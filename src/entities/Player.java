@@ -5,28 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
-public class Player {
-    private int x, y, width, height;
 
-    private int velocityY = 0; // Player's vertical velocity
-    private boolean isJumping = false;
-    private boolean canDoubleJump = true; // Tracks if double jump is available
-    private final int GRAVITY = 1;
-    private final int JUMP_STRENGTH = 15;
-    private final int GROUND_Y = 600; // The Y position of the ground
+import static utils.Constants.GameWindow.*;
+import static utils.Constants.PlayerConstants.*;
 
-    public static final int IDLE_RIGHT = 1;
-    public static final int RUN_RIGHT = 2;
-    public static final int JUMP_RIGHT = 3;
-    public static final int DOUBLE_JUMP_RIGHT = 4;
-    public static final int IDLE_LEFT = -1;
-    public static final int RUN_LEFT = -2;
-    public static final int JUMP_LEFT = -3;
-    public static final int DOUBLE_JUMP_LEFT = -4;
+public class Player extends Entity{
 
-    private BufferedImage spriteSheet;
+    private int yVelocity = 0; // Tracks vertical speed for jumping
+    private boolean onGround;
+    private boolean doubleJump;
+
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
     private BufferedImage[] runRightFrames;
@@ -35,22 +24,18 @@ public class Player {
     private BufferedImage[] jumpLeftFrames;
     private BufferedImage[] doubleJumpRightFrames;    
     private BufferedImage[] doubleJumpLeftFrames;
-    private int currentFrame = 0;
-    private int state; // -1: idleLeft, 1: idleRight, -2: RunLeft, 2: RunRight, -3: JumpLeft, 3: JumpRight, -4: DoubleJumpLeft, 4: DoubleJumpRight
-    private int frameDelay = 5; // slows the animation
-    private int frameCount = 0;
+    private int currentFrame;
 
     // Constructor
-    public Player(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.state = 1; // initialling idle right
+    public Player() {
+        this.x = WINDOW_WIDTH / 2 - PLAYER_SIZE / 2; // centers the player in the middle of the panel
+        this.y = WINDOW_HEIGHT - PLAYER_SIZE;
+        // -1: idleLeft, 1: idleRight, -2: RunLeft, 2: RunRight, -3: JumpLeft, 3: JumpRight, -4: DoubleJumpLeft, 4: DoubleJumpRight
+        this.state = 1;
 
         // Load sprite sheet
         try {
-            spriteSheet = ImageIO.read(new File("D:/Documents/GitHub/Ninja-Blades/img/player_sprite.png"));
+            spriteSheet = ImageIO.read(new File("src/img/player_sprite.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,20 +51,179 @@ public class Player {
         loadDoubleJumpLeft();
     }
 
-    /* (General method to load frames from sprite sheet)
-     *
-     * makes an array of BufferedImages from a spritesheet which is found in the /img directory,
-     * the loading image Methods
-     */
-    private BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
-        BufferedImage[] frames = new BufferedImage[frameCount];
-        for (int i = 0; i < frameCount; i++) {
-            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
+
+    // Handles jumping mechanics
+    public void jump() {
+        if(onGround){
+            yVelocity = JUMP_FORCE; // first jump is height than the second 
+            onGround = false;
+            doubleJump = true;
+        }else if(!onGround && doubleJump){
+            doubleJump = false; 
+            yVelocity = JUMP_FORCE;
         }
-        return frames;
+    }
+    
+    // Updates the player's position based on gravity
+    public void applyGravity() {
+        if (!onGround) {
+            yVelocity += GRAVITY; // Gravity pulls the player down
+            this.y += yVelocity;
+
+            if (y >= WINDOW_HEIGHT - PLAYER_SIZE) { // Check if the player has landed
+                y = WINDOW_HEIGHT - PLAYER_SIZE; // Reset y position to the ground level
+                onGround = true;
+                doubleJump = true; // resets the double-jump when on ground 
+            }
+        }
     }
 
-    // Loading Image Methods
+
+    // Method that updates the state and the current frames
+    public void update() {
+
+        frameCount++;
+
+        if (frameCount >= frameDelay) {
+            currentFrame++;
+            frameCount = 0; // Resets the frame counter
+        }
+
+        // Applies gravity
+        applyGravity();
+
+        // checks the current state and cicles the frames
+        switch (state) {
+            case IDLE_RIGHT: // idle right
+                currentFrame %= idleRightFrames.length;
+                break;
+            case RUN_RIGHT: // run right
+                currentFrame %= runRightFrames.length;
+                break;
+            case JUMP_RIGHT: // jump right
+                currentFrame %= jumpRightFrames.length;
+                break;
+            case DOUBLE_JUMP_RIGHT: // double-jump right
+                currentFrame %= doubleJumpRightFrames.length;
+                break;
+            case IDLE_LEFT: // idle left
+                currentFrame %= idleLeftFrames.length;
+                break;
+            case RUN_LEFT: // run left
+                currentFrame %= runLeftFrames.length;
+                break;
+            case JUMP_LEFT: // jump left
+                currentFrame %= jumpLeftFrames.length;
+                break;
+            case DOUBLE_JUMP_LEFT: // double-jump left
+                currentFrame %= doubleJumpLeftFrames.length;
+                break;
+        }
+    }
+
+
+    // Drawing method
+    public void draw(Graphics g) {
+
+        BufferedImage currentImage = null;
+
+        switch (state) {
+            case IDLE_RIGHT: // idle right
+                if (currentFrame >= idleRightFrames.length) currentFrame = 0;
+                currentImage = idleRightFrames[currentFrame];
+                break;
+            case RUN_RIGHT: // run right
+                if (currentFrame >= runRightFrames.length) currentFrame = 0;
+                currentImage = runRightFrames[currentFrame];
+                break;
+            case JUMP_RIGHT: // jump right
+                if (currentFrame >= jumpRightFrames.length) currentFrame = 0;
+                currentImage = jumpRightFrames[currentFrame];
+                break;
+            case DOUBLE_JUMP_RIGHT: // double-jump right
+                if (currentFrame >= doubleJumpRightFrames.length) currentFrame = 0;
+                currentImage = doubleJumpRightFrames[currentFrame];
+                break;
+            case IDLE_LEFT: // idle left
+                if (currentFrame >= idleLeftFrames.length) currentFrame = 0;
+                currentImage = idleLeftFrames[currentFrame];
+                break;
+            case RUN_LEFT: // run left
+                if (currentFrame >= runLeftFrames.length) currentFrame = 0;
+                currentImage = runLeftFrames[currentFrame];
+                break;
+            case JUMP_LEFT: // jump left
+                if (currentFrame >= jumpLeftFrames.length) currentFrame = 0;
+                currentImage = jumpLeftFrames[currentFrame];
+                break;
+            case DOUBLE_JUMP_LEFT: // double-jump left
+                if (currentFrame >= doubleJumpLeftFrames.length) currentFrame = 0;
+                currentImage = doubleJumpLeftFrames[currentFrame];
+                break;
+        }
+
+        // if there is a current image, draws it
+        if (currentImage != null) {
+            g.drawImage(currentImage, x, y, PLAYER_SIZE, PLAYER_SIZE, null);
+
+            this.update();
+        }
+
+    }
+
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *             Method to change player state                  *
+    * *                                                            *
+    * **************************************************************
+    */
+    public void idleRightState(){
+        this.state = IDLE_RIGHT;
+    }
+    public void runRightState(){
+        this.state = RUN_RIGHT;
+    }
+    public void jumpRightState(){
+        this.state = JUMP_RIGHT;
+    }
+    public void doubleJumpRightState(){
+        this.state = DOUBLE_JUMP_RIGHT;
+    }
+    public void idleLeftState(){
+        this.state = IDLE_LEFT;
+    }
+    public void runLeftState(){
+        this.state = RUN_LEFT;
+    }
+    public void jumpLeftState(){
+        this.state = JUMP_LEFT;
+    }
+    public void doubleJumpLeftState(){
+        this.state = DOUBLE_JUMP_LEFT;
+    }
+
+    // movement
+    public void changePositionRight(){
+        if(this.x <= MAX_X){
+            this.x += SPEEDX;
+        }
+    }
+    public void changePositionLeft(){
+        if(this.x >= MIN_X){
+            this.x -= SPEEDX;
+        }
+    }
+
+
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *               Loading frames Methods                       *
+    * *                                                            *
+    * **************************************************************
+    */
+    // those methods loads the frame from a player_sprite located on the ../img folder
     public void loadIdleRight() {
         idleRightFrames = loadFrames(0, 0, 4, 32, 32); 
     }
@@ -89,11 +233,11 @@ public class Player {
     }
 
     public void loadJumpRight() {
-        jumpRightFrames = loadFrames(0, 64, 7, 32, 32);
+        jumpRightFrames = loadFrames(96, 64, 1, 32, 32);
     }
 
     public void loadDoubleJumpRight() {
-        doubleJumpRightFrames = loadFrames(0, 96, 5, 32, 32);
+        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32);
     }
 
     public void loadIdleLeft() {
@@ -105,151 +249,17 @@ public class Player {
     }
 
     public void loadJumpLeft() {
-        jumpLeftFrames = loadFrames(0, 192, 7, 32, 32);
+        jumpLeftFrames = loadFrames(96, 192, 1, 32, 32);
     }
 
     public void loadDoubleJumpLeft() {
-        doubleJumpLeftFrames = loadFrames(0, 224, 5, 32, 32);
-    }
-    
-    // Metodo per aggiornare lo stato e il frame corrente
-    public void update() {
-        // Apply gravity
-        if (y < GROUND_Y) {
-            velocityY += GRAVITY; // Increase downward velocity
-            y += velocityY; // Move player down
-        } else {
-            // Player has hit the ground, reset jump variables
-            y = GROUND_Y;
-            velocityY = 0;
-            isJumping = false;
-            canDoubleJump = true;
-        }
-
-        frameCount++;
-
-        if (frameCount >= frameDelay) {
-            currentFrame++;
-            frameCount = 0; // Resets the frame counter
-        }
-
-        // checks the current state and cicles the frames
-        switch (state) {
-            case (1): // idle right
-                currentFrame %= idleRightFrames.length;
-                break;
-            case (2): // run right
-                currentFrame %= runRightFrames.length;
-                break;
-            case (3): // jump right
-                currentFrame %= jumpRightFrames.length;
-                break;
-            case (4): // double-jump right
-                currentFrame %= doubleJumpRightFrames.length;
-                break;
-            case (-1): // idle left
-                currentFrame %= idleLeftFrames.length;
-                break;
-            case (-2): // run left
-                currentFrame %= runLeftFrames.length;
-                break;
-            case (-3): // jump left
-                currentFrame %= jumpLeftFrames.length;
-                break;
-            case (-4): // double-jump left
-                currentFrame %= doubleJumpLeftFrames.length;
-                break;
-        }
+        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32);
     }
 
-    // Drawing method
-    public void draw(Graphics g) {
-        BufferedImage currentImage = null;
-
-        switch (state) {
-            case (1): // idle right
-                currentImage = idleRightFrames[currentFrame];
-                break;
-            case (2): // run right
-                currentImage = runRightFrames[currentFrame];
-                break;
-            case (3): // jump right
-                currentImage = jumpRightFrames[currentFrame];
-                break;
-            case 4: // double-jump right
-                currentImage = doubleJumpRightFrames[currentFrame];
-                break;
-            case -1: // idle left
-                currentImage = idleLeftFrames[currentFrame];
-                break;
-            case -2: // run left
-                currentImage = runLeftFrames[currentFrame];
-                break;
-            case -3: // jump left
-                currentImage = jumpLeftFrames[currentFrame];
-                break;
-            case -4: // double-jump left
-                currentImage = doubleJumpLeftFrames[currentFrame];
-                break;
-        }
-        // if there is a current image, draws it
-        if (currentImage != null) {
-            g.drawImage(currentImage, x, y, width, height, null);
-            this.update();
-        }
+    public boolean canDoubleJump(){
+        return doubleJump;
     }
-
-    // Method to get the Player's bounding box
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    // Method for jumping
-    public void jump() {
-        if (!isJumping) {
-            // First jump
-            velocityY = JUMP_STRENGTH;
-            isJumping = true;
-        } else if (canDoubleJump) {
-            // Double jump
-            velocityY = JUMP_STRENGTH;
-            canDoubleJump = false; // Disable further double jumps
-        }
-    }
-
-    // changing state Methods
-    public void idleRight(){
-        this.state = IDLE_RIGHT;
-    }
-    public void idleLeft(){
-        this.state = IDLE_LEFT;
-    }
-    public void runRight(){
-        this.state = RUN_RIGHT;
-    }
-    public void runLeft(){
-        this.state = RUN_LEFT;
-    }
-    public void jumpRight(){
-        this.state = JUMP_RIGHT;
-    }
-    public void jumpLeft(){
-        this.state = JUMP_LEFT;
-    }
-    public void doubleJumpRight(){
-        this.state = DOUBLE_JUMP_RIGHT;
-    }
-    public void doubleJumpLeft(){
-        this.state = DOUBLE_JUMP_LEFT;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-
-    // movement
-    public void changePosition(int stepX){
-        this.x += stepX;
+    public boolean isOnGround(){
+        return onGround;
     }
 }
