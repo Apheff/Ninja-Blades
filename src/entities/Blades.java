@@ -31,7 +31,7 @@ public class Blades extends Entity{
 
     public void update(){
         frameCount++;
-
+        
         bladesMovement();
 
         if (frameCount >= frameDelay) {

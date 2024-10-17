@@ -101,7 +101,7 @@ public class GamePanel extends JPanel {
         g2d.scale(1/scaleFactor, 1/scaleFactor);
         g2d.drawImage(wallpaper, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, getFocusCycleRootAncestor());
         player.draw(g2d);
-                
+        blades.draw(g2d);
         Update();
     }
 
