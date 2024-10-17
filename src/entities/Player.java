@@ -12,9 +12,8 @@ import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
 
-    private int yVelocity = 0; // Tracks vertical speed for jumping
     private boolean onGround;
-    private boolean doubleJump;
+    private boolean doubleJump = true;
 
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
@@ -28,9 +27,17 @@ public class Player extends Entity{
 
     // Constructor
     public Player() {
-        this.x = WINDOW_WIDTH / 2 - PLAYER_SIZE / 2; // centers the player in the middle of the panel
-        this.y = WINDOW_HEIGHT - PLAYER_SIZE;
-        // -1: idleLeft, 1: idleRight, -2: RunLeft, 2: RunRight, -3: JumpLeft, 3: JumpRight, -4: DoubleJumpLeft, 4: DoubleJumpRight
+        this.x = SCREEN_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
+        this.y = 0;
+        this.speedX = 10;
+        this.speedY = 0;
+
+        /*
+         * -1: idleLeft, 1: idleRight,
+         * -2: RunLeft, 2: RunRight,
+         * -3: JumpLeft, 3: JumpRight,
+         * -4: DoubleJumpLeft, 4: DoubleJumpRight
+         */
         this.state = 1;
 
         // Load sprite sheet
@@ -55,23 +62,23 @@ public class Player extends Entity{
     // Handles jumping mechanics
     public void jump() {
         if(onGround){
-            yVelocity = JUMP_FORCE; // first jump is height than the second 
+            speedY = JUMP_FORCE; // first jump is height than the second 
             onGround = false;
             doubleJump = true;
         }else if(!onGround && doubleJump){
             doubleJump = false; 
-            yVelocity = JUMP_FORCE;
+            speedY = JUMP_FORCE;
         }
     }
     
     // Updates the player's position based on gravity
     public void applyGravity() {
         if (!onGround) {
-            yVelocity += GRAVITY; // Gravity pulls the player down
-            this.y += yVelocity;
+            speedY += GRAVITY; // Gravity pulls the player down
+            this.y += speedY;
 
-            if (y >= WINDOW_HEIGHT - PLAYER_SIZE) { // Check if the player has landed
-                y = WINDOW_HEIGHT - PLAYER_SIZE; // Reset y position to the ground level
+            if (y >= SCREEN_HEIGHT - this.height) { // Check if the player has landed
+                y = SCREEN_HEIGHT - this.height; // Reset y position to the ground level
                 onGround = true;
                 doubleJump = true; // resets the double-jump when on ground 
             }
@@ -122,7 +129,13 @@ public class Player extends Entity{
     }
 
 
-    // Drawing method
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                    Drawing methods                         *
+    * *                                                            *
+    * **************************************************************
+    */
     public void draw(Graphics g) {
 
         BufferedImage currentImage = null;
@@ -164,8 +177,7 @@ public class Player extends Entity{
 
         // if there is a current image, draws it
         if (currentImage != null) {
-            g.drawImage(currentImage, x, y, PLAYER_SIZE, PLAYER_SIZE, null);
-
+            g.drawImage(currentImage, x, y, height, width, null);
             this.update();
         }
 
@@ -203,17 +215,6 @@ public class Player extends Entity{
         this.state = DOUBLE_JUMP_LEFT;
     }
 
-    // movement
-    public void changePositionRight(){
-        if(this.x <= MAX_X){
-            this.x += SPEEDX;
-        }
-    }
-    public void changePositionLeft(){
-        if(this.x >= MIN_X){
-            this.x -= SPEEDX;
-        }
-    }
 
 
     /*

@@ -4,9 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static utils.Constants.Entities.ENTITY_SIZE;
-import static utils.Constants.GameWindow.WINDOW_HEIGHT;
-import static utils.Constants.GameWindow.WINDOW_WIDTH;
+import static utils.Constants.GameWindow.SCREEN_HEIGHT;
+import static utils.Constants.GameWindow.SCREEN_WIDTH;
 
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
@@ -14,12 +13,10 @@ import javax.imageio.ImageIO;
 public class Blades extends Entity{
 
     private BufferedImage [] redFrames;
-    private int SPEED = 2;
 
     public Blades() {
-        super();
-        this.x = WINDOW_WIDTH / 2 - ENTITY_SIZE / 2; // centers the player in the middle of the panel
-        this.y = WINDOW_HEIGHT - ENTITY_SIZE;
+        this.x = SCREEN_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
+        this.y = 0;
         // Load sprite sheet
         try {
             spriteSheet = ImageIO.read(new File("src/img/red-blade.png"));
@@ -34,6 +31,8 @@ public class Blades extends Entity{
 
     public void update(){
         frameCount++;
+
+        bladesMovement();
 
         if (frameCount >= frameDelay) {
             currentFrame++;
@@ -66,7 +65,16 @@ public class Blades extends Entity{
     }
     
     
+
+    //without gravity or speed reduction
     public void bladesMovement(){
-        
+        y += speedY;
+        x += speedX;
+        if (y + this.height > SCREEN_HEIGHT || y < 0) { 
+            speedY = -speedY * 0.8; // changing the blades direction
+        }
+        if (x < 0 || x + width > SCREEN_WIDTH) {
+            speedX = -speedX; // horizontal bouncing
+        }
     }
 }

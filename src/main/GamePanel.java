@@ -1,11 +1,12 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Dimension;
+
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import utils.KeyboardInputs;
@@ -14,7 +15,6 @@ import entities.Player;
 
 // importing all the GameWindoo constants
 import static utils.Constants.GameWindow.*;
-import static utils.Constants.PlayerConstants.PLAYER_SIZE;
 
 public class GamePanel extends JPanel {
     
@@ -25,25 +25,25 @@ public class GamePanel extends JPanel {
     private BufferedImage wallpaper;
 
     public GamePanel() { 
-        setPanelSize();
         addKeyListener(keyboardInputs);
-        player = new Player(); // Use player size as 64x64
+        player = new Player();
         blades = new Blades();
+
+        setSize(SCREEN_SIZE);
+        System.out.println(scaleFactor);
+        // Load sprite sheet
         try {
             wallpaper = ImageIO.read(new File("src/img/wallpaper3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }   
-
-    public void setPanelSize(){
-        Dimension size = new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setMinimumSize(size);
-        setPreferredSize(size);
-        setMaximumSize(size);
-
-    }
     
+    public void bladesSpawner(){
+        //TO-DO
+    }
+
+
     // Update game logic
     public void Update() {
         // Check keyboard inputs and update player's position or state
@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
             if(player.isOnGround()){
                 player.runRightState(); // Change state to runRight
             }
-            player.changePositionRight();
+            player.moveX(player.speedX);
         }
 
         if (player.getState() < 0 && player.isOnGround()){
@@ -87,22 +87,21 @@ public class GamePanel extends JPanel {
             if(player.isOnGround()){
                 player.runLeftState(); // Change state to runLeft
             }
-            player.changePositionLeft();
+            player.moveX(-player.speedX);
         }
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(wallpaper, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
-        if(player.getBounds().intersects(blades.getBounds())){
-            g.setColor(new Color(255,0,0));
-            g.fillRect(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
-            
-        }
-        //g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        // entities draw        
-        player.draw(g);
-        blades.draw(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        
+        // Applica il fattore di scala
+        g2d.scale(1/scaleFactor, 1/scaleFactor);
+        g2d.drawImage(wallpaper, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, getFocusCycleRootAncestor());
+        player.draw(g2d);
+                
         Update();
     }
 

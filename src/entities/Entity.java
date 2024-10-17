@@ -1,5 +1,6 @@
 package entities;
 
+import static utils.Constants.GameWindow.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
@@ -12,14 +13,20 @@ public class Entity {
     public int frameCount;
     public int frameDelay = 5;
     public int currentFrame;
+    public double speedX;
+    public double speedY;
+    public Rectangle hitbox;
 
     public Entity(){
         this.x = 0;
         this.y = 0;
-        this.width = 64;
-        this.height = 64;
+        this.width = 96;
+        this.height = 96;
         this.spriteSheet = null;
         this.state = 0;
+        this.speedX = 10;
+        this.speedY = 10;
+        hitbox = new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     /* (General method to load frames from sprite sheet)
@@ -35,17 +42,56 @@ public class Entity {
         return frames;
     }
 
-    // moves the Entity
-    public void move(int dx, int dy) {
-        x += dx;
-        y += dy;
+    
+
+
+    // set Methods
+    public boolean setX(int x){
+        if(x <= SCREEN_WIDTH){
+            this.x = x;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean setY(int y){
+        if(y <= SCREEN_HEIGHT){
+            this.y = y;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean moveX(double dx){
+        if(x + width <= SCREEN_WIDTH){
+            this.x += dx;
+            return true;
+        }
+        else{
+            this.x = SCREEN_WIDTH;
+            return false;
+        }
+    }
+    public boolean moveY(double dy){
+        if(x + height <= SCREEN_HEIGHT){
+            this.x += dy;
+            return true;
+        }
+        else{
+            this.x = SCREEN_HEIGHT;
+            return false;
+        }
     }
 
+
+
     // get Methods
-    public int getX() {
+    public double getX() {
         return x;
     }
-    public int getY() {
+    public double getY() {
         return y;
     }
     public int getWidth() {
@@ -54,13 +100,13 @@ public class Entity {
     public int getHeight() {
         return height;
     }
-
-    // Method to get the Player's bounding box
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
-    }
-
     public int getState(){
         return state;
     }
+
+    // Method to get the bounding box
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
 }

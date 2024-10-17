@@ -3,7 +3,7 @@ package main;
 public class MainClass implements Runnable{
     private GamePanel gamePanel;
     private Thread gameThread;
-    private final int SET_FPS = 69; // for the memes
+    private final int SET_FPS = 60; // fps
     
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
