@@ -9,9 +9,14 @@ import java.awt.Toolkit;
 public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */
 
+    public static class BladesConstants{
+        public static final int RED_STATE = 0;
+        public static final int WHITE_STATE = 1;        
+    }
+
+
     public static class PlayerConstants {
         //gravity
-        public static final int JUMP_FORCE = -20; // Initial velocity upwards
         public static final int GRAVITY = 1; // Gravity pulls the player down
 
         // states 

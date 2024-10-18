@@ -24,8 +24,8 @@ public class Entity {
         this.height = 96;
         this.spriteSheet = null;
         this.state = 0;
-        this.speedX = 10;
-        this.speedY = 10;
+        this.speedX = 0;
+        this.speedY = 0;
         hitbox = new Rectangle(this.x, this.y, this.width, this.height);
     }
 
@@ -34,10 +34,10 @@ public class Entity {
      * makes an array of BufferedImages from a spritesheet which is found in the /img directory,
      * the loading image Methods
      */
-    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
+    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight, int offset) {
         BufferedImage[] frames = new BufferedImage[frameCount];
         for (int i = 0; i < frameCount; i++) {
-            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
+            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth) + offset, startY, frameWidth, frameHeight);
         }
         return frames;
     }
@@ -65,22 +65,22 @@ public class Entity {
         }
     }
     public boolean moveX(double dx){
-        if(x + width <= SCREEN_WIDTH){
+        if(x + width + dx <= SCREEN_WIDTH && x + dx >= 0){
             this.x += dx;
             return true;
         }
         else{
-            this.x = SCREEN_WIDTH;
+            //this.x = SCREEN_WIDTH;
             return false;
         }
     }
     public boolean moveY(double dy){
-        if(x + height <= SCREEN_HEIGHT){
+        if(y + height + dy <= SCREEN_WIDTH && y + dy < 0){
             this.x += dy;
             return true;
         }
         else{
-            this.x = SCREEN_HEIGHT;
+            //this.x = SCREEN_HEIGHT;
             return false;
         }
     }

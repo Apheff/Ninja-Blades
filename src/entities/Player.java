@@ -12,6 +12,7 @@ import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
 
+    private static final int JUMP_FORCE = -20;
     private boolean onGround;
     private boolean doubleJump = true;
 
@@ -28,7 +29,7 @@ public class Player extends Entity{
     // Constructor
     public Player() {
         this.x = SCREEN_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
-        this.y = 0;
+        this.y = SCREEN_HEIGHT - this.height;
         this.speedX = 10;
         this.speedY = 0;
 
@@ -67,7 +68,7 @@ public class Player extends Entity{
             doubleJump = true;
         }else if(!onGround && doubleJump){
             doubleJump = false; 
-            speedY = JUMP_FORCE;
+            speedY = JUMP_FORCE - 5;
         }
     }
     
@@ -190,28 +191,28 @@ public class Player extends Entity{
     * *                                                            *
     * **************************************************************
     */
-    public void idleRightState(){
+    public void setIdleRightState(){
         this.state = IDLE_RIGHT;
     }
-    public void runRightState(){
+    public void setRunRightState(){
         this.state = RUN_RIGHT;
     }
-    public void jumpRightState(){
+    public void setJumpRightState(){
         this.state = JUMP_RIGHT;
     }
-    public void doubleJumpRightState(){
+    public void setDoubleJumpRightState(){
         this.state = DOUBLE_JUMP_RIGHT;
     }
-    public void idleLeftState(){
+    public void setIdleLeftState(){
         this.state = IDLE_LEFT;
     }
-    public void runLeftState(){
+    public void setRunLeftState(){
         this.state = RUN_LEFT;
     }
-    public void jumpLeftState(){
+    public void setJumpLeftState(){
         this.state = JUMP_LEFT;
     }
-    public void doubleJumpLeftState(){
+    public void setDoubleJumpLeftState(){
         this.state = DOUBLE_JUMP_LEFT;
     }
 
@@ -226,35 +227,35 @@ public class Player extends Entity{
     */
     // those methods loads the frame from a player_sprite located on the ../img folder
     public void loadIdleRight() {
-        idleRightFrames = loadFrames(0, 0, 4, 32, 32); 
+        idleRightFrames = loadFrames(0, 0, 4, 32, 32,0); 
     }
 
     public void loadRunRight() {
-        runRightFrames = loadFrames(0, 32, 4, 32, 32);
+        runRightFrames = loadFrames(0, 32, 4, 32, 32, 0);
     }
 
     public void loadJumpRight() {
-        jumpRightFrames = loadFrames(96, 64, 1, 32, 32);
+        jumpRightFrames = loadFrames(96, 64, 1, 32, 32, 0);
     }
 
     public void loadDoubleJumpRight() {
-        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32);
+        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32, 0);
     }
 
     public void loadIdleLeft() {
-        idleLeftFrames = loadFrames(0, 128, 4, 32, 32);
+        idleLeftFrames = loadFrames(0, 128, 4, 32, 32, 0);
     }
 
     public void loadRunLeft() {
-        runLeftFrames = loadFrames(0, 160, 4, 32, 32);
+        runLeftFrames = loadFrames(0, 160, 4, 32, 32, 0);
     }
 
     public void loadJumpLeft() {
-        jumpLeftFrames = loadFrames(96, 192, 1, 32, 32);
+        jumpLeftFrames = loadFrames(96, 192, 1, 32, 32, 0);
     }
 
     public void loadDoubleJumpLeft() {
-        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32);
+        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32, 0);
     }
 
     public boolean canDoubleJump(){

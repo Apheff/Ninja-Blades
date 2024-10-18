@@ -13,7 +13,7 @@ import utils.KeyboardInputs;
 import entities.Blades;
 import entities.Player;
 
-// importing all the GameWindoo constants
+// importing all the constants
 import static utils.Constants.GameWindow.*;
 
 public class GamePanel extends JPanel {
@@ -28,9 +28,7 @@ public class GamePanel extends JPanel {
         addKeyListener(keyboardInputs);
         player = new Player();
         blades = new Blades();
-
         setSize(SCREEN_SIZE);
-        System.out.println(scaleFactor);
         // Load sprite sheet
         try {
             wallpaper = ImageIO.read(new File("src/img/wallpaper3.png"));
@@ -54,16 +52,16 @@ public class GamePanel extends JPanel {
             startjump = false;
         }
         if (player.canDoubleJump() && player.getState() > 0 || keyboardInputs.isMoveRight() && !player.isOnGround()){
-            player.jumpRightState();
+            player.setJumpRightState();
         }
         if (!player.canDoubleJump() && player.getState() > 0 && !player.isOnGround()){
-            player.doubleJumpRightState();
+            player.setDoubleJumpRightState();
         }
         if (player.canDoubleJump() && player.getState() < 0 || keyboardInputs.isMoveLeft() && !player.isOnGround()){
-            player.jumpLeftState();
+            player.setJumpLeftState();
         }
         if (!player.canDoubleJump() && player.getState() < 0 && !player.isOnGround()){
-            player.doubleJumpLeftState();
+            player.setDoubleJumpLeftState();
         }
         if(!keyboardInputs.isSpace()){
             startjump = true;
@@ -71,23 +69,26 @@ public class GamePanel extends JPanel {
 
         // left and right movment
         if (player.getState() > 0 && player.isOnGround()){
-            player.idleRightState();
+            player.setIdleRightState();
         }
         if (keyboardInputs.isMoveRight()) {
             if(player.isOnGround()){
-                player.runRightState(); // Change state to runRight
+                player.setRunRightState(); // Change state to runRight
             }
             player.moveX(player.speedX);
         }
 
         if (player.getState() < 0 && player.isOnGround()){
-            player.idleLeftState();
+            player.setIdleLeftState();
         }       
         if (keyboardInputs.isMoveLeft()) {
             if(player.isOnGround()){
-                player.runLeftState(); // Change state to runLeft
+                player.setRunLeftState(); // Change state to runLeft
             }
             player.moveX(-player.speedX);
+        }
+        if(player.y < blades.y && player.x >= blades.x && player.x <= blades.x + blades.width){
+            blades.setWhiteState();
         }
     }
 
@@ -100,6 +101,7 @@ public class GamePanel extends JPanel {
         // Applica il fattore di scala
         g2d.scale(1/scaleFactor, 1/scaleFactor);
         g2d.drawImage(wallpaper, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, getFocusCycleRootAncestor());
+        g2d.fill3DRect(player.x, player.y, player.width, player.height, true);
         player.draw(g2d);
         blades.draw(g2d);
         Update();
