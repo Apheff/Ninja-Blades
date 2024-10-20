@@ -5,8 +5,7 @@ import java.awt.event.KeyEvent;
 
 public class KeyboardInputs implements KeyListener {
 
-    private boolean left, right, space; 
-
+    public boolean left, right, space;
 
     // Method to handle key pressed events
     @Override
@@ -23,7 +22,7 @@ public class KeyboardInputs implements KeyListener {
                 right = true;
                 break;
             case KeyEvent.VK_SPACE:    
-                space = true; // Your action for space
+                space = true;
                 break;
         }  
     }
@@ -49,17 +48,5 @@ public class KeyboardInputs implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e){
         // not used
-    }
-
-    public boolean isMoveLeft() {
-        return left;
-    }
-
-    public boolean isMoveRight() {
-        return right;
-    }
-
-    public boolean isSpace() {
-        return space;
     }
 }

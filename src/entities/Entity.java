@@ -1,8 +1,9 @@
 package entities;
 
-import static utils.Constants.GameWindow.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import static utils.Constants.GamePanel.*;
 
 public class Entity {
 
@@ -11,7 +12,7 @@ public class Entity {
     public int width, height; // size
     public int state;
     public int frameCount;
-    public int frameDelay = 5;
+    public int frameDelay = 8;
     public int currentFrame;
     public double speedX;
     public double speedY;
@@ -34,10 +35,10 @@ public class Entity {
      * makes an array of BufferedImages from a spritesheet which is found in the /img directory,
      * the loading image Methods
      */
-    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight, int offset) {
+    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
         BufferedImage[] frames = new BufferedImage[frameCount];
         for (int i = 0; i < frameCount; i++) {
-            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth) + offset, startY, frameWidth, frameHeight);
+            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
         }
         return frames;
     }
@@ -46,43 +47,27 @@ public class Entity {
 
 
     // set Methods
-    public boolean setX(int x){
-        if(x <= SCREEN_WIDTH){
-            this.x = x;
-            return true;
-        }
-        else{
-            return false;
-        }
+    public void setX(int x){
+        this.x = x;
     }
-    public boolean setY(int y){
-        if(y <= SCREEN_HEIGHT){
-            this.y = y;
-            return true;
-        }
-        else{
-            return false;
-        }
+    public void setY(int y){
+        this.y = y;
     }
-    public boolean moveX(double dx){
-        if(x + width + dx <= SCREEN_WIDTH && x + dx >= 0){
+    public void moveX(double dx){
+        if(x + width + dx <= PANEL_WIDTH && x + dx >= 0)
             this.x += dx;
-            return true;
-        }
-        else{
-            //this.x = SCREEN_WIDTH;
-            return false;
-        }
+        if(x + dx < 0)
+            this.x = 0;
+        if(x + width + dx > PANEL_WIDTH)
+            this.x = PANEL_WIDTH - width;
     }
-    public boolean moveY(double dy){
-        if(y + height + dy <= SCREEN_WIDTH && y + dy < 0){
-            this.x += dy;
-            return true;
-        }
-        else{
-            //this.x = SCREEN_HEIGHT;
-            return false;
-        }
+    public void moveY(double dy){
+        if(y + height + dy <= PANEL_HEIGHT && y + dy > 0)
+            this.y += dy;
+        if(y + height + dy > PANEL_HEIGHT)
+            this.y = PANEL_HEIGHT - this.height;
+        if(y + dy < 0)
+            this.y = 0;
     }
 
 
@@ -109,4 +94,9 @@ public class Entity {
         return hitbox;
     }
 
+    // will tell if two entities had a collision
+    public boolean getCollision(Rectangle entityHitbox){
+        return this.hitbox.intersects(entityHitbox);
+    } 
+    
 }

@@ -6,15 +6,25 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.Graphics;
 
-
+import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GameWindow.*;
 import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
 
-    private static final int JUMP_FORCE = -20;
-    private boolean onGround;
-    private boolean doubleJump = true;
+    public boolean onGround;
+    public boolean doubleJump = false; // Modificato: inizia come false, sarà abilitato solo dopo il primo salto
+    public boolean isJumping = false;  // Indica se il giocatore sta eseguendo il primo salto
+
+    private long jumpStartTime; // Tempo di inizio della pressione del tasto per il primo salto
+    private final long MAX_JUMP_HOLD_TIME = 250; // Tempo massimo per il salto lungo (in millisecondi)
+    private int jumpForce; // Forza del salto variabile in base al tempo di pressione
+
+    private final int FIXED_DOUBLE_JUMP = -15; // Forza fissa per il secondo salto
+    private final int INITIAL_JUMP_FORCE = -10; // Valore iniziale per il primo salto
+
+    private double gravity = 0.6f;
 
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
@@ -28,11 +38,10 @@ public class Player extends Entity{
 
     // Constructor
     public Player() {
-        this.x = SCREEN_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
-        this.y = SCREEN_HEIGHT - this.height;
+        this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
+        this.y = PANEL_HEIGHT - this.height;
         this.speedX = 10;
         this.speedY = 0;
-
         /*
          * -1: idleLeft, 1: idleRight,
          * -2: RunLeft, 2: RunRight,
@@ -49,43 +58,56 @@ public class Player extends Entity{
         }
 
         // Loads the Frames for every state
-        loadIdleRight();
-        loadRunRight();
-        loadJumpRight();
-        loadDoubleJumpRight();
-        loadIdleLeft();
-        loadRunLeft();
-        loadJumpLeft();
-        loadDoubleJumpLeft();
+        loadAllFrames();
     }
 
 
-    // Handles jumping mechanics
+    // Metodo per gestire l'inizio del salto
     public void jump() {
-        if(onGround){
-            speedY = JUMP_FORCE; // first jump is height than the second 
-            onGround = false;
-            doubleJump = true;
-        }else if(!onGround && doubleJump){
-            doubleJump = false; 
-            speedY = JUMP_FORCE - 5;
+        if (onGround) {
+            jumpStartTime = System.currentTimeMillis(); // Inizia il timer per il primo salto
+            isJumping = true;
+            onGround = false; // Il giocatore è ora in aria
+            jumpForce = INITIAL_JUMP_FORCE; // Imposta la forza iniziale del primo salto
         }
     }
-    
-    // Updates the player's position based on gravity
+
+    public void doubleJump(){
+        if (doubleJump && !onGround) { // Assicurati che il tasto sia stato rilasciato
+            doubleJump = false;  // Impedisce ulteriori doppi salti
+            speedY = FIXED_DOUBLE_JUMP; // Imposta la velocità fissa per il doppio salto
+        }
+    }
+
+    // Metodo per gestire la continuazione del salto (mentre il tasto è tenuto premuto)
+    public void continueJump() {
+        if (isJumping) {
+            long heldTime = System.currentTimeMillis() - jumpStartTime;
+            // Aumenta l'altezza del salto se il tasto viene tenuto premuto, fino al limite massimo
+            if (heldTime < MAX_JUMP_HOLD_TIME) {
+                jumpForce = INITIAL_JUMP_FORCE - (int)(heldTime / 40); // La forza aumenta fino a un certo limite
+            }else{
+                isJumping = false;
+            }   
+
+            speedY = jumpForce; // Applica la forza del salto aggiornata
+        }
+    }
+
+    // Metodo per applicare la gravità e gestire la logica del movimento
     public void applyGravity() {
         if (!onGround) {
-            speedY += GRAVITY; // Gravity pulls the player down
+            speedY += gravity; // La gravità agisce sul giocatore
             this.y += speedY;
 
-            if (y >= SCREEN_HEIGHT - this.height) { // Check if the player has landed
-                y = SCREEN_HEIGHT - this.height; // Reset y position to the ground level
+            if (y >= SCREEN_HEIGHT - this.height) {
+                y = SCREEN_HEIGHT - this.height;
                 onGround = true;
-                doubleJump = true; // resets the double-jump when on ground 
+                doubleJump = false; // Resetta il doppio salto
             }
         }
     }
-
+    
 
     // Method that updates the state and the current frames
     public void update() {
@@ -143,35 +165,51 @@ public class Player extends Entity{
 
         switch (state) {
             case IDLE_RIGHT: // idle right
-                if (currentFrame >= idleRightFrames.length) currentFrame = 0;
+                if (currentFrame >= idleRightFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = idleRightFrames[currentFrame];
                 break;
             case RUN_RIGHT: // run right
-                if (currentFrame >= runRightFrames.length) currentFrame = 0;
+                if (currentFrame >= runRightFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = runRightFrames[currentFrame];
                 break;
             case JUMP_RIGHT: // jump right
-                if (currentFrame >= jumpRightFrames.length) currentFrame = 0;
+                if (currentFrame >= jumpRightFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = jumpRightFrames[currentFrame];
                 break;
             case DOUBLE_JUMP_RIGHT: // double-jump right
-                if (currentFrame >= doubleJumpRightFrames.length) currentFrame = 0;
+                if (currentFrame >= doubleJumpRightFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = doubleJumpRightFrames[currentFrame];
                 break;
             case IDLE_LEFT: // idle left
-                if (currentFrame >= idleLeftFrames.length) currentFrame = 0;
+                if (currentFrame >= idleLeftFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = idleLeftFrames[currentFrame];
                 break;
             case RUN_LEFT: // run left
-                if (currentFrame >= runLeftFrames.length) currentFrame = 0;
+                if (currentFrame >= runLeftFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = runLeftFrames[currentFrame];
                 break;
             case JUMP_LEFT: // jump left
-                if (currentFrame >= jumpLeftFrames.length) currentFrame = 0;
+                if (currentFrame >= jumpLeftFrames.length){
+                    currentFrame = 0;
+                } 
                 currentImage = jumpLeftFrames[currentFrame];
                 break;
             case DOUBLE_JUMP_LEFT: // double-jump left
-                if (currentFrame >= doubleJumpLeftFrames.length) currentFrame = 0;
+                if (currentFrame >= doubleJumpLeftFrames.length){
+                    currentFrame = 0;
+                }
                 currentImage = doubleJumpLeftFrames[currentFrame];
                 break;
         }
@@ -221,43 +259,25 @@ public class Player extends Entity{
     /*
     * **************************************************************
     * *                                                            *
-    * *               Loading frames Methods                       *
+    * *               Loading frames Method                        *
     * *                                                            *
     * **************************************************************
     */
-    // those methods loads the frame from a player_sprite located on the ../img folder
-    public void loadIdleRight() {
-        idleRightFrames = loadFrames(0, 0, 4, 32, 32,0); 
+    // this method loads the frame from a player_sprite located on the ../img folder
+
+    public void loadAllFrames(){
+        idleRightFrames = loadFrames(0, 0, 3, 32, 32); // idle right
+        runRightFrames = loadFrames(0, 32, 4, 32, 32); // run right
+        jumpRightFrames = loadFrames(0, 64, 1, 32, 32); // jump right
+        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32);  //double jump right
+        idleLeftFrames = loadFrames(0, 128, 3, 32, 32);  // idle left
+        runLeftFrames = loadFrames(0, 160, 4, 32, 32);  // run left
+        jumpLeftFrames = loadFrames(0, 192, 1, 32, 32);  // jump left
+        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32); // double jump left 
     }
 
-    public void loadRunRight() {
-        runRightFrames = loadFrames(0, 32, 4, 32, 32, 0);
-    }
 
-    public void loadJumpRight() {
-        jumpRightFrames = loadFrames(96, 64, 1, 32, 32, 0);
-    }
-
-    public void loadDoubleJumpRight() {
-        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32, 0);
-    }
-
-    public void loadIdleLeft() {
-        idleLeftFrames = loadFrames(0, 128, 4, 32, 32, 0);
-    }
-
-    public void loadRunLeft() {
-        runLeftFrames = loadFrames(0, 160, 4, 32, 32, 0);
-    }
-
-    public void loadJumpLeft() {
-        jumpLeftFrames = loadFrames(96, 192, 1, 32, 32, 0);
-    }
-
-    public void loadDoubleJumpLeft() {
-        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32, 0);
-    }
-
+    // get boolean Methods
     public boolean canDoubleJump(){
         return doubleJump;
     }

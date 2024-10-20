@@ -11,13 +11,16 @@ public class Constants {
 
     public static class BladesConstants{
         public static final int RED_STATE = 0;
-        public static final int WHITE_STATE = 1;        
+        public static final int GREEN_STATE = 1;        
     }
-
-
+    public static class GamePanel{
+        public static final int PANEL_WIDTH = 920;
+        public static final int PANEL_HEIGHT = 1080;
+        public static final int BORDER_WIDTH = 400;
+        public static final Dimension pannelSize = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+    }
     public static class PlayerConstants {
-        //gravity
-        public static final int GRAVITY = 1; // Gravity pulls the player down
+
 
         // states 
         public static final int IDLE_RIGHT = 1;
