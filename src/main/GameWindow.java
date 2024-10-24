@@ -43,5 +43,4 @@ public class GameWindow {
         // Show the window
         window.setVisible(true);
     }
-
 }

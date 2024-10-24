@@ -7,22 +7,36 @@ import static utils.Constants.GamePanel.*;
 
 public class Entity {
 
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                  Entity's variables                        *
+    * *                                                            *
+    * **************************************************************
+    */    
     public BufferedImage spriteSheet;
     public int x, y; // position
     public int width, height; // size
     public int state;
     public int frameCount;
-    public int frameDelay = 8;
+    public int frameDelay = 10;
     public int currentFrame;
     public double speedX;
     public double speedY;
     public Rectangle hitbox;
 
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                     constractor                            *
+    * *                                                            *
+    * **************************************************************
+    */    
     public Entity(){
         this.x = 0;
         this.y = 0;
-        this.width = 96;
-        this.height = 96;
+        this.width = 80;
+        this.height = 80;
         this.spriteSheet = null;
         this.state = 0;
         this.speedX = 0;
@@ -46,7 +60,13 @@ public class Entity {
     
 
 
-    // set Methods
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                       set methods                          *
+    * *                                                            *
+    * **************************************************************
+    */    
     public void setX(int x){
         this.x = x;
     }
@@ -54,25 +74,30 @@ public class Entity {
         this.y = y;
     }
     public void moveX(double dx){
-        if(x + width + dx <= PANEL_WIDTH && x + dx >= 0)
-            this.x += dx;
-        if(x + dx < 0)
-            this.x = 0;
-        if(x + width + dx > PANEL_WIDTH)
-            this.x = PANEL_WIDTH - width;
+        if (x + dx < 0) {
+            this.x = 0; // limits the left border
+        } else if (x + width + dx > PANEL_WIDTH) {
+            this.x = PANEL_WIDTH - width; // limits the right border
+        } else {
+            this.x += dx; // normal movement
+        }
     }
     public void moveY(double dy){
-        if(y + height + dy <= PANEL_HEIGHT && y + dy > 0)
-            this.y += dy;
-        if(y + height + dy > PANEL_HEIGHT)
-            this.y = PANEL_HEIGHT - this.height;
-        if(y + dy < 0)
-            this.y = 0;
+        if (y + height + dy > PANEL_HEIGHT) {
+            this.y = PANEL_HEIGHT - height; // limits the bottom border
+        } else {
+            this.y += dy; // normal movement
+        }
     }
 
 
-
-    // get Methods
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                       get methods                          *
+    * *                                                            *
+    * **************************************************************
+    */    
     public double getX() {
         return x;
     }
@@ -89,14 +114,13 @@ public class Entity {
         return state;
     }
 
-    // Method to get the bounding box
     public Rectangle getHitbox() {
         return hitbox;
     }
 
     // will tell if two entities had a collision
-    public boolean getCollision(Rectangle entityHitbox){
-        return this.hitbox.intersects(entityHitbox);
+    public boolean collisionCheck(Entity entity){
+        return this.hitbox.intersects(entity.hitbox);
     } 
     
 }

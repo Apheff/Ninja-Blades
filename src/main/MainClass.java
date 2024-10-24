@@ -11,10 +11,10 @@ public class MainClass implements Runnable{
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new MainClass();
-          }
-      });
+            }
+        });
     }
-
+    
     // constructor
     public MainClass() {
         gamePanel = new GamePanel();
@@ -27,13 +27,13 @@ public class MainClass implements Runnable{
         gameThread = new Thread(this);
         gameThread.start(); 
     }
-
+    
     @Override
     public void run(){
         double timePerSecond = 1000000000.0 / SET_FPS;
         long lastTime = System.nanoTime();
-        long now = System.nanoTime();
         int frames = 0;
+        long now;
         long lastCheck = System.currentTimeMillis();
         while(true){
             now = System.nanoTime();
@@ -43,7 +43,7 @@ public class MainClass implements Runnable{
                 frames++;
             }
             if(System.currentTimeMillis() - lastCheck >= 1000) {
-                System.out.println("FPS:" + frames);
+                System.err.println("FPS:" + frames);
                 lastCheck = System.currentTimeMillis();
                 frames = 0;
             }

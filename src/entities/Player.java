@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import utils.KeyboardInputs;
+
 import java.awt.Graphics;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
@@ -13,18 +16,21 @@ import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
 
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                   player's variables                       *
+    * *                                                            *
+    * **************************************************************
+    */    
     public boolean onGround;
-    public boolean doubleJump = false; // Modificato: inizia come false, sarà abilitato solo dopo il primo salto
-    public boolean isJumping = false;  // Indica se il giocatore sta eseguendo il primo salto
-
-    private long jumpStartTime; // Tempo di inizio della pressione del tasto per il primo salto
-    private final long MAX_JUMP_HOLD_TIME = 250; // Tempo massimo per il salto lungo (in millisecondi)
-    private int jumpForce; // Forza del salto variabile in base al tempo di pressione
-
-    private final int FIXED_DOUBLE_JUMP = -15; // Forza fissa per il secondo salto
-    private final int INITIAL_JUMP_FORCE = -10; // Valore iniziale per il primo salto
-
-    private double gravity = 0.6f;
+    public boolean doubleJump = false; // will be true when the first jump was made
+    private boolean holdingJump = true;
+    private final int maxJumpForce = 300;
+    private final double gravity = .4;
+    private double variableJumpForce = 0; // this will change to let the player make a long jump
+    private final double jumpIncrement = 10; // will increment the jump force 
+    private int fixedJumpForce = 12; 
 
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
@@ -35,13 +41,20 @@ public class Player extends Entity{
     private BufferedImage[] doubleJumpRightFrames;    
     private BufferedImage[] doubleJumpLeftFrames;
     private int currentFrame;
+    private KeyboardInputs keyboardInputs;
 
-    // Constructor
-    public Player() {
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                      constractor                           *
+    * *                                                            *
+    * **************************************************************
+    */    
+    public Player(KeyboardInputs keyboardInputs) {
+        this.keyboardInputs = keyboardInputs;
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
         this.y = PANEL_HEIGHT - this.height;
-        this.speedX = 10;
-        this.speedY = 0;
+        this.speedX = 6;
         /*
          * -1: idleLeft, 1: idleRight,
          * -2: RunLeft, 2: RunRight,
@@ -61,55 +74,125 @@ public class Player extends Entity{
         loadAllFrames();
     }
 
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                    movement logic                          *
+    * *                                                            *
+    * **************************************************************
+    */       
 
-    // Metodo per gestire l'inizio del salto
-    public void jump() {
-        if (onGround) {
-            jumpStartTime = System.currentTimeMillis(); // Inizia il timer per il primo salto
-            isJumping = true;
-            onGround = false; // Il giocatore è ora in aria
-            jumpForce = INITIAL_JUMP_FORCE; // Imposta la forza iniziale del primo salto
-        }
-    }
-
-    public void doubleJump(){
-        if (doubleJump && !onGround) { // Assicurati che il tasto sia stato rilasciato
-            doubleJump = false;  // Impedisce ulteriori doppi salti
-            speedY = FIXED_DOUBLE_JUMP; // Imposta la velocità fissa per il doppio salto
-        }
-    }
-
-    // Metodo per gestire la continuazione del salto (mentre il tasto è tenuto premuto)
-    public void continueJump() {
-        if (isJumping) {
-            long heldTime = System.currentTimeMillis() - jumpStartTime;
-            // Aumenta l'altezza del salto se il tasto viene tenuto premuto, fino al limite massimo
-            if (heldTime < MAX_JUMP_HOLD_TIME) {
-                jumpForce = INITIAL_JUMP_FORCE - (int)(heldTime / 40); // La forza aumenta fino a un certo limite
-            }else{
-                isJumping = false;
-            }   
-
-            speedY = jumpForce; // Applica la forza del salto aggiornata
-        }
-    }
-
-    // Metodo per applicare la gravità e gestire la logica del movimento
     public void applyGravity() {
         if (!onGround) {
-            speedY += gravity; // La gravità agisce sul giocatore
+            speedY += gravity;
             this.y += speedY;
 
             if (y >= SCREEN_HEIGHT - this.height) {
                 y = SCREEN_HEIGHT - this.height;
                 onGround = true;
-                doubleJump = false; // Resetta il doppio salto
+                doubleJump = false;
+                speedY = 0;
             }
         }
     }
-    
 
-    // Method that updates the state and the current frames
+    public void playerMovement(){
+
+        // left move
+        if(keyboardInputs.left){
+            moveX(-speedX);
+        }
+
+        // right move
+        if(keyboardInputs.right){
+            moveX(speedX);
+        }
+
+        // Check if jump button is pressed and released properly before allowing a new jump
+        if (keyboardInputs.space) {
+            if (onGround && !holdingJump) {
+                // First long jump
+                holdingJump = true;
+                variableJumpForce = 0; // Reset jump force
+                onGround = false; // Player is no longer on the ground
+                variableJumpForce = 0;
+                doubleJump = true; // Enable double jump after the first jump
+            }
+
+            // While the space key is held, increase the jump force gradually
+            if (holdingJump && variableJumpForce < maxJumpForce) {
+                variableJumpForce += jumpIncrement; // Aumenta la forza del salto
+                speedY = -jumpIncrement; // applies an upper force
+            }
+
+            // If player is in the air and doubleJump is available
+            if (doubleJump && !holdingJump) {
+                speedY = -fixedJumpForce; // Fixed height for the double jump
+                doubleJump = false; // Double jump is now used
+            }
+
+        }else {
+            // Release jump and allow the next jump
+            holdingJump = false; // Reset after releasing space key
+        }
+
+
+
+        // Applies gravity
+        applyGravity();
+
+        // sets the state
+        setState();
+
+        // reset of the hitbox
+        this.hitbox.setBounds(this.x, this.y, this.width, this.height);
+    }
+
+
+    // sets the state for every movement
+    public void setState(){
+        if(!onGround){
+            if(doubleJump){
+                // jump frames
+                if(this.state > 0 || keyboardInputs.right){
+                    this.state = JUMP_RIGHT;
+                }
+                if(this.state < 0 || keyboardInputs.left){
+                    this.state = JUMP_LEFT;
+                }
+            }else{
+                // double jump frames
+                if(this.state > 0 || keyboardInputs.right){
+                    this.state = DOUBLE_JUMP_RIGHT;
+                }
+                if(this.state < 0 || keyboardInputs.left){
+                    this.state = DOUBLE_JUMP_LEFT;
+                }               
+            }
+        }else{
+            // on ground right frames (idle and run) 
+            if(keyboardInputs.right){
+                this.state = RUN_RIGHT;
+            }else if (this.state > 0){
+                this.state = IDLE_RIGHT;
+            }
+            // on ground left frames (idle and run)
+            if(keyboardInputs.left){
+                this.state = RUN_LEFT;
+            }else if (this.state < 0){
+                this.state = IDLE_LEFT;
+            }
+        }
+    }
+
+
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                      update method                         *
+    * *                                                            *
+    * **************************************************************
+    */    
     public void update() {
 
         frameCount++;
@@ -119,8 +202,8 @@ public class Player extends Entity{
             frameCount = 0; // Resets the frame counter
         }
 
-        // Applies gravity
-        applyGravity();
+        // Update player movement
+        playerMovement();
 
         // checks the current state and cicles the frames
         switch (state) {
@@ -150,7 +233,6 @@ public class Player extends Entity{
                 break;
         }
     }
-
 
     /*
     * **************************************************************
@@ -216,7 +298,7 @@ public class Player extends Entity{
 
         // if there is a current image, draws it
         if (currentImage != null) {
-            g.drawImage(currentImage, x, y, height, width, null);
+            g.drawImage(currentImage, this.x, this.y, this.height, this.width, null);
             this.update();
         }
 
@@ -229,32 +311,9 @@ public class Player extends Entity{
     * *                                                            *
     * **************************************************************
     */
-    public void setIdleRightState(){
-        this.state = IDLE_RIGHT;
+    public void setState(int newState){
+        this.state = newState;
     }
-    public void setRunRightState(){
-        this.state = RUN_RIGHT;
-    }
-    public void setJumpRightState(){
-        this.state = JUMP_RIGHT;
-    }
-    public void setDoubleJumpRightState(){
-        this.state = DOUBLE_JUMP_RIGHT;
-    }
-    public void setIdleLeftState(){
-        this.state = IDLE_LEFT;
-    }
-    public void setRunLeftState(){
-        this.state = RUN_LEFT;
-    }
-    public void setJumpLeftState(){
-        this.state = JUMP_LEFT;
-    }
-    public void setDoubleJumpLeftState(){
-        this.state = DOUBLE_JUMP_LEFT;
-    }
-
-
 
     /*
     * **************************************************************
@@ -274,14 +333,5 @@ public class Player extends Entity{
         runLeftFrames = loadFrames(0, 160, 4, 32, 32);  // run left
         jumpLeftFrames = loadFrames(0, 192, 1, 32, 32);  // jump left
         doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32); // double jump left 
-    }
-
-
-    // get boolean Methods
-    public boolean canDoubleJump(){
-        return doubleJump;
-    }
-    public boolean isOnGround(){
-        return onGround;
     }
 }

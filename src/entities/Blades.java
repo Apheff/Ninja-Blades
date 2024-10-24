@@ -20,11 +20,17 @@ public class Blades extends Entity{
     public boolean destroyed = false;
 
     public Blades() {
-        this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
-        this.y = 0;
+        this.x = random.nextInt(PANEL_WIDTH - this.width); // centers the player in the middle of the panel
+        this.y = - this.height;
         this.frameDelay = 3;
-        this.speedX = random.nextInt(10) + 1; // random velocity
-        this.speedY = random.nextInt(10) + 1; // random velocity
+        // random velocity
+        if(random.nextBoolean()){
+            this.speedX = 2;
+        }else{
+            this.speedX = -2;
+        }
+        
+        this.speedY = 2; // constant velocity
         this.state = 0; // sets the state to red (default)
         // Load sprite sheet
         try {
@@ -43,6 +49,8 @@ public class Blades extends Entity{
         if (!destroyed) {
             frameCount++;
             bladesMovement();
+            // set the hitbox position every time does it move
+            hitbox.setBounds(this.x, this.y, this.width, this.height);
 
 
             if (frameCount >= frameDelay) {
@@ -58,8 +66,8 @@ public class Blades extends Entity{
                     currentFrame %= greenFrames.length;
                     break;
             }
-
         }
+
     }
 
     public void draw(Graphics g) {
@@ -80,7 +88,7 @@ public class Blades extends Entity{
 
             // if there is a current image, draws it
             if (currentImage != null) {
-                g.drawImage(currentImage, x, y, width, height, null);
+                g.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
 
                 this.update();
             }
@@ -98,23 +106,18 @@ public class Blades extends Entity{
 
     //without gravity or speed reduction
     public void bladesMovement(){
-        y += speedY;
-        x += speedX;
-        if (x < 0 || x + width > PANEL_WIDTH) {
-            speedX = -speedX; // horizontal bouncing
-            speedX += random.nextDouble();
+        moveX(speedX);
+        moveY(speedY);
+        if (this.x == 0 || this.x + this.width == PANEL_WIDTH) {
+            this.speedX = -this.speedX; // horizontal bouncing
         }
-        if (y + this.height > PANEL_HEIGHT || y < 0) { 
-            speedY = -speedY; // changing the blades direction
+        if (this.y + this.height == PANEL_HEIGHT) { 
+            this.speedY = -this.speedY; // changing the blades direction
         }
     }
 
-    public void setGreenState(){
-        state = GREEN_STATE;
-    }
-    
-    public void setRedState(){
-        state = RED_STATE;
+    public void setState(int newState){
+        this.state = newState;
     }
 
     public boolean isDestroyed(){
