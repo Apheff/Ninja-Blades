@@ -5,6 +5,7 @@ public class MainClass implements Runnable{
     private Thread gameThread;
     private final int SET_FPS = 60; // frame per seconds setted
     
+    
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
