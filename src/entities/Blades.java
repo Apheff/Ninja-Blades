@@ -34,7 +34,7 @@ public class Blades extends Entity{
         this.state = 0; // sets the state to red (default)
         // Load sprite sheet
         try {
-            spriteSheet = ImageIO.read(new File("src/img/blade_sheet_prova.png"));
+            spriteSheet = ImageIO.read(new File("src/img/blades_sprite.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

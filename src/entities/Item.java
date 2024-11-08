@@ -1,5 +1,5 @@
 package entities;
 
-public class Item {
-
+public class Item extends Entity{
+ 
 }

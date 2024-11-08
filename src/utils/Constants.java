@@ -30,6 +30,12 @@ public class Constants {
         public static final int RUN_LEFT = -2;
         public static final int JUMP_LEFT = -3;
         public static final int DOUBLE_JUMP_LEFT = -4;
+
+        //jump constants
+        public static final double jumpIncrement = 10; // will increment the jump force 
+        public static final int FIXED_JUMP_FORCE = 12; 
+        public static final int MAX_JUMP_FORCE = 300;
+        public static final double GRAVITY = .4;
     }
     public static class GameWindow {
         public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -40,5 +46,12 @@ public class Constants {
 
         // DPI 96 corrisponds to 100% scaling dpi
         public static final double scaleFactor = dpi / 96.0;
+    }
+    public static class ItemConstants {
+        public static final int COIN = 0;
+        public static final int SHIELD = 1;
+        public static final int MAGNET = 2;
+        public static final int SLOW_TIME = 3;
+        public static final int HEART = 4; 
     }
 }

@@ -26,11 +26,9 @@ public class Player extends Entity{
     public boolean onGround;
     public boolean doubleJump = false; // will be true when the first jump was made
     private boolean holdingJump = true;
-    private final int maxJumpForce = 300;
-    private final double gravity = .4;
     private double variableJumpForce = 0; // this will change to let the player make a long jump
-    private final double jumpIncrement = 10; // will increment the jump force 
-    private int fixedJumpForce = 12; 
+
+    public int hearts = 3;
 
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
@@ -84,7 +82,7 @@ public class Player extends Entity{
 
     public void applyGravity() {
         if (!onGround) {
-            speedY += gravity;
+            speedY += GRAVITY;
             this.y += speedY;
 
             if (y >= SCREEN_HEIGHT - this.height) {
@@ -120,14 +118,14 @@ public class Player extends Entity{
             }
 
             // While the space key is held, increase the jump force gradually
-            if (holdingJump && variableJumpForce < maxJumpForce) {
+            if (holdingJump && variableJumpForce < MAX_JUMP_FORCE) {
                 variableJumpForce += jumpIncrement; // Aumenta la forza del salto
                 speedY = -jumpIncrement; // applies an upper force
             }
 
             // If player is in the air and doubleJump is available
             if (doubleJump && !holdingJump) {
-                speedY = -fixedJumpForce; // Fixed height for the double jump
+                speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
                 doubleJump = false; // Double jump is now used
             }
 
@@ -145,7 +143,7 @@ public class Player extends Entity{
         setState();
 
         // reset of the hitbox
-        this.hitbox.setBounds(this.x, this.y, this.width, this.height);
+        this.hitbox.setBounds(this.x + this.width / 6, this.y + this.width / 6, this.width - this.width / 3, this.height - this.height / 3);
     }
 
 
