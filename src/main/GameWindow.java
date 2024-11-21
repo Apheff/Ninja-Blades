@@ -1,6 +1,6 @@
 package main;
 
-import static utils.Constants.GameWindow.SCREEN_SIZE;
+import static utils.Constants.GameWindow.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,8 +28,8 @@ public class GameWindow {
         rightBorder = new JPanel();
 
         // Set fixed dimensions for the black borders
-        leftBorder.setPreferredSize(new Dimension(400, 1080)); // 500px wide borders, 1080px height
-        rightBorder.setPreferredSize(new Dimension(400, 1080));
+        leftBorder.setPreferredSize(new Dimension((int)(500/scaleFactor),(int)( 1080/scaleFactor))); // 500px wide borders, 1080px height
+        rightBorder.setPreferredSize(new Dimension((int)(500/scaleFactor),(int)( 1080/scaleFactor)));
 
         // Set the black color for the borders
         leftBorder.setBackground(new Color(0, 0, 0));

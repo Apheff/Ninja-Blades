@@ -55,7 +55,8 @@ public class GamePanel extends JPanel {
                     System.err.println("Player hit! Remaining hearts: " + player.hearts);
                     lastCollisionTime = System.currentTimeMillis();
                     if (player.hearts <= 0) {
-                        gameOver = true; 
+                        gameOver = true;
+                        
                     }
                     break;
                 }
@@ -82,21 +83,21 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.scale(1 / scaleFactor, 1 / scaleFactor);
-
-        g2d.fill(player.hitbox);
-        player.draw(g2d);
-        for (Blades blade : bladesList) {
-            blade.draw(g2d);
-        }
-
-        drawHearts(g2d);
-
+        
         if (gameOver) {
             drawGameOver(g2d);
         }
-
+        
         if (!gameOver) {
             Update();
+    
+            g2d.fill(player.hitbox);
+            player.draw(g2d);
+            for (Blades blade : bladesList) {
+                blade.draw(g2d);
+            }
+    
+            drawHearts(g2d);
         }
         // pause overlay
         if (isPaused) {
