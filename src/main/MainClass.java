@@ -1,13 +1,17 @@
 package main;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class MainClass implements Runnable, KeyListener {
-    private GamePanel gamePanel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
+public class MainClass extends JPanel implements Runnable{
+
+    private GamePanel gamePanel = new GamePanel();
+    private MenuPanel menuPanel = new MenuPanel();
+    private SettingsPanel settingsPanel = new SettingsPanel();
+    private JLayeredPane layeredPane = new JLayeredPane();
     private Thread gameThread;
-    private final int SET_FPS = 60; // frames per second
-    private boolean isPaused = false; // Flag per la pausa
+    private boolean running = true;
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
@@ -18,10 +22,16 @@ public class MainClass implements Runnable, KeyListener {
 
     // Constructor
     public MainClass() {
-        gamePanel = new GamePanel();
-        new GameWindow(gamePanel);
-        gamePanel.requestFocus();
-        gamePanel.addKeyListener(this); // Aggiungi il KeyListener per rilevare i tasti
+
+        layeredPane.add(gamePanel, Integer.valueOf(0)); // Ensure correct layering
+        layeredPane.add(settingsPanel, Integer.valueOf(1)); 
+    
+        new GameWindow(layeredPane);
+        
+        // Request focus for gamePanel after adding it to the window
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
+        
         startGameLoop();
     }
 
@@ -32,41 +42,15 @@ public class MainClass implements Runnable, KeyListener {
 
     @Override
     public void run() {
-        double timePerFrame = 1000000000.0 / SET_FPS; // in nanoseconds
-        long lastTime = System.nanoTime();
-        int frames = 0;
-        long lastCheck = System.currentTimeMillis();
-
-        while (!gamePanel.isGameOver()) {
-            long now = System.nanoTime();
-            if (!isPaused && now - lastTime >= timePerFrame) {
-                lastTime = now;
-                gamePanel.repaint(); // Ridisegna solo se il gioco non è in pausa
-                frames++;
-            }
-
-            if (System.currentTimeMillis() - lastCheck >= 1000) {
-                System.out.println("FPS: " + frames);
-                lastCheck = System.currentTimeMillis();
-                frames = 0;
+        while (running) {
+            // Settings logic and rendering updates
+            layeredPane.repaint();
+            try {
+                Thread.sleep(16); // Approximately 60 FPS
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
     }
-
-    @Override
-    public void keyPressed(KeyEvent e) {//aggiungilo ALLE UTILS
-        if (e.getKeyCode() == KeyEvent.VK_P) { // Tasto P per mettere in pausa o riprendere
-            gamePanel.setPaused();
-            isPaused = !isPaused;
-            System.out.println(isPaused ? "Game Paused" : "Game Resumed");
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {}
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
 
 }

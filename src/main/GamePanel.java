@@ -29,18 +29,13 @@ public class GamePanel extends JPanel {
     private long lastCollisionTime = 0; 
 
     private boolean gameOver = false;
-    private boolean isPaused = false;
+    private boolean running = true;
 
     public GamePanel() {
         addKeyListener(keyboardInputs);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
         setPreferredSize(new Dimension(pannelSize));
         setMinimumSize(new Dimension(pannelSize));
-    }
-
-    public void setPaused() {
-        this.isPaused = !isPaused;
-        repaint();
     }
 
     // Update game logic
@@ -100,7 +95,7 @@ public class GamePanel extends JPanel {
             drawHearts(g2d);
         }
         // pause overlay
-        if (isPaused) {
+        if (!running) {
             g2d.setColor(new Color(0, 0, 0, 150)); // overlay semi-transperent
             g2d.fillRect(0, 0, getWidth(), getHeight());
             g2d.setColor(Color.WHITE);
