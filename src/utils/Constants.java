@@ -32,10 +32,10 @@ public class Constants {
         public static final int DOUBLE_JUMP_LEFT = -4;
 
         //jump constants
-        public static final double jumpIncrement = 10; // will increment the jump force 
-        public static final int FIXED_JUMP_FORCE = 12; 
-        public static final int MAX_JUMP_FORCE = 300;
-        public static final double GRAVITY = .4;
+        public static final double jumpIncrement = 14; // will increment the jump force 
+        public static final int FIXED_JUMP_FORCE = 20; 
+        public static final int MAX_JUMP_FORCE = 200;
+        public static final double GRAVITY = .6;
     }
     public static class GameWindow {
         public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

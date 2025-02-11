@@ -1,11 +1,12 @@
 package entities;
 
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
+import ui.Smokes;
+import utils.ImageLoader;
 
 import static utils.Constants.GamePanel.*;
 
-public class Entity {
+public class Entity extends ImageLoader{
 
     /*
     * **************************************************************
@@ -14,16 +15,16 @@ public class Entity {
     * *                                                            *
     * **************************************************************
     */    
-    public BufferedImage spriteSheet;
     public int x, y; // position
     public int width, height; // size
     public int state;
     public int frameCount;
-    public int frameDelay = 10;
+    public int frameDelay = 16;
     public int currentFrame;
     public double speedX;
     public double speedY;
     public Rectangle hitbox;
+    public Smokes smoke;
 
     /*
     * **************************************************************
@@ -41,23 +42,9 @@ public class Entity {
         this.state = 0;
         this.speedX = 0;
         this.speedY = 0;
+        this.smoke = new Smokes();
         hitbox = new Rectangle(this.x, this.y, this.width, this.height);
     }
-
-    /* (General method to load frames from sprite sheet)
-     *
-     * makes an array of BufferedImages from a spritesheet which is found in the /img directory,
-     * the loading image Methods
-     */
-    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
-        BufferedImage[] frames = new BufferedImage[frameCount];
-        for (int i = 0; i < frameCount; i++) {
-            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
-        }
-        return frames;
-    }
-
-    
 
 
     /*

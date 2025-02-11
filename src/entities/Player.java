@@ -1,13 +1,10 @@
 package entities;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 import utils.KeyboardInputs;
-
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
@@ -27,8 +24,11 @@ public class Player extends Entity{
     public boolean doubleJump = false; // will be true when the first jump was made
     private boolean holdingJump = true;
     private double variableJumpForce = 0; // this will change to let the player make a long jump
-
     public int hearts = 3;
+    public int score = 0;
+    public boolean isMagnetized = false;
+    public boolean isInvincible = false;
+     
 
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
@@ -52,7 +52,7 @@ public class Player extends Entity{
         this.keyboardInputs = keyboardInputs;
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
         this.y = PANEL_HEIGHT - this.height;
-        this.speedX = 6;
+        this.speedX = 14;
         /*
          * -1: idleLeft, 1: idleRight,
          * -2: RunLeft, 2: RunRight,
@@ -62,11 +62,7 @@ public class Player extends Entity{
         this.state = 1;
 
         // Load sprite sheet
-        try {
-            spriteSheet = ImageIO.read(new File("src/img/player_sprite.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        spriteSheet = loadImage("player.png");
 
         // Loads the Frames for every state
         loadAllFrames();
@@ -108,6 +104,7 @@ public class Player extends Entity{
 
         // Check if jump button is pressed and released properly before allowing a new jump
         if (keyboardInputs.space) {
+
             if (onGround && !holdingJump) {
                 // First long jump
                 holdingJump = true;
@@ -115,6 +112,7 @@ public class Player extends Entity{
                 onGround = false; // Player is no longer on the ground
                 variableJumpForce = 0;
                 doubleJump = true; // Enable double jump after the first jump
+                smoke.setSmoke(9, this.x, this.y + 20);
             }
 
             // While the space key is held, increase the jump force gradually
@@ -127,14 +125,13 @@ public class Player extends Entity{
             if (doubleJump && !holdingJump) {
                 speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
                 doubleJump = false; // Double jump is now used
+                smoke.setSmoke(11, this.x, this.y + 20);
             }
 
         }else {
             // Release jump and allow the next jump
             holdingJump = false; // Reset after releasing space key
         }
-
-
 
         // Applies gravity
         applyGravity();
@@ -239,7 +236,7 @@ public class Player extends Entity{
     * *                                                            *
     * **************************************************************
     */
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g2d) {
 
         BufferedImage currentImage = null;
 
@@ -296,10 +293,9 @@ public class Player extends Entity{
 
         // if there is a current image, draws it
         if (currentImage != null) {
-            g.drawImage(currentImage, this.x, this.y, this.height, this.width, null);
-            this.update();
+            g2d.drawImage(currentImage, this.x, this.y, this.height, this.width, null);
         }
-
+        smoke.draw(g2d);
     }
 
     /*

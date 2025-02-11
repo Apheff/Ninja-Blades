@@ -21,7 +21,7 @@ public class KeyboardInputs implements KeyListener {
                 //System.out.println("right pressed"); // for debugging
                 right = true;
                 break;
-            case KeyEvent.VK_SPACE:    
+            case KeyEvent.VK_UP:    
                 space = true;
                 break;
         }  
@@ -39,7 +39,7 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 right = false;
                 break;
-            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_UP:
                 space = false;
                 break;
         }  

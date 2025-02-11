@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 public class MainClass extends JPanel implements Runnable{
 
     private GamePanel gamePanel = new GamePanel();
-    private MenuPanel menuPanel = new MenuPanel();
+    // private MenuPanel menuPanel = new MenuPanel();
     private SettingsPanel settingsPanel = new SettingsPanel();
     private JLayeredPane layeredPane = new JLayeredPane();
     private Thread gameThread;

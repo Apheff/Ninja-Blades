@@ -14,5 +14,6 @@ public class SettingsPanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Render settings elements here
+        g.drawString("MENU", 0, 0);
     }
 }

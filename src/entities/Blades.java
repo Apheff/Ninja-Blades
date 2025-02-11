@@ -1,16 +1,11 @@
 package entities;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-
 import static utils.Constants.BladesConstants.*;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-
-import java.awt.Graphics;
-import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
 
 public class Blades extends Entity{
     
@@ -20,6 +15,7 @@ public class Blades extends Entity{
     public boolean destroyed = false;
 
     public Blades() {
+        spriteSheet = loadImage("blades.png");
         this.x = random.nextInt(PANEL_WIDTH - this.width); // centers the player in the middle of the panel
         this.y = - this.height;
         this.frameDelay = 3;
@@ -29,15 +25,8 @@ public class Blades extends Entity{
         }else{
             this.speedX = -2;
         }
-        
-        this.speedY = 2; // constant velocity
+        this.speedY = 6; // constant velocity
         this.state = 0; // sets the state to red (default)
-        // Load sprite sheet
-        try {
-            spriteSheet = ImageIO.read(new File("src/img/blades_sprite.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //loading the frames
         loadRed();
@@ -66,11 +55,13 @@ public class Blades extends Entity{
                     currentFrame %= greenFrames.length;
                     break;
             }
+        }else{
+            smoke.setSmokePosition(this.x, this.y);
         }
 
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g2d) {
         if(!destroyed){
             BufferedImage currentImage = null;
 
@@ -88,10 +79,10 @@ public class Blades extends Entity{
 
             // if there is a current image, draws it
             if (currentImage != null) {
-                g.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
-
-                this.update();
+                g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
             }
+        }else{
+            smoke.setSmoke(7, this.x, this.y);
         }
     }
 
@@ -122,5 +113,9 @@ public class Blades extends Entity{
 
     public boolean isDestroyed(){
         return destroyed;
+    }
+
+    public void destroyBlade(){
+        this.destroyed = true;
     }
 }
