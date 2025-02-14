@@ -7,9 +7,11 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
 
     protected BufferedImage spriteSheet;
+    public BufferedImage[] blades;
 
     public ImageLoader(){
         spriteSheet = null;
+
     }
 
     public BufferedImage loadImage(String filename){
@@ -33,10 +35,10 @@ public class ImageLoader {
      * makes an array of BufferedImages from a spritesheet which is found in the /img directory,
      * the loading image Methods
      */
-    public BufferedImage[] loadFrames(int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
+    public BufferedImage[] loadFrames(BufferedImage image, int startX, int startY, int frameCount, int frameWidth, int frameHeight) {
         BufferedImage[] frames = new BufferedImage[frameCount];
         for (int i = 0; i < frameCount; i++) {
-            frames[i] = spriteSheet.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
+            frames[i] = image.getSubimage(startX + (i * frameWidth), startY, frameWidth, frameHeight);
         }
         return frames;
     }

@@ -12,9 +12,9 @@ public class Wallpapers extends ImageLoader{
     public BufferedImage wallpapers[];
 
     public Wallpapers(){
-        this.wallpapers = new BufferedImage[4]; 
+        this.wallpapers = new BufferedImage[3]; 
         // Load wallpapers
-        for(int i = 0; i < 4 ; i++){
+        for(int i = 0; i < 3 ; i++){
             String s = "wallpaper" + i + ".jpg";
             this.wallpapers[i] = loadImage(s);
         }

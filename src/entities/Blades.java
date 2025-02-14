@@ -2,36 +2,39 @@ package entities;
 
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import static utils.Constants.BladesConstants.*;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import java.awt.Graphics2D;
 
 public class Blades extends Entity{
     
-    private BufferedImage [] redFrames;
-    private BufferedImage [] greenFrames;
+    private BufferedImage [] frames;
     Random random = new Random();
     public boolean destroyed = false;
+    private static BufferedImage bladeSheet;
 
     public Blades() {
-        spriteSheet = loadImage("blades.png");
+        // Load the sprite sheet only once
+        if (bladeSheet == null) {
+            bladeSheet = loadImage("blades.png");
+            if (bladeSheet == null) {
+                // Image not found; stop further processing.
+                System.err.println("Failed to load blades.png");
+                return;
+            }
+        }
         this.x = random.nextInt(PANEL_WIDTH - this.width); // centers the player in the middle of the panel
         this.y = - this.height;
         this.frameDelay = 3;
         // random velocity
-        if(random.nextBoolean()){
-            this.speedX = 2;
-        }else{
-            this.speedX = -2;
-        }
+        this.speedX = random.nextBoolean() ? 2 : -2;
         this.speedY = 6; // constant velocity
         this.state = 0; // sets the state to red (default)
 
         //loading the frames
-        loadRed();
-        loadGreen();
+        loadFrames();
     }
+
 
 
     public void update(){
@@ -46,15 +49,7 @@ public class Blades extends Entity{
                 currentFrame++;
                 frameCount = 0; // Resetta il contatore dei frame
             }
-
-            switch (state) {
-                case RED_STATE:
-                    currentFrame %= redFrames.length;
-                    break;
-                case GREEN_STATE:
-                    currentFrame %= greenFrames.length;
-                    break;
-            }
+            currentFrame %= frames.length;
         }else{
             smoke.setSmokePosition(this.x, this.y);
         }
@@ -65,37 +60,19 @@ public class Blades extends Entity{
         if(!destroyed){
             BufferedImage currentImage = null;
 
-            if (currentFrame >= redFrames.length){
-                currentFrame = 0;
-            }
-            switch (state) {
-                case RED_STATE: // red
-                    currentImage = redFrames[currentFrame];
-                    break;
-                case GREEN_STATE: // green
-                    currentImage = greenFrames[currentFrame];
-                    break;
-            }
+            currentFrame %= frames.length;
+            currentImage = frames[currentFrame];
 
             // if there is a current image, draws it
             if (currentImage != null) {
                 g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
             }
         }else{
-            smoke.setSmoke(7, this.x, this.y);
+            smoke.setSmoke(5, this.x, this.y);
         }
     }
 
-
-    public void loadRed() {
-        redFrames = loadFrames(0, 0, 3, 32, 32); 
-    }
-    
-    public void loadGreen(){
-        greenFrames = loadFrames(0, 32, 3, 32, 32); 
-    }
-
-    //without gravity or speed reduction
+    // without gravity or speed reduction
     public void bladesMovement(){
         moveX(speedX);
         moveY(speedY);
@@ -107,15 +84,31 @@ public class Blades extends Entity{
         }
     }
 
-    public void setState(int newState){
-        this.state = newState;
-    }
-
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                   destruction logic                        *
+    * *                                                            *
+    * **************************************************************
+    */
     public boolean isDestroyed(){
         return destroyed;
     }
 
     public void destroyBlade(){
         this.destroyed = true;
+    }
+
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *               Loading frames Method                        *
+    * *                                                            *
+    * **************************************************************
+    */
+    // this method loads the frame from blades.png located on the ../img folder
+        
+    public void loadFrames() {
+        frames = loadFrames(bladeSheet, 0, 0, 3, 32, 32); 
     }
 }

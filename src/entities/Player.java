@@ -1,15 +1,16 @@
 package entities;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import utils.KeyboardInputs;
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GameWindow.*;
 import static utils.Constants.PlayerConstants.*;
+import java.awt.image.RescaleOp;
 
 public class Player extends Entity{
 
@@ -19,17 +20,26 @@ public class Player extends Entity{
     * *                   player's variables                       *
     * *                                                            *
     * **************************************************************
-    */    
+    */
+
+    // Player's variables
     public boolean onGround;
     public boolean doubleJump = false; // will be true when the first jump was made
     private boolean holdingJump = true;
     private double variableJumpForce = 0; // this will change to let the player make a long jump
     public int hearts = 3;
     public int score = 0;
+
+    // Powerups variables
     public boolean isMagnetized = false;
     public boolean isInvincible = false;
-     
-
+    public boolean damaged = false;
+    public long invincibilityEndTime;
+    public long magnetizedEndTime;
+    public long damagedEndTime;
+    
+    // images for the player
+    private BufferedImage shieldSheet = loadImage("shield.png");
     private BufferedImage[] idleRightFrames;
     private BufferedImage[] idleLeftFrames;
     private BufferedImage[] runRightFrames;
@@ -39,6 +49,8 @@ public class Player extends Entity{
     private BufferedImage[] doubleJumpRightFrames;    
     private BufferedImage[] doubleJumpLeftFrames;
     private int currentFrame;
+
+    // input for the player
     private KeyboardInputs keyboardInputs;
 
     /*
@@ -77,7 +89,7 @@ public class Player extends Entity{
     */       
 
     public void applyGravity() {
-        if (!onGround) {
+        if (!onGround || this.y < SCREEN_HEIGHT - this.height) {
             speedY += GRAVITY;
             this.y += speedY;
 
@@ -110,7 +122,6 @@ public class Player extends Entity{
                 holdingJump = true;
                 variableJumpForce = 0; // Reset jump force
                 onGround = false; // Player is no longer on the ground
-                variableJumpForce = 0;
                 doubleJump = true; // Enable double jump after the first jump
                 smoke.setSmoke(9, this.x, this.y + 20);
             }
@@ -140,9 +151,8 @@ public class Player extends Entity{
         setState();
 
         // reset of the hitbox
-        this.hitbox.setBounds(this.x + this.width / 6, this.y + this.width / 6, this.width - this.width / 3, this.height - this.height / 3);
+        this.hitbox.setBounds(this.x + this.width / 4, this.y + this.width / 4, this.width - this.width / 2, this.height - this.height / 2);
     }
-
 
     // sets the state for every movement
     public void setState(){
@@ -189,6 +199,11 @@ public class Player extends Entity{
     * **************************************************************
     */    
     public void update() {
+        // check if the player is damaged
+        checkDamage();
+
+        // check if the player has powerups
+        checkPowerups();
 
         frameCount++;
 
@@ -242,58 +257,71 @@ public class Player extends Entity{
 
         switch (state) {
             case IDLE_RIGHT: // idle right
-                if (currentFrame >= idleRightFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= idleRightFrames.length;
                 currentImage = idleRightFrames[currentFrame];
                 break;
             case RUN_RIGHT: // run right
-                if (currentFrame >= runRightFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= runRightFrames.length;
                 currentImage = runRightFrames[currentFrame];
                 break;
             case JUMP_RIGHT: // jump right
-                if (currentFrame >= jumpRightFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= jumpRightFrames.length;
                 currentImage = jumpRightFrames[currentFrame];
                 break;
             case DOUBLE_JUMP_RIGHT: // double-jump right
-                if (currentFrame >= doubleJumpRightFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= doubleJumpRightFrames.length;
                 currentImage = doubleJumpRightFrames[currentFrame];
                 break;
             case IDLE_LEFT: // idle left
-                if (currentFrame >= idleLeftFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= idleLeftFrames.length;
                 currentImage = idleLeftFrames[currentFrame];
                 break;
             case RUN_LEFT: // run left
-                if (currentFrame >= runLeftFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= runLeftFrames.length;
                 currentImage = runLeftFrames[currentFrame];
                 break;
             case JUMP_LEFT: // jump left
-                if (currentFrame >= jumpLeftFrames.length){
-                    currentFrame = 0;
-                } 
+                currentFrame %= jumpLeftFrames.length; 
                 currentImage = jumpLeftFrames[currentFrame];
                 break;
             case DOUBLE_JUMP_LEFT: // double-jump left
-                if (currentFrame >= doubleJumpLeftFrames.length){
-                    currentFrame = 0;
-                }
+                currentFrame %= doubleJumpLeftFrames.length;
                 currentImage = doubleJumpLeftFrames[currentFrame];
                 break;
         }
 
         // if there is a current image, draws it
         if (currentImage != null) {
-            g2d.drawImage(currentImage, this.x, this.y, this.height, this.width, null);
+            drawPlayer(g2d, currentImage);
+        }
+
+
+    }  
+    
+    // draws the player with all the effects
+    public void drawPlayer(Graphics2D g2d, BufferedImage currentImage){
+        // If the player is damaged and we're on the "blink" frame, overlay a red tint.
+        if (damaged && (System.currentTimeMillis() % 2 == 0)) {
+            // Create a filter to add a red tint to the character
+            float[] scales = {255f, 0f, 0f, 1f}; // Scale factors for R, G, B, Alpha
+            float[] offsets = {0f, 0f, 0f, 0f}; // No offset applied
+            RescaleOp op = new RescaleOp(scales, offsets, null);
+
+            // Create a temporary image to apply the effect
+            BufferedImage redEffect = new BufferedImage(currentImage.getWidth(), currentImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = redEffect.createGraphics();
+            g2.drawImage(currentImage, 0, 0, null);
+            g2.dispose();
+
+            // Apply the red tint filter and draw the modified image
+            g2d.drawImage(op.filter(redEffect, null), x, y, this.width, this.height, null);
+        }else{
+            // Draw the base image.
+            g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
+        }
+        // Draw the shield if the player is invincible
+        if(isInvincible){
+            g2d.drawImage(shieldSheet, this.x, this.y, this.height, this.width, null);
         }
         smoke.draw(g2d);
     }
@@ -301,12 +329,62 @@ public class Player extends Entity{
     /*
     * **************************************************************
     * *                                                            *
-    * *             Method to change player state                  *
+    * *                       Set Methods                          *
     * *                                                            *
     * **************************************************************
     */
     public void setState(int newState){
         this.state = newState;
+    }
+
+    public void setDamage(long  durationMillis){
+        this.damaged = true;
+        this.y -= 2;          // to lift the player from the ground
+        this.speedY = -10;    // knockback  y (upwards)
+        this.x += 10 * state; // knockback x (opposite of the direction the player is facing)
+        this.damagedEndTime = System.currentTimeMillis() + durationMillis;
+    }
+
+    public void setMagnetize(long  durationMillis){
+        isMagnetized = true;
+        magnetizedEndTime = System.currentTimeMillis() + durationMillis;
+    }
+
+    public void setInvincible(long durationMillis) {
+        isInvincible = true;
+        invincibilityEndTime = System.currentTimeMillis() + durationMillis;
+    }
+
+    /*
+    * **************************************************************
+    * *                                                            *
+    * *                     check Methods                          *
+    * *                                                            *
+    * **************************************************************
+    */    
+    // checks if the player has powerups
+    public void checkPowerups(){
+        // check if the player is invincible
+        if(isInvincible){
+            if(System.currentTimeMillis() > invincibilityEndTime){
+                isInvincible = false;
+            }
+        }
+        // check if the player is magnetized
+        if(isMagnetized){
+            if(System.currentTimeMillis() > magnetizedEndTime){
+                isMagnetized = false;
+            }
+        }
+    }
+    
+    // checks if the player is damaged
+    public void checkDamage(){
+        if(damaged){
+            if(System.currentTimeMillis() > damagedEndTime){
+                damaged = false;
+            }
+        }
     }
 
     /*
@@ -316,16 +394,16 @@ public class Player extends Entity{
     * *                                                            *
     * **************************************************************
     */
-    // this method loads the frame from a player_sprite located on the ../img folder
+    // this method loads the frame from player.png located on the ../img folder
 
     public void loadAllFrames(){
-        idleRightFrames = loadFrames(0, 0, 3, 32, 32); // idle right
-        runRightFrames = loadFrames(0, 32, 4, 32, 32); // run right
-        jumpRightFrames = loadFrames(0, 64, 1, 32, 32); // jump right
-        doubleJumpRightFrames = loadFrames(0, 96, 3, 32, 32);  //double jump right
-        idleLeftFrames = loadFrames(0, 128, 3, 32, 32);  // idle left
-        runLeftFrames = loadFrames(0, 160, 4, 32, 32);  // run left
-        jumpLeftFrames = loadFrames(0, 192, 1, 32, 32);  // jump left
-        doubleJumpLeftFrames = loadFrames(0, 224, 3, 32, 32); // double jump left 
+        idleRightFrames = loadFrames(spriteSheet, 0, 0, 3, 32, 32); // idle right
+        runRightFrames = loadFrames(spriteSheet, 0, 32, 4, 32, 32); // run right
+        jumpRightFrames = loadFrames(spriteSheet, 0, 64, 1, 32, 32); // jump right
+        doubleJumpRightFrames = loadFrames(spriteSheet, 0, 96, 3, 32, 32);  //double jump right
+        idleLeftFrames = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
+        runLeftFrames = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
+        jumpLeftFrames = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
+        doubleJumpLeftFrames = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
     }
 }

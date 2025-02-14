@@ -9,10 +9,6 @@ import java.awt.Toolkit;
 public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */
 
-    public static class BladesConstants {
-        public static final int RED_STATE = 0;
-        public static final int GREEN_STATE = 1;        
-    }
     public static class GamePanel {
         public static final int PANEL_WIDTH = 920;
         public static final int PANEL_HEIGHT = 1080;

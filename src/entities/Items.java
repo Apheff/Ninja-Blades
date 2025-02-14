@@ -13,20 +13,28 @@ public class Items extends Entity {
      * 0 coin
      * 1 shield
      * 2 magnet
-     * 4 heart
+     * 3 heart
      */
 
-    private boolean destroyed = false;
-    private float magnetSpeed = 0.1;
+    private boolean grabed = false;
+    private double magnetSpeed = 0.1;
+    private static BufferedImage itemSheet;
 
     public Items(int x, int y) {
         item = new BufferedImage[4][5];
-        spriteSheet = loadImage("items-test.png");
+        if (itemSheet == null) {
+            itemSheet = loadImage("items.png");
+            if (itemSheet == null) {
+                // Image not found; stop further processing.
+                System.err.println("Failed to load blades.png");
+                return;
+            }
+        }
         this.x = x;
         this.y = y;
         this.speedY = 3;
-        this.height = 64;
-        this.width = 64;
+        this.height = 56;
+        this.width = 56;
 
         // Randomly assign type with higher probability for coin (0)
         Random rand = new Random();
@@ -38,7 +46,7 @@ public class Items extends Entity {
         } else if (randomValue < 85) {
             type = 2; // 15% chance for magnet
         } else {
-            type = 4; // 15% chance for clock
+            type = 3; // 15% chance for heart
         }
 
         // loading all the frames of all items
@@ -48,19 +56,18 @@ public class Items extends Entity {
 
     public void draw(Graphics2D g2d) {
 
-        if(currentFrame >= item[type].length){
-            currentFrame = 0;
-        }
+        currentFrame %= item[type].length;
         if(item[type][currentFrame] != null){
             g2d.drawImage(item[type][currentFrame], x, y, width, height, null);
         }
+
     }
 
 
     public void update(Player player){
         frameCount++;
         y += speedY;
-        speedY += 0.1;
+        speedY += 0.4; // gravity
         if (y >= PANEL_HEIGHT - this.height) { 
             speedY = -speedY * 0.8; // inverts the velocity
         }
@@ -69,35 +76,38 @@ public class Items extends Entity {
             currentFrame++;
             frameCount = 0; // Resets the frame counter
         }
-        if(player.isMagnetized && player.x > this.x){
-            this.x += magnetSpeed;
-            magnetSpeed += 0.1;
-        }else if(player.isMagnetized && player.x < this.x){
-            this.x -= magnetSpeed;
-            magnetSpeed += 0.1;
-        }else if(player.isMagnetized && player.y > this.y){
-            this.y += magnetSpeed;
-            magnetSpeed += 0.1;
-        }else if(player.isMagnetized && player.y < this.y){
-            this.y -= magnetSpeed;
-            magnetSpeed += 0.1;
+        if (player.isMagnetized) {
+            if (player.x > this.x) {
+                this.x += magnetSpeed;
+            } else if (player.x < this.x) {
+                this.x -= magnetSpeed;
+            }
+            
+            if (player.y > this.y) {
+                this.y += magnetSpeed;
+            } else if (player.y < this.y) {
+                this.y -= magnetSpeed;
+            }
+            
+            magnetSpeed += 0.2; // or control the increment differently
         }
-        
+        hitbox.setBounds(this.x, this.y, this.width, this.height);
     }
 
     public void loadAllFrames(){
-        item[0] = loadFrames(0, 0, 5,32, 32);
-        item[1] = loadFrames(0,1 * 32, 5,32, 32);
-        item[2] = loadFrames(0, 2 * 32, 5,32, 32);
-        item[3] = loadFrames(0, 3 * 32, 1,32, 32);
+        item[0] = loadFrames(itemSheet, 0, 0, 5,32, 32);
+        item[1] = loadFrames(itemSheet, 0,1 * 32, 5,32, 32);
+        item[2] = loadFrames(itemSheet, 0, 2 * 32, 5,32, 32);
+        item[3] = loadFrames(itemSheet, 0, 3 * 32, 1,32, 32);
     }
+
 
 
     public boolean isDestroyed(){
-        return destroyed;
+        return grabed;
     }
 
     public void destroyItem(){
-        this.destroyed = true;
+        this.grabed = true;
     }
 }
