@@ -2,7 +2,6 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -14,11 +13,13 @@ import ui.HUD;
 import ui.Smokes;
 import entities.Items;
 import ui.Wallpapers;
+import ui.PauseMenu; // <-- Importiamo il menu di pausa
 import utils.KeyboardInputs;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
+import ui.GameOverMenu;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
@@ -33,7 +34,10 @@ public class GamePanel extends JPanel {
     // UI elements
     private Wallpapers wallpapers = new Wallpapers();
     private HUD hud = new HUD();
-    
+    private PauseMenu pauseMenu; // <-- Aggiungiamo il menu di pausa
+    private MainClass mainClass;
+    private GameOverMenu gameOverMenu;
+
     // Game Effects
     private Smokes smokes = new Smokes();
 
@@ -43,51 +47,70 @@ public class GamePanel extends JPanel {
     private List<Items> itemList = new ArrayList<>();
     private Random random = new Random();
     private int timeSpawner = 3000;
-    private Timer bladesSpawner = new Timer(500, e -> {bladesList.add(new Blades()); timeSpawner-= 5; System.out.println(timeSpawner);});
-    
+    private Timer bladesSpawner = new Timer(0, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!pauseMenu.isPaused()) { // Se il gioco è in pausa, non generiamo lame
+                bladesList.add(new Blades());
+                timeSpawner = Math.max(500, timeSpawner - 25); // Evita che scenda sotto 500 ms
+                bladesSpawner.setDelay(random.nextInt(timeSpawner)); // Aggiorna il delay
+                System.out.println(timeSpawner);
+            }
+        }
+    });
+
+    // Game loop usando Swing Timer (aggiorna ogni 16 ms ~ 60 FPS)
+    Timer gameLoopTimer = new Timer(16, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!gameOver && !pauseMenu.isPaused()) { // <-- Ferma gli update se in pausa
+                Update();
+                repaint();
+            }
+        }
+    });
+
     // Game state
     private long lastCollisionTime = 0; // Time of the last collision
     private boolean gameOver = false;
-    private boolean running = true;
 
-    public GamePanel() {
+    public GamePanel(MainClass mainClass) {
+        this.mainClass = mainClass; //  Salviamo il riferimento alla MainClass
         setDoubleBuffered(true);
         setBackground(Color.BLACK);
         addKeyListener(keyboardInputs);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
         setPreferredSize(new Dimension(pannelSize));
         setMinimumSize(new Dimension(pannelSize));
-
-        // Game loop using Swing Timer (updates every 16 ms ~ 60 FPS)
-        Timer timer = new Timer(16, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!gameOver && running) {
-                    Update();
-                    repaint();
-                }
-            }
-        });
-        timer.start();
+    
+        // Inizializziamo il menu di pausa
+        pauseMenu = new PauseMenu(this, keyboardInputs);
+        gameOverMenu = new GameOverMenu(this, keyboardInputs);
+    
+        // Inizializziamo il game loop
+        gameLoopTimer.start();
     }
+    
 
     // Update game logic
     public void Update() {
+        if (pauseMenu.isPaused()) return;
 
         player.update();
 
         for (Blades blade : bladesList) {
             if (player.collisionCheck(blade) && System.currentTimeMillis() > lastCollisionTime) {
-                if(!player.isInvincible){
-                    if(!player.damaged){
+                if (!player.isInvincible) {
+                    if (!player.damaged) {
                         player.hearts--;
-                        player.setDamage(3000);
+                        player.setDamage(2000);
                         lastCollisionTime = System.currentTimeMillis() + 2000;
                         if (player.hearts <= 0) {
                             gameOver = true;
+                            gameOverMenu.show();
                         }
                     }
-                }else{
+                } else {
                     smokes.setSmoke(13, player.x, player.y);
                     player.isInvincible = false;
                     lastCollisionTime = System.currentTimeMillis() + 2000;
@@ -104,8 +127,8 @@ public class GamePanel extends JPanel {
             blade.update();
         }
 
-        for(Items item : itemList){
-            if(player.collisionCheck(item)){
+        for (Items item : itemList) {
+            if (player.collisionCheck(item)) {
                 switch (item.type) {
                     case 0:
                         player.score += 1;
@@ -117,7 +140,7 @@ public class GamePanel extends JPanel {
                         player.setMagnetize(5000);
                         break;
                     case 3:
-                        if(player.hearts < 3){
+                        if (player.hearts < 3) {
                             player.hearts++;
                         }
                         break;
@@ -127,11 +150,10 @@ public class GamePanel extends JPanel {
             item.update(player);
         }
 
-        itemList.removeIf(item -> item.isDestroyed());
+        itemList.removeIf(Items::isDestroyed);
         bladesList.removeIf(blade -> blade.y < -blade.height || blade.destroyed);
 
-        bladesSpawner.start(); // Starts the timer
-        bladesSpawner.setDelay(random.nextInt(timeSpawner)); // sets the delay
+        bladesSpawner.start();
     }
 
     @Override
@@ -143,9 +165,14 @@ public class GamePanel extends JPanel {
         g2d.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         wallpapers.draw(g2d, 1);
         hud.draw(g2d, player);
+
         if (gameOver) {
-            drawGameOver(g2d);
-        }else {
+            gameOverMenu.show();
+        }
+
+        if (gameOverMenu.isActive()) {
+            gameOverMenu.draw(g2d);
+        } else {
             player.draw(g2d);
             for (Blades blade : bladesList) {
                 blade.draw(g2d);
@@ -155,41 +182,41 @@ public class GamePanel extends JPanel {
                 item.draw(g2d);
             }
         }
-        // pause overlay
-        // if (!running) {
-        //     g2d.setColor(new Color(0, 0, 0, 150)); // overlay semi-transperent
-        //     g2d.fillRect(0, 0, getWidth(), getHeight());
-        //     g2d.setColor(Color.WHITE);
-        //     g2d.drawString("Game Paused", getWidth() / 2 - 30, getHeight() / 2);
-        //     g2d.drawString("Press 'P' to resume", getWidth() / 2 - 50, getHeight() / 2 + 20);
-        // }
-        drawScore(g2d);
+        pauseMenu.draw(g2d); // Disegna il menu di pausa
+
     }
 
-    private void drawScore(Graphics2D g2d) {
-        String scoreText = "" + player.score;
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Arial", Font.BOLD, 36));
-        g2d.drawString(scoreText, PANEL_WIDTH - g2d.getFontMetrics().stringWidth(scoreText) - 20, g2d.getFontMetrics().getHeight());
-    }
-
-    private void drawGameOver(Graphics2D g2d) {
-        String gameOverText = "GAME OVER";
-        g2d.setColor(Color.RED);
-        g2d.setFont(new Font("Arial", Font.BOLD, 50));
-        int textWidth = g2d.getFontMetrics().stringWidth(gameOverText);
-        int textHeight = g2d.getFontMetrics().getHeight();
-        int x = (PANEL_WIDTH - textWidth) / 2;
-        int y = (PANEL_HEIGHT - textHeight) / 2;
-        g2d.drawString(gameOverText, x, y);
-        String scoreText = "Score: " + player.score;
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Arial", Font.BOLD, 36));
-        g2d.drawString(scoreText, (PANEL_WIDTH - g2d.getFontMetrics().stringWidth(scoreText)) /2, (PANEL_HEIGHT - g2d.getFontMetrics().getHeight()) / 2 + 40);
-    }
-
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         return gameOver;
     }
+
+    public PauseMenu getPauseMenu() {
+        return pauseMenu;
+    }
+    // Metodo per fermare il timer quando il gioco è in pausa
+    public void pauseGame() {
+        bladesSpawner.stop(); // Ferma lo spawn delle lame
+        gameLoopTimer.stop(); // Ferma il loop del gioco
+    }
     
+    public void resumeGame() {
+        bladesSpawner.start(); // Riavvia lo spawn delle lame
+        gameLoopTimer.start(); // Riavvia il loop del gioco
+    }
+    public void returnToMenu() {
+        pauseGame(); // Ferma il gioco
+        mainClass.showMenu(); // Torna al menu principale
+    }
+
+    public void resetGame() {
+        gameOver = false;
+        player.resetPlayer(); // Resetta il giocatore
+        pauseMenu.setPaused(false); // Resetta il menu di pausa
+        bladesList.clear(); // Rimuove tutte le lame
+        itemList.clear();   // Rimuove tutti gli oggetti
+        timeSpawner = 3000; // Reimposta il tempo di spawn iniziale delle lame
+    
+        // Riavvia il gioco
+        resumeGame();
+    }
 }

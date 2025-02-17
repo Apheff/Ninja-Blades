@@ -39,14 +39,14 @@ public class Items extends Entity {
         // Randomly assign type with higher probability for coin (0)
         Random rand = new Random();
         int randomValue = rand.nextInt(100);
-        if (randomValue < 50) {
-            type = 0; // 50% chance for coin
-        } else if (randomValue < 70) {
-            type = 1; // 20% chance for shield
-        } else if (randomValue < 85) {
-            type = 2; // 15% chance for magnet
+        if (randomValue < 85) {
+            type = 0; // 85% chance for coin
+        } else if (randomValue < 90) {
+            type = 1; // 5% chance for shield
+        } else if (randomValue < 95) {
+            type = 2; // 5% chance for magnet
         } else {
-            type = 3; // 15% chance for heart
+            type = 3; // 5% chance for heart
         }
 
         // loading all the frames of all items

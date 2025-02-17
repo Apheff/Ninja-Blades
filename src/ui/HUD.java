@@ -1,11 +1,12 @@
 package ui;
 
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import entities.Player;
+import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import java.awt.Font;
+import java.awt.Color;
 
 import utils.ImageLoader;
 
@@ -52,6 +53,11 @@ public class HUD extends ImageLoader{
         }else if(player.isInvincible){
             g.drawImage(shield[0], padding, size + 2 * padding, size, size, null);
         }
+
+        String scoreText = "" + player.score;
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 36));
+        g.drawString(scoreText, PANEL_WIDTH - g.getFontMetrics().stringWidth(scoreText) - 20, g.getFontMetrics().getHeight());
     }
 
     public void loadAllFrames(){

@@ -1,8 +1,6 @@
 package entities;
 
 import java.awt.image.BufferedImage;
-import java.util.Random;
-
 import utils.KeyboardInputs;
 import java.awt.Graphics2D;
 
@@ -355,6 +353,20 @@ public class Player extends Entity{
         invincibilityEndTime = System.currentTimeMillis() + durationMillis;
     }
 
+    public void resetPosition(){
+        this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
+        this.y = PANEL_HEIGHT - this.height;
+        this.isInvincible = false;
+        this.damaged = false;
+    }
+    public void resetPlayer(){
+        score = 0;
+        hearts = 3;
+        resetPosition(); // Assicurati che player abbia un metodo per ripristinare la posizione
+        isInvincible = false; // Resetta l'invincibilità
+        isMagnetized = false; // Resetta il magnetismo
+        damaged = false; // Resetta il danno
+    }
     /*
     * **************************************************************
     * *                                                            *
