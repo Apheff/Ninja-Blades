@@ -54,7 +54,6 @@ public class GamePanel extends JPanel {
                 bladesList.add(new Blades());
                 timeSpawner = Math.max(500, timeSpawner - 25); // Evita che scenda sotto 500 ms
                 bladesSpawner.setDelay(random.nextInt(timeSpawner)); // Aggiorna il delay
-                System.out.println(timeSpawner);
             }
         }
     });
@@ -63,7 +62,7 @@ public class GamePanel extends JPanel {
     Timer gameLoopTimer = new Timer(16, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!gameOver && !pauseMenu.isPaused()) { // <-- Ferma gli update se in pausa
+            if (!gameOverMenu.isActive() && !pauseMenu.isPaused()) { // <-- Ferma gli update se in pausa
                 Update();
                 repaint();
             }
@@ -72,7 +71,6 @@ public class GamePanel extends JPanel {
 
     // Game state
     private long lastCollisionTime = 0; // Time of the last collision
-    private boolean gameOver = false;
 
     public GamePanel(MainClass mainClass) {
         this.mainClass = mainClass; //  Salviamo il riferimento alla MainClass
@@ -106,7 +104,7 @@ public class GamePanel extends JPanel {
                         player.setDamage(2000);
                         lastCollisionTime = System.currentTimeMillis() + 2000;
                         if (player.hearts <= 0) {
-                            gameOver = true;
+
                             gameOverMenu.show();
                         }
                     }
@@ -166,11 +164,8 @@ public class GamePanel extends JPanel {
         wallpapers.draw(g2d, 1);
         hud.draw(g2d, player);
 
-        if (gameOver) {
-            gameOverMenu.show();
-        }
-
         if (gameOverMenu.isActive()) {
+            gameOverMenu.show();
             gameOverMenu.draw(g2d);
         } else {
             player.draw(g2d);
@@ -186,21 +181,15 @@ public class GamePanel extends JPanel {
 
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public PauseMenu getPauseMenu() {
         return pauseMenu;
     }
     // Metodo per fermare il timer quando il gioco è in pausa
     public void pauseGame() {
-        bladesSpawner.stop(); // Ferma lo spawn delle lame
         gameLoopTimer.stop(); // Ferma il loop del gioco
     }
     
     public void resumeGame() {
-        bladesSpawner.start(); // Riavvia lo spawn delle lame
         gameLoopTimer.start(); // Riavvia il loop del gioco
     }
     public void returnToMenu() {
@@ -209,13 +198,12 @@ public class GamePanel extends JPanel {
     }
 
     public void resetGame() {
-        gameOver = false;
         player.resetPlayer(); // Resetta il giocatore
         pauseMenu.setPaused(false); // Resetta il menu di pausa
         bladesList.clear(); // Rimuove tutte le lame
         itemList.clear();   // Rimuove tutti gli oggetti
         timeSpawner = 3000; // Reimposta il tempo di spawn iniziale delle lame
-    
+        gameOverMenu.hide(); // Nasconde il menu di fine partita
         // Riavvia il gioco
         resumeGame();
     }

@@ -60,6 +60,9 @@ public class PauseMenu {
             case KeyEvent.VK_ENTER:
                 selectOption();
                 break;
+            case KeyEvent.VK_P:
+                togglePause();
+                break;
         }
     }
     
