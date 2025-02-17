@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import ui.GameOverMenu;
+import utils.SoundManager;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
@@ -102,13 +103,14 @@ public class GamePanel extends JPanel {
                     if (!player.damaged) {
                         player.hearts--;
                         player.setDamage(2000);
+                        SoundManager.playSound("hit.wav"); // Suono di danno
                         lastCollisionTime = System.currentTimeMillis() + 2000;
                         if (player.hearts <= 0) {
-
                             gameOverMenu.show();
                         }
                     }
                 } else {
+                    SoundManager.playSound("pop.wav"); // Suono di scudo
                     smokes.setSmoke(13, player.x, player.y);
                     player.isInvincible = false;
                     lastCollisionTime = System.currentTimeMillis() + 2000;
@@ -130,16 +132,20 @@ public class GamePanel extends JPanel {
                 switch (item.type) {
                     case 0:
                         player.score += 1;
+                        SoundManager.playSound("coin.wav"); // 🔊 Suono di moneta
                         break;
                     case 1:
                         player.setInvincible(5000);
+                        SoundManager.playSound("shield.wav"); // 🔊 Suono di power-up
                         break;
                     case 2:
                         player.setMagnetize(7000);
+                        SoundManager.playSound("magnet.wav"); // 🔊 Suono di magnete
                         break;
                     case 3:
                         if (player.hearts < 3) {
                             player.hearts++;
+                            SoundManager.playSound("heal.wav"); // 🔊 Suono di guarigione
                         }
                         break;
                 }
@@ -147,7 +153,7 @@ public class GamePanel extends JPanel {
             }
             item.update(player);
         }
-
+        
         itemList.removeIf(Items::isDestroyed);
         bladesList.removeIf(blade -> blade.y < -blade.height || blade.destroyed);
 
