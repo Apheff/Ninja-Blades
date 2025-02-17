@@ -135,7 +135,7 @@ public class GamePanel extends JPanel {
                         player.setInvincible(5000);
                         break;
                     case 2:
-                        player.setMagnetize(5000);
+                        player.setMagnetize(7000);
                         break;
                     case 3:
                         if (player.hearts < 3) {
@@ -178,7 +178,6 @@ public class GamePanel extends JPanel {
             }
         }
         pauseMenu.draw(g2d); // Disegna il menu di pausa
-
     }
 
     public PauseMenu getPauseMenu() {
