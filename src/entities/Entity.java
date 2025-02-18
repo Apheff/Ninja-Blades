@@ -85,10 +85,10 @@ public class Entity extends ImageLoader{
     * *                                                            *
     * **************************************************************
     */    
-    public double getX() {
+    public int getX() {
         return x;
     }
-    public double getY() {
+    public int getY() {
         return y;
     }
     public int getWidth() {
@@ -105,7 +105,7 @@ public class Entity extends ImageLoader{
         return hitbox;
     }
 
-    // will tell if two entities had a collision
+    // will test if the hitbox of the entity is colliding with another entity
     public boolean collisionCheck(Entity entity){
         return this.hitbox.intersects(entity.hitbox);
     } 

@@ -1,6 +1,8 @@
 package utils;
 
-
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -13,7 +15,19 @@ public class Constants {
         public static final int PANEL_WIDTH = 920;
         public static final int PANEL_HEIGHT = 1080;
         public static final int BORDER_WIDTH = 400;
-        public static final Dimension pannelSize = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+        public static final Dimension panelSize = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+        public static final Font customFont;
+
+        static {
+            Font tempFont;
+            try {
+                tempFont = Font.createFont(Font.TRUETYPE_FONT, Constants.class.getResourceAsStream("/font/customFont.ttf")).deriveFont(36f);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                tempFont = new Font("Arial", Font.BOLD, 36);
+            }
+            customFont = tempFont;
+        }
     }
     public static class PlayerConstants {
         

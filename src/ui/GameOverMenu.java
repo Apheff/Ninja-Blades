@@ -5,6 +5,7 @@ import utils.KeyboardInputs;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.customFont;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,7 +13,7 @@ import java.awt.event.KeyEvent;
 public class GameOverMenu{
 
     private GamePanel gamePanel;
-    private String[] options = {"Riprovare", "Torna al Menu"};
+    private String[] options = {"Retry", "Return to Menu", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private boolean active = false; // Mostra/nasconde il menu
 
@@ -42,13 +43,13 @@ public class GameOverMenu{
 
         // Titolo "GAME OVER"
         g2d.setColor(Color.RED);
-        g2d.setFont(new Font("Arial", Font.BOLD, 50));
+        g2d.setFont(customFont);
         String title = "GAME OVER";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
         g2d.drawString(title, (PANEL_WIDTH- titleWidth) / 2, PANEL_HEIGHT / 3);
 
         // Opzioni di gioco
-        g2d.setFont(new Font("Arial", Font.BOLD, 30));
+        g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
                 g2d.setColor(Color.YELLOW); // Evidenziazione opzione selezionata

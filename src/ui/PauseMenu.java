@@ -2,11 +2,13 @@ package ui;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.customFont;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+
 import utils.KeyboardInputs;
 import main.GamePanel;
 public class PauseMenu {
@@ -29,7 +31,7 @@ public class PauseMenu {
 
         // Titolo "Pausa"
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Arial", Font.BOLD, 50));
+        g2d.setFont(customFont);
         String title = "PAUSA";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
         g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT / 3);

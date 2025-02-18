@@ -9,6 +9,7 @@ public class Items extends Entity {
  
     public BufferedImage[][] item;
     public int type = 0; // default coin (0)
+    
     /*
      * 0 coin
      * 1 shield

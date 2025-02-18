@@ -4,34 +4,45 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 import utils.ImageLoader;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.pannelSize;
+import static utils.Constants.GamePanel.panelSize;
 import static utils.Constants.GameWindow.scaleFactor;
 
 public class MenuPanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private String[] options = {"Gioca", "Tutorial", "Impostazioni", "Armadietto"};
+    private String[] options = {"Play", "Tutorial", "Options", "Locker"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
-    private ImageLoader imageLoader = new ImageLoader();
     private BufferedImage menuWallpaper;
     private BufferedImage[] wallpaperFrames;
+    private Font customFont;
+
     public MenuPanel(MainClass mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);
         setBackground(new Color(215, 215 , 215));
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setPreferredSize(new Dimension(pannelSize));
-        setMinimumSize(new Dimension(pannelSize));
+        setPreferredSize(new Dimension(panelSize));
+        setMinimumSize(new Dimension(panelSize));
 
         // Carichiamo il logo usando la funzione esistente
-        logoImage = imageLoader.loadImage("logo.png"); // Assicurati che il file sia in img/
-        menuWallpaper = imageLoader.loadImage("menuWallpaper.png");
-        wallpaperFrames = imageLoader.loadFrames(menuWallpaper, 0, 0, 8, 920, 1080);
+        logoImage = ImageLoader.loadImage("logo.png"); // Assicurati che il file sia in img/
+        menuWallpaper = ImageLoader.loadImage("menuWallpaper.png");
+        wallpaperFrames = ImageLoader.loadFrames(menuWallpaper, 0, 0, 8, 920, 1080);
+
+        // Load the custom font
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/customFont.ttf")).deriveFont(36f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            customFont = new Font("Arial", Font.BOLD, 36); // Fallback font
+        }
     }
 
     @Override
@@ -55,7 +66,7 @@ public class MenuPanel extends JPanel implements KeyListener {
         }
 
         // Disegniamo le opzioni del menu
-        g2d.setFont(new Font("Arial", Font.BOLD, 36));
+        g2d.setFont(customFont);
         int startY = PANEL_HEIGHT / 2; // Punto di partenza verticale per i pulsanti
         int spacing = 60; // Distanza tra i pulsanti
 

@@ -4,27 +4,26 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import entities.Player;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import java.awt.Font;
 import java.awt.Color;
 
 import utils.ImageLoader;
 
 public class HUD extends ImageLoader{
-    public int size = 36;
-    public int padding = 5; 
+    public static int size = 36;
+    public static int padding = 5; 
 
     // frames
-    public BufferedImage[] blackheart;
-    public BufferedImage[] redheart;
-    public BufferedImage[] magnet;
-    public BufferedImage[] shield;
+    public static BufferedImage[] blackheart;
+    public static BufferedImage[] redheart;
+    public static BufferedImage[] magnet;
+    public static BufferedImage[] shield;
 
     // images
-    public BufferedImage powerupSheet;
-    public BufferedImage heartSheet;
+    public static BufferedImage powerupSheet;
+    public static BufferedImage heartSheet;
 
-    public HUD(){
+    public static void loadHUD(){
         // Load img
         heartSheet = loadImage("hearts.png");
         powerupSheet = loadImage("items.png");
@@ -32,7 +31,7 @@ public class HUD extends ImageLoader{
         loadAllFrames();
     }
 
-    public void draw(Graphics g, Player player){
+    public static void draw(Graphics g, Player player){
         // if there is a current image, draws it
         for (int i = 0; i < player.hearts; i++) {
             int x = padding + (i * (size + padding));
@@ -60,7 +59,7 @@ public class HUD extends ImageLoader{
         g.drawString(scoreText, PANEL_WIDTH - g.getFontMetrics().stringWidth(scoreText) - 20, g.getFontMetrics().getHeight());
     }
 
-    public void loadAllFrames(){
+    public static void loadAllFrames(){
         // load all frames
         redheart = loadFrames(heartSheet, 0, 0, 1, 32, 32);
         blackheart = loadFrames(heartSheet, 32, 0, 1, 32, 32);

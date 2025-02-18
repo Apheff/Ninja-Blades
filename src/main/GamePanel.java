@@ -1,5 +1,10 @@
 package main;
 
+// import libraries
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,24 +12,25 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+
+// import entities
 import entities.Blades;
+import entities.Items;
 import entities.Player;
+
+// import ui elements
 import ui.HUD;
 import ui.Smokes;
-import entities.Items;
+import ui.PauseMenu;
 import ui.Wallpapers;
-import ui.PauseMenu; // <-- Importiamo il menu di pausa
-import utils.KeyboardInputs;
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
 import ui.GameOverMenu;
+
+// import utilites
+import utils.KeyboardInputs;
 import utils.SoundManager;
 
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.pannelSize;
+// import constants
+import static utils.Constants.GamePanel.*;
 import static utils.Constants.GameWindow.*;
 
 public class GamePanel extends JPanel {
@@ -32,10 +38,7 @@ public class GamePanel extends JPanel {
     // Game inputs
     private KeyboardInputs keyboardInputs = new KeyboardInputs();
 
-    // UI elements
-    private Wallpapers wallpapers = new Wallpapers();
-    private HUD hud = new HUD();
-    private PauseMenu pauseMenu; // <-- Aggiungiamo il menu di pausa
+    private PauseMenu pauseMenu;
     private MainClass mainClass;
     private GameOverMenu gameOverMenu;
 
@@ -51,19 +54,19 @@ public class GamePanel extends JPanel {
     private Timer bladesSpawner = new Timer(0, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!pauseMenu.isPaused()) { // Se il gioco è in pausa, non generiamo lame
+            if (!pauseMenu.isPaused()) { // if the game is paused stop the spawner
                 bladesList.add(new Blades());
-                timeSpawner = Math.max(500, timeSpawner - 25); // Evita che scenda sotto 500 ms
-                bladesSpawner.setDelay(random.nextInt(timeSpawner)); // Aggiorna il delay
+                timeSpawner = Math.max(500, timeSpawner - 25); // decrease the delay over time (minimum 500ms)
+                bladesSpawner.setDelay(random.nextInt(timeSpawner)); // randomize the delay
             }
         }
     });
 
-    // Game loop usando Swing Timer (aggiorna ogni 16 ms ~ 60 FPS)
+    // Game loop (refreshes each 16 ms ~ 60 FPS)
     Timer gameLoopTimer = new Timer(16, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!gameOverMenu.isActive() && !pauseMenu.isPaused()) { // <-- Ferma gli update se in pausa
+            if (!gameOverMenu.isActive() && !pauseMenu.isPaused()) { // if the game is not over and not paused
                 Update();
                 repaint();
             }
@@ -74,19 +77,23 @@ public class GamePanel extends JPanel {
     private long lastCollisionTime = 0; // Time of the last collision
 
     public GamePanel(MainClass mainClass) {
-        this.mainClass = mainClass; //  Salviamo il riferimento alla MainClass
+
+        // Set the panel properties
         setDoubleBuffered(true);
         setBackground(Color.BLACK);
         addKeyListener(keyboardInputs);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setPreferredSize(new Dimension(pannelSize));
-        setMinimumSize(new Dimension(pannelSize));
+        setPreferredSize(new Dimension(panelSize));
+        setMinimumSize(new Dimension(panelSize));
+        setMaximumSize(new Dimension(panelSize));
+
+        this.mainClass = mainClass;
     
-        // Inizializziamo il menu di pausa
+        // load pause and game over menu
         pauseMenu = new PauseMenu(this, keyboardInputs);
         gameOverMenu = new GameOverMenu(this, keyboardInputs);
     
-        // Inizializziamo il game loop
+        // starts the game loop
         gameLoopTimer.start();
     }
     
@@ -103,14 +110,14 @@ public class GamePanel extends JPanel {
                     if (!player.damaged) {
                         player.hearts--;
                         player.setDamage(2000);
-                        SoundManager.playSound("hit.wav"); // Suono di danno
+                        SoundManager.playSound("hit.wav"); // 🔊 hit sound
                         lastCollisionTime = System.currentTimeMillis() + 2000;
                         if (player.hearts <= 0) {
                             gameOverMenu.show();
                         }
                     }
                 } else {
-                    SoundManager.playSound("pop.wav"); // Suono di scudo
+                    SoundManager.playSound("pop.wav"); // 🔊 pop sound
                     smokes.setSmoke(13, player.x, player.y);
                     player.isInvincible = false;
                     lastCollisionTime = System.currentTimeMillis() + 2000;
@@ -119,10 +126,11 @@ public class GamePanel extends JPanel {
         }
 
         for (Blades blade : bladesList) {
-            if ((player.y + player.height < blade.y && player.x + player.width / 2 > blade.x && player.x + player.width / 2 < blade.x + blade.width)) {
+            if (player.checkBladeDestroy(blade)) {
                 blade.destroyBlade();
                 smokes.setSmoke(0, blade.x, blade.y);
                 itemList.add(new Items(blade.x, blade.y));
+                SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
             }
             blade.update();
         }
@@ -131,21 +139,21 @@ public class GamePanel extends JPanel {
             if (player.collisionCheck(item)) {
                 switch (item.type) {
                     case 0:
+                        SoundManager.playSound("coin.wav"); // 🔊 coin grabbed sound
                         player.score += 1;
-                        SoundManager.playSound("coin.wav"); // 🔊 Suono di moneta
                         break;
                     case 1:
+                        SoundManager.playSound("shield.wav"); // 🔊 shield sound
                         player.setInvincible(5000);
-                        SoundManager.playSound("shield.wav"); // 🔊 Suono di power-up
                         break;
                     case 2:
+                        SoundManager.playSound("magnet.wav"); // 🔊 magnet sound
                         player.setMagnetize(7000);
-                        SoundManager.playSound("magnet.wav"); // 🔊 Suono di magnete
                         break;
                     case 3:
                         if (player.hearts < 3) {
+                            SoundManager.playSound("heal.wav"); // 🔊 heal sound
                             player.hearts++;
-                            SoundManager.playSound("heal.wav"); // 🔊 Suono di guarigione
                         }
                         break;
                 }
@@ -167,8 +175,8 @@ public class GamePanel extends JPanel {
         g2d.scale(1 / scaleFactor, 1 / scaleFactor);
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        wallpapers.draw(g2d, 1);
-        hud.draw(g2d, player);
+        Wallpapers.draw(g2d, 1);
+        HUD.draw(g2d, player);
 
         if (gameOverMenu.isActive()) {
             gameOverMenu.show();

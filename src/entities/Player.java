@@ -1,14 +1,17 @@
 package entities;
 
 import java.awt.image.BufferedImage;
-import utils.KeyboardInputs;
 import java.awt.Graphics2D;
+import java.awt.image.RescaleOp;
 
+// import utilities
+import utils.KeyboardInputs;
+
+// import constants
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GameWindow.*;
 import static utils.Constants.PlayerConstants.*;
-import java.awt.image.RescaleOp;
 
 public class Player extends Entity{
 
@@ -362,10 +365,10 @@ public class Player extends Entity{
     public void resetPlayer(){
         score = 0;
         hearts = 3;
-        resetPosition(); // Assicurati che player abbia un metodo per ripristinare la posizione
-        isInvincible = false; // Resetta l'invincibilità
-        isMagnetized = false; // Resetta il magnetismo
-        damaged = false; // Resetta il danno
+        resetPosition(); // resets the player position
+        isInvincible = false; // resets the invincibility
+        isMagnetized = false; // resets the magnetism
+        damaged = false; // resets the damage
     }
     /*
     * **************************************************************
@@ -397,6 +400,16 @@ public class Player extends Entity{
                 damaged = false;
             }
         }
+    }
+
+    public boolean checkBladeDestroy(Blades blade){
+        boolean destroyed = false;
+        if(this.y + this.height < blade.y){
+            if(this.x + this.width / 2 > blade.x && this.x + this.width / 2 < blade.x + blade.width){
+                destroyed = true;
+            }
+        }
+        return destroyed;
     }
 
     /*

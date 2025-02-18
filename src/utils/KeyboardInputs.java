@@ -8,8 +8,24 @@ import ui.GameOverMenu;
 public class KeyboardInputs implements KeyListener {
 
     public boolean left, right, space;
-    private PauseMenu pauseMenu; // <-- Aggiunto per gestire il menu di pausa
+    private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
+
+    private static boolean isWASD = true;
+
+    public static void toggleControlType() {
+        isWASD = !isWASD;
+    }
+
+    public static String getControlType() {
+        if(isWASD) {
+            return "WASD";
+        } else {
+            return "Arrow keys";
+        }
+    }
+
+
 
     // Metodo per collegare il menu di pausa
     public void setPauseMenu(PauseMenu pauseMenu) {
@@ -41,35 +57,60 @@ public class KeyboardInputs implements KeyListener {
             return;
         }
 
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                left = true;
-                break;
-            case KeyEvent.VK_D:
-                right = true;
-                break;
-            case KeyEvent.VK_W:
-                space = true;
-                break;
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
-                break;
+        if(isWASD){
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                    left = true;
+                    break;
+                case KeyEvent.VK_D:
+                    right = true;
+                    break;
+                case KeyEvent.VK_W:
+                    space = true;
+                    break;
+            }
+        } else {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    left = true;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    right = true;
+                    break;
+                case KeyEvent.VK_UP:
+                    space = true;
+                    break;
+            }
         }
     }
 
     // Metodo per gestire i tasti rilasciati
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                left = false;
-                break;
-            case KeyEvent.VK_D:
-                right = false;
-                break;
-            case KeyEvent.VK_W:
-                space = false;
-                break;
+        if(isWASD){
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                    left = false;
+                    break;
+                case KeyEvent.VK_D:
+                    right = false;
+                    break;
+                case KeyEvent.VK_W:
+                    space = false;
+                    break;
+            }
+        } else {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    left = false;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    right = false;
+                    break;
+                case KeyEvent.VK_UP:
+                    space = false;
+                    break;
+            }
         }
     }
 

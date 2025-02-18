@@ -9,19 +9,19 @@ import utils.ImageLoader;
 
 public class Wallpapers extends ImageLoader{
 
-    public BufferedImage wallpapers[];
+    public static BufferedImage wallpapers[];
 
-    public Wallpapers(){
-        this.wallpapers = new BufferedImage[3]; 
+    public static void LoadWallpapers(){
+        wallpapers = new BufferedImage[3]; 
         // Load wallpapers
         for(int i = 0; i < 3 ; i++){
             String s = "wallpaper" + i + ".jpg";
-            this.wallpapers[i] = loadImage(s);
+            wallpapers[i] = loadImage(s);
         }
 
     }
 
-    public void draw(Graphics2D g2d, int numWallpaper){
+    public static void draw(Graphics2D g2d, int numWallpaper){
         // if there is a current image, draws it
         g2d.drawImage(wallpapers[numWallpaper], 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
     }
