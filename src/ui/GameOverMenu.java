@@ -42,7 +42,7 @@ public class GameOverMenu{
         g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 
         // Titolo "GAME OVER"
-        g2d.setColor(Color.RED);
+        g2d.setColor(new Color(200, 10, 15));
         g2d.setFont(customFont);
         String title = "GAME OVER";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
@@ -78,11 +78,17 @@ public class GameOverMenu{
     }
 
     private void selectOption() {
-        if (selectedOption == 0) {
-            gamePanel.resetGame(); // Riparte la partita
-            hide();
-        } else if (selectedOption == 1) {
-            gamePanel.returnToMenu(); // Torna al menu principale
+        switch (selectedOption) {
+            case 0:
+                gamePanel.resetGame(); // Riparte la partita
+                hide();
+                break;
+            case 1:
+                gamePanel.returnToMenu(); // Torna al menu principale
+                break;
+            case 2:
+                System.exit(0);
+                break;
         }
     }
 }

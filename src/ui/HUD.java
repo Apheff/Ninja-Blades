@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import entities.Player;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import java.awt.Font;
+import static utils.Constants.GamePanel.customFont;
 import java.awt.Color;
 
 import utils.ImageLoader;
@@ -55,7 +55,7 @@ public class HUD extends ImageLoader{
 
         String scoreText = "" + player.score;
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 36));
+        g.setFont(customFont);
         g.drawString(scoreText, PANEL_WIDTH - g.getFontMetrics().stringWidth(scoreText) - 20, g.getFontMetrics().getHeight());
     }
 

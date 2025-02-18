@@ -127,10 +127,10 @@ public class GamePanel extends JPanel {
 
         for (Blades blade : bladesList) {
             if (player.checkBladeDestroy(blade)) {
+                SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
                 blade.destroyBlade();
                 smokes.setSmoke(0, blade.x, blade.y);
                 itemList.add(new Items(blade.x, blade.y));
-                SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
             }
             blade.update();
         }

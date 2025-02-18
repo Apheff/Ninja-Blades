@@ -7,21 +7,18 @@ import javax.swing.event.ChangeListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import utils.KeyboardInputs;
+import utils.SoundManager;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.panelSize;
 import static utils.Constants.GameWindow.scaleFactor;
-
-import utils.SoundManager;
+import static utils.Constants.GamePanel.customFont;
 
 public class SettingsPanel extends JPanel implements KeyListener {
     
@@ -33,40 +30,30 @@ public class SettingsPanel extends JPanel implements KeyListener {
     private String[] options = {"Controls: WASD", "Back"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private boolean active = false;
-
-    private Font customFont;
+    private int value = 100;
     
     public SettingsPanel(MainClass mainClass) {
         this.mainClass = mainClass;
-        setLayout(null); // using absolute layout for simplicity
         setFocusable(true);
         addKeyListener(this);
-        setBackground(new Color(0, 0, 0, 200)); // semi-transparent overlay
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
         setPreferredSize(new Dimension(panelSize));
         setMinimumSize(new Dimension(panelSize));
+        setBackground(Color.BLACK);
+        setLayout(null);
         
-        // Load the custom font
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/customFont.ttf")).deriveFont(36f);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            customFont = new Font("Arial", Font.BOLD, 36); // Fallback font
-        }
-
         // Create volume slider
-        volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
-        volumeSlider.setBounds((PANEL_WIDTH - 300) / 2, 200, 300, 50);
-        volumeSlider.setMajorTickSpacing(20);
-        volumeSlider.setMinorTickSpacing(5);
-        volumeSlider.setPaintTicks(true);
-        volumeSlider.setPaintLabels(true);
+        volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, value);
+        volumeSlider.setBackground(Color.BLACK);
         volumeSlider.setFocusable(true);
-        // Update volume in SoundManager when slider drags
+        // Imposta un bordo trasparente iniziale
+        volumeSlider.setBounds((PANEL_WIDTH - 400)/2, PANEL_HEIGHT/3 + 160, 400, 40);
+        
         volumeSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                int value = volumeSlider.getValue();
+                value = volumeSlider.getValue();
+                System.out.println("Volume: " + value);
                 SoundManager.setVolume(value);
             }
         });
@@ -75,7 +62,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
     
     public void showPanel() {
         active = true;
-        requestFocusInWindow();
+        requestFocusInWindow(); // Mantiene il focus sulla finestra
         repaint();
     }
     
@@ -95,20 +82,25 @@ public class SettingsPanel extends JPanel implements KeyListener {
         
         Graphics2D g2d = (Graphics2D) g;
         g2d.scale(1 / scaleFactor, 1 / scaleFactor);
+
         // Draw a background overlay (already set by components but additional painting can be done)
         g2d.setColor(new Color(0, 0, 0, 150));
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+
         // Draw title if desired
         g2d.setColor(Color.WHITE);
         g2d.setFont(customFont);
 
         String title = "SETTINGS";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
-        g2d.drawString(title, (getWidth() - titleWidth) / 2, 70);
+        g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT/3);
 
-        g2d.setFont(customFont);
-        int startY = PANEL_HEIGHT / 2; // Punto di partenza verticale per i pulsanti
-        int spacing = 60; // Distanza tra i pulsanti
+        String volumeLabel = "volume";
+        int volumeWidth = g2d.getFontMetrics().stringWidth(volumeLabel);
+        g2d.drawString(volumeLabel, (PANEL_WIDTH - volumeWidth) / 2, PANEL_HEIGHT/3  + 160);
+
+        int startY = PANEL_HEIGHT / 2 + 80; // Punto di partenza verticale per i pulsanti
+        int spacing = 40; // Distanza tra i pulsanti
 
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
@@ -132,13 +124,19 @@ public class SettingsPanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-
+    
         switch (keyCode) {
             case KeyEvent.VK_UP:
-                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
+                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1; // Loop con lo slider
                 break;
             case KeyEvent.VK_DOWN:
-                selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
+                selectedOption = (selectedOption < options.length) ? selectedOption + 1 : 0; // Loop con lo slider
+                break;
+            case KeyEvent.VK_LEFT:
+                volumeSlider.setValue(volumeSlider.getValue() - 10);
+                break;
+            case KeyEvent.VK_RIGHT:
+                volumeSlider.setValue(volumeSlider.getValue() + 10);
                 break;
             case KeyEvent.VK_ENTER:
                 selectOption();
@@ -147,7 +145,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
                 System.exit(0);
                 break;
         }
-        repaint(); // Aggiorna la grafica
+        repaint();
     }
 
     private void selectOption() {

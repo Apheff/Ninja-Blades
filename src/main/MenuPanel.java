@@ -15,7 +15,7 @@ import static utils.Constants.GameWindow.scaleFactor;
 public class MenuPanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private String[] options = {"Play", "Tutorial", "Options", "Locker"};
+    private String[] options = {"Play", "Tutorial", "Options", "Locker", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
     private BufferedImage menuWallpaper;
@@ -104,9 +104,6 @@ public class MenuPanel extends JPanel implements KeyListener {
             case KeyEvent.VK_ENTER:
                 selectOption();
                 break;
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
-                break;
         }
         repaint(); // Aggiorna la grafica
     }
@@ -124,6 +121,9 @@ public class MenuPanel extends JPanel implements KeyListener {
                 break;
             case 3:
                 System.out.println("Armadietto selezionato (da implementare)");
+                break;
+            case 4:
+                System.exit(0);
                 break;
         }
     }

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -50,6 +49,7 @@ public class MainClass extends JPanel implements Runnable{
         SoundManager.preloadSound("magnet.wav");
         SoundManager.preloadSound("heal.wav");
         SoundManager.preloadSound("pop.wav");
+        SoundManager.preloadSound("explosion.wav");
 
         HUD.loadHUD();
         Wallpapers.LoadWallpapers();

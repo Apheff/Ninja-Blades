@@ -5,7 +5,6 @@ import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.customFont;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
@@ -14,7 +13,7 @@ import main.GamePanel;
 public class PauseMenu {
 
     private boolean isPaused = false;
-    private String[] options = {"Riprendi", "Esci al menu principale"};
+    private String[] options = {"Resume", "Return to Menu", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private GamePanel gamePanel;
 
@@ -37,7 +36,7 @@ public class PauseMenu {
         g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT / 3);
 
         // Opzioni del menu
-        g2d.setFont(new Font("Arial", Font.BOLD, 30));
+        g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
                 g2d.setColor(Color.YELLOW); // Evidenzia l'opzione selezionata
@@ -63,6 +62,9 @@ public class PauseMenu {
                 selectOption();
                 break;
             case KeyEvent.VK_P:
+                togglePause();
+                break;
+            case KeyEvent.VK_ESCAPE:
                 togglePause();
                 break;
         }
