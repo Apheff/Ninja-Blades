@@ -66,7 +66,7 @@ public class TutorialPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.scale(1 / scaleFactor, 1 / scaleFactor);
+        g2d.scale(scaleFactor, scaleFactor);
     
         player.draw(g2d);
     

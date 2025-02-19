@@ -3,9 +3,6 @@ package utils;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-
-import static utils.Constants.GamePanel.scaleFactor;
-
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -15,6 +12,7 @@ public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */
 
     public static class GamePanel {
+        // DPI 96 corrisponds to 100% scaling dpi
         public static final float dpi = Toolkit.getDefaultToolkit().getScreenResolution(); 
         public static final double scaleFactor = 96/dpi;
         public static final Font customFont;
@@ -27,7 +25,6 @@ public class Constants {
         public static final Dimension PANEL_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
         public static final int BORDER_WIDTH = (int) (SCREEN_WIDTH / 4 * scaleFactor);
 
-        // DPI 96 corrisponds to 100% scaling dpi
 
         static {
             Font tempFont;
