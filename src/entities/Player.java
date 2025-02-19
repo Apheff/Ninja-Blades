@@ -10,7 +10,7 @@ import utils.KeyboardInputs;
 // import constants
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GameWindow.*;
+import static utils.Constants.GamePanel.SCREEN_HEIGHT;
 import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
@@ -295,8 +295,6 @@ public class Player extends Entity{
         if (currentImage != null) {
             drawPlayer(g2d, currentImage);
         }
-
-
     }  
     
     // draws the player with all the effects
@@ -315,14 +313,14 @@ public class Player extends Entity{
             g2.dispose();
 
             // Apply the red tint filter and draw the modified image
-            g2d.drawImage(op.filter(redEffect, null), x, y, this.width, this.height, null);
+            g2d.drawImage(op.filter(redEffect, null), this.x, this.y, this.width, this.height, null);
         }else{
             // Draw the base image.
             g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
         }
         // Draw the shield if the player is invincible
         if(isInvincible){
-            g2d.drawImage(shieldSheet, this.x, this.y, this.height, this.width, null);
+            g2d.drawImage(shieldSheet, this.x, this.y, this.width, this.height, null);
         }
         smoke.draw(g2d);
     }

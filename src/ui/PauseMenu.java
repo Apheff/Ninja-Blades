@@ -21,6 +21,7 @@ public class PauseMenu {
         this.gamePanel = gamePanel;
         keyboardInputs.setPauseMenu(this);
     }
+
     public void draw(Graphics2D g2d) {
         if (!isPaused) return;
 

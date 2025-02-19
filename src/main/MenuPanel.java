@@ -4,52 +4,43 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import utils.ImageLoader;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.panelSize;
-import static utils.Constants.GameWindow.scaleFactor;
+import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.scaleFactor;
+
 
 public class MenuPanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private String[] options = {"Play", "Tutorial", "Options", "Locker", "Exit"};
+    private String[] options = {"Play", "Tutorial", "Settings", "Locker", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
     private BufferedImage menuWallpaper;
     private BufferedImage[] wallpaperFrames;
-    private Font customFont;
 
     public MenuPanel(MainClass mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);
-        setBackground(new Color(215, 215 , 215));
+        setBackground(Color.BLACK);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setPreferredSize(new Dimension(panelSize));
-        setMinimumSize(new Dimension(panelSize));
+        setMaximumSize(PANEL_SIZE);
 
         // Carichiamo il logo usando la funzione esistente
         logoImage = ImageLoader.loadImage("logo.png"); // Assicurati che il file sia in img/
         menuWallpaper = ImageLoader.loadImage("menuWallpaper.png");
         wallpaperFrames = ImageLoader.loadFrames(menuWallpaper, 0, 0, 8, 920, 1080);
-
-        // Load the custom font
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/customFont.ttf")).deriveFont(36f);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            customFont = new Font("Arial", Font.BOLD, 36); // Fallback font
-        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.scale(1 / scaleFactor, 1 / scaleFactor);
+        g2d.scale(scaleFactor, scaleFactor);
 
         drawWallpaper(g2d);
         // Overlay semi-trasparente
@@ -87,7 +78,7 @@ public class MenuPanel extends JPanel implements KeyListener {
 
     private void drawWallpaper(Graphics2D g2d) {
         int frameIndex = (int) (System.currentTimeMillis() / 200) % wallpaperFrames.length;
-        g2d.drawImage(wallpaperFrames[frameIndex], 0, 0, null);
+        g2d.drawImage(wallpaperFrames[frameIndex], 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
     }
 
     @Override

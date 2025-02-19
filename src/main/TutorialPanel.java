@@ -12,7 +12,6 @@ import entities.Player;
 import ui.TutorialEndMenu;
 import utils.KeyboardInputs;
 import static utils.Constants.GamePanel.*;
-import static utils.Constants.GameWindow.scaleFactor;
 
 public class TutorialPanel extends JPanel {
 

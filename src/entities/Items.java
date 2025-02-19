@@ -70,7 +70,7 @@ public class Items extends Entity {
         y += speedY;
         speedY += 0.4; // gravity
         if (y >= PANEL_HEIGHT - this.height) { 
-            speedY = -speedY * 0.8; // inverts the velocity
+            speedY = -speedY * 0.5; // inverts the velocity
         }
 
         if (frameCount >= frameDelay) {

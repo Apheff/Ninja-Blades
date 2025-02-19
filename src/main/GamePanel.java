@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -29,9 +28,11 @@ import ui.GameOverMenu;
 import utils.KeyboardInputs;
 import utils.SoundManager;
 
-// import constants
-import static utils.Constants.GamePanel.*;
-import static utils.Constants.GameWindow.*;
+// import constant
+import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_SIZE;
+import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.scaleFactor;
 
 public class GamePanel extends JPanel {
 
@@ -83,9 +84,7 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         addKeyListener(keyboardInputs);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setPreferredSize(new Dimension(panelSize));
-        setMinimumSize(new Dimension(panelSize));
-        setMaximumSize(new Dimension(panelSize));
+        setMaximumSize(PANEL_SIZE);
 
         this.mainClass = mainClass;
     
@@ -173,9 +172,10 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.scale(1 / scaleFactor, 1 / scaleFactor);
+        g2d.scale(scaleFactor, scaleFactor);
+
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
         Wallpapers.draw(g2d, 1);
         HUD.draw(g2d, player);
 

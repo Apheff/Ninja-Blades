@@ -15,7 +15,7 @@ public class Smokes extends ImageLoader{
     private int state = 0;
     private int x, y;
     private int size = 96;
-
+    
     public Smokes(){
         // Load smoke img
         smokes = new BufferedImage[15][9];
@@ -40,7 +40,7 @@ public class Smokes extends ImageLoader{
     }
 
     public void draw(Graphics2D g2d){
-        if(this.x != 0 && this.y != 0){
+        if(this.x != 0 || this.y != 0){
             frameCount++;
             if(frameCount >= frameDelay){
                 currentFrame++;

@@ -6,7 +6,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -16,8 +15,7 @@ import utils.SoundManager;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.panelSize;
-import static utils.Constants.GameWindow.scaleFactor;
+import static utils.Constants.GamePanel.scaleFactor;
 import static utils.Constants.GamePanel.customFont;
 
 public class SettingsPanel extends JPanel implements KeyListener {
@@ -37,8 +35,6 @@ public class SettingsPanel extends JPanel implements KeyListener {
         setFocusable(true);
         addKeyListener(this);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setPreferredSize(new Dimension(panelSize));
-        setMinimumSize(new Dimension(panelSize));
         setBackground(Color.BLACK);
         setLayout(null);
         
@@ -81,7 +77,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
         if (!active) return;
         
         Graphics2D g2d = (Graphics2D) g;
-        g2d.scale(1 / scaleFactor, 1 / scaleFactor);
+        g2d.scale(scaleFactor, scaleFactor);
 
         // Draw a background overlay (already set by components but additional painting can be done)
         g2d.setColor(new Color(0, 0, 0, 150));
@@ -100,7 +96,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
         g2d.drawString(volumeLabel, (PANEL_WIDTH - volumeWidth) / 2, PANEL_HEIGHT/3  + 160);
 
         int startY = PANEL_HEIGHT / 2 + 80; // Punto di partenza verticale per i pulsanti
-        int spacing = 40; // Distanza tra i pulsanti
+        int spacing = 160; // Distanza tra i pulsanti
 
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
@@ -117,6 +113,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
             int textX = (PANEL_WIDTH - textWidth) / 2;
             int textY = startY + (i * spacing);
             g2d.drawString(text, textX, textY);
+            g2d.fillRect(textX, textY + 8, textWidth, 4);
         }
     }
     
@@ -158,7 +155,6 @@ public class SettingsPanel extends JPanel implements KeyListener {
                 break;
         }
     }
-
 
     @Override
     public void keyReleased(KeyEvent e) { }

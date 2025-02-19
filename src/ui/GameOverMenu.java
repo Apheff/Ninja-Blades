@@ -46,7 +46,7 @@ public class GameOverMenu{
         g2d.setFont(customFont);
         String title = "GAME OVER";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
-        g2d.drawString(title, (PANEL_WIDTH- titleWidth) / 2, PANEL_HEIGHT / 3);
+        g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT / 3);
 
         // Opzioni di gioco
         g2d.setFont(customFont);

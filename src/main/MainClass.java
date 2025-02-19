@@ -16,8 +16,14 @@ import utils.SoundManager;
 import ui.HUD;
 import ui.Wallpapers;
 
+import static utils.Constants.GamePanel.BORDER_WIDTH;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.SCREEN_HEIGHT;
+import static utils.Constants.GamePanel.SCREEN_WIDTH;
+import static utils.Constants.GamePanel.dpi;
+import static utils.Constants.GamePanel.scaleFactor;
 
 
 
@@ -56,12 +62,22 @@ public class MainClass extends JPanel implements Runnable{
         Wallpapers.LoadWallpapers();
 
         // Inizializziamo il layeredPane con una dimensione fissa
-        layeredPane.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT)); 
+        layeredPane.setSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT)); 
+        layeredPane.setMaximumSize(PANEL_SIZE);
     
         // Inizializziamo i pannelli
         gamePanel = new GamePanel(this);
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
+    
+        System.out.println("screen height: " + SCREEN_HEIGHT);
+        System.out.println("screen width: " + SCREEN_WIDTH);
+        System.out.println("panel height: " + PANEL_HEIGHT);
+        System.out.println("panel width: " + PANEL_WIDTH);
+        System.out.println("total black border: " + 2 * BORDER_WIDTH);
+        System.out.println(dpi);
+        System.out.println(scaleFactor);
+
         tutorialPanel = new TutorialPanel(this);
 
         // Aggiungiamo i pannelli al layeredPane

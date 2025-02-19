@@ -1,5 +1,6 @@
 package utils;
 
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -25,7 +26,6 @@ public class ImageLoader {
             return image;
         } catch (IOException | NullPointerException e) {
             System.err.println("Error loading image: " + filename);
-            e.printStackTrace();
             return null;
         }
     }
