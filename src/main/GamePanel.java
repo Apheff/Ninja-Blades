@@ -147,7 +147,7 @@ public class GamePanel extends JPanel {
                         player.setInvincible(5000);
                         break;
                     case 2:
-                        SoundManager.playSound("magnet.wav"); // 🔊 magnet sound
+                        SoundManager.playSound("magnet1.wav"); // 🔊 magnet sound
                         player.setMagnetize(7000);
                         break;
                     case 3:
@@ -162,6 +162,7 @@ public class GamePanel extends JPanel {
             item.update(player);
         }
         
+
         itemList.removeIf(Items::isDestroyed);
         bladesList.removeIf(blade -> blade.y < -blade.height || blade.destroyed);
 

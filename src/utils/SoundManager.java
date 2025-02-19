@@ -29,7 +29,6 @@ public class SoundManager {
 
     public static void playSound(String soundFile) {
         Clip clip = soundMap.get(soundFile);
-
         if (clip != null) {
             if (!clip.isRunning()) {
                 clip.setFramePosition(0); // Rewind to the beginning

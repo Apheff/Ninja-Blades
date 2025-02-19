@@ -412,6 +412,24 @@ public class Player extends Entity{
         return destroyed;
     }
 
+    public boolean hasJumped(){
+        return !onGround;
+    }
+
+    public boolean hasDoubleJumped(){
+        return !doubleJump && !onGround;
+    }
+
+    public boolean isMoving(){
+        boolean ismoving = false;
+        if(state > 0 && keyboardInputs.left){
+            ismoving = true;
+        }else if(state < 0 && keyboardInputs.right){
+            ismoving = true;
+        }
+        return ismoving;
+    }
+
     /*
     * **************************************************************
     * *                                                            *

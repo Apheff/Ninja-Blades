@@ -30,6 +30,7 @@ public class MainClass extends JPanel implements Runnable{
     private Thread gameThread;
     private MenuPanel menuPanel;
     private boolean running = true;
+    private TutorialPanel tutorialPanel;
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
@@ -46,7 +47,7 @@ public class MainClass extends JPanel implements Runnable{
         SoundManager.preloadSound("hit.wav");
         SoundManager.preloadSound("coin.wav");
         SoundManager.preloadSound("shield.wav");
-        SoundManager.preloadSound("magnet.wav");
+        SoundManager.preloadSound("magnet1.wav");
         SoundManager.preloadSound("heal.wav");
         SoundManager.preloadSound("pop.wav");
         SoundManager.preloadSound("explosion.wav");
@@ -61,12 +62,13 @@ public class MainClass extends JPanel implements Runnable{
         gamePanel = new GamePanel(this);
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
-    
+        tutorialPanel = new TutorialPanel(this);
+
         // Aggiungiamo i pannelli al layeredPane
         layeredPane.add(gamePanel, Integer.valueOf(0));
         layeredPane.add(settingsPanel, Integer.valueOf(1));
-        layeredPane.add(menuPanel, Integer.valueOf(2)); // Menu sopra tutto
-    
+        layeredPane.add(tutorialPanel, Integer.valueOf(2)); // Strato sopra il gioco
+        layeredPane.add(menuPanel, Integer.valueOf(3)); // Menu sopra tutto
         new GameWindow(layeredPane);
         
         addFont(); // Carica il font personalizzato
@@ -84,6 +86,7 @@ public class MainClass extends JPanel implements Runnable{
         settingsPanel.setVisible(true);
         menuPanel.setVisible(false);
         gamePanel.setVisible(false);
+        tutorialPanel.setVisible(false);
 
         settingsPanel.showPanel();
     }
@@ -93,6 +96,7 @@ public class MainClass extends JPanel implements Runnable{
         menuPanel.setVisible(true);
         gamePanel.setVisible(false);
         settingsPanel.setVisible(false);
+        tutorialPanel.setVisible(false);
         
         gamePanel.pauseGame(); // Pausa completa del gioco
         menuPanel.requestFocusInWindow();
@@ -105,13 +109,21 @@ public class MainClass extends JPanel implements Runnable{
         gamePanel.setVisible(true);
         menuPanel.setVisible(false);
         settingsPanel.setVisible(false);
+        tutorialPanel.setVisible(false);
     
         gamePanel.resumeGame(); // Riavvia il gioco
         gamePanel.requestFocusInWindow();
     
         updatePanels(); // Forza il rendering corretto
     }
-    
+
+    public void startTutorial() {
+        tutorialPanel.setVisible(true);
+        menuPanel.setVisible(false);
+        gamePanel.setVisible(false);
+        tutorialPanel.requestFocusInWindow();
+    }
+
     private void updatePanels() {
         menuPanel.revalidate();
         menuPanel.repaint();
@@ -120,6 +132,7 @@ public class MainClass extends JPanel implements Runnable{
         settingsPanel.revalidate();
         settingsPanel.repaint();
     }
+
 
     @Override
     public void run() {

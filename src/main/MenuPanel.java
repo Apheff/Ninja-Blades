@@ -114,7 +114,7 @@ public class MenuPanel extends JPanel implements KeyListener {
                 mainClass.startGame();
                 break;
             case 1:
-                System.out.println("Tutorial selezionato (da implementare)");
+                mainClass.startTutorial();
                 break;
             case 2:
                 mainClass.showSettings();
