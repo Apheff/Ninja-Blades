@@ -70,16 +70,6 @@ public class MainClass extends JPanel implements Runnable{
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
     
-        System.out.println("screen height: " + SCREEN_HEIGHT);
-        System.out.println("screen width: " + SCREEN_WIDTH);
-        System.out.println("panel height: " + PANEL_HEIGHT);
-        System.out.println("panel width: " + PANEL_WIDTH);
-        System.out.println("total black border: " + 2 * BORDER_WIDTH);
-        System.out.println(dpi);
-        System.out.println(scaleFactor);
-
-        tutorialPanel = new TutorialPanel(this);
-
         // Aggiungiamo i pannelli al layeredPane
         layeredPane.add(gamePanel, Integer.valueOf(0));
         layeredPane.add(settingsPanel, Integer.valueOf(1));
