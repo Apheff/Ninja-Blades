@@ -102,7 +102,7 @@ public class TutorialPanel extends JPanel {
 
         switch (tutorialStep) {
             case 0: // Movimento
-                if (player.isMoving()) {
+                if (player.hasMoved()) {
                     tutorialStep++;
                 }
                 break;

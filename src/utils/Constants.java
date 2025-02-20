@@ -2,21 +2,28 @@ package utils;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.io.IOException;
-import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.awt.Dimension;
+
 
 public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */
 
     public static class GamePanel {
-        public static final int PANEL_WIDTH = 920;
-        public static final int PANEL_HEIGHT = 1080;
-        public static final int BORDER_WIDTH = 400;
-        public static final Dimension panelSize = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+        public static final float dpi = Toolkit.getDefaultToolkit().getScreenResolution(); 
+        public static final double scaleFactor = 96/dpi;
         public static final Font customFont;
+        public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        public static final int SCREEN_WIDTH = gd.getDisplayMode().getWidth();
+        public static final int SCREEN_HEIGHT = gd.getDisplayMode().getHeight();
+        public static final Dimension SCREEN_SIZE = new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT);
+        public static final int PANEL_HEIGHT = SCREEN_HEIGHT;
+        public static final int PANEL_WIDTH = (int) (SCREEN_WIDTH / 2);
+        public static final Dimension PANEL_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+        public static final int BORDER_WIDTH = (int) (SCREEN_WIDTH / 4 * scaleFactor);
 
         static {
             Font tempFont;

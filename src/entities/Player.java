@@ -137,7 +137,7 @@ public class Player extends Entity{
             if (doubleJump && !holdingJump) {
                 speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
                 doubleJump = false; // Double jump is now used
-                smoke.setSmoke(11, this.x, this.y + 20);
+                smoke.setSmoke(10, this.x, this.y + 20);
             }
 
         }else {
@@ -418,14 +418,20 @@ public class Player extends Entity{
         return !doubleJump && !onGround;
     }
 
-    public boolean isMoving(){
-        boolean ismoving = false;
-        if(state > 0 && keyboardInputs.left){
-            ismoving = true;
-        }else if(state < 0 && keyboardInputs.right){
-            ismoving = true;
+    public boolean isMovingLeft(){
+        return keyboardInputs.left;
+    }
+
+    public boolean isMovingRight(){
+        return keyboardInputs.right;
+    }
+
+    public boolean hasMoved(){
+        boolean moved = false;
+        if(this.isMovingLeft() || this.isMovingRight()){
+            moved = true;
         }
-        return ismoving;
+        return moved;
     }
 
     /*

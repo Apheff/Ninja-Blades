@@ -16,14 +16,10 @@ import utils.SoundManager;
 import ui.HUD;
 import ui.Wallpapers;
 
-import static utils.Constants.GamePanel.BORDER_WIDTH;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.SCREEN_HEIGHT;
-import static utils.Constants.GamePanel.SCREEN_WIDTH;
-import static utils.Constants.GamePanel.dpi;
-import static utils.Constants.GamePanel.scaleFactor;
+
 
 
 
@@ -69,6 +65,7 @@ public class MainClass extends JPanel implements Runnable{
         gamePanel = new GamePanel(this);
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
+        tutorialPanel = new TutorialPanel(this);
     
         // Aggiungiamo i pannelli al layeredPane
         layeredPane.add(gamePanel, Integer.valueOf(0));
