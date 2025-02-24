@@ -10,6 +10,9 @@ public class Items extends Entity {
     public BufferedImage[][] item;
     public int type = 0; // default coin (0)
     
+    // Randomly assign type with higher probability for coin (0)
+    Random rand = new Random();
+    
     /*
      * 0 coin
      * 1 shield
@@ -27,7 +30,7 @@ public class Items extends Entity {
             itemSheet = loadImage("items.png");
             if (itemSheet == null) {
                 // Image not found; stop further processing.
-                System.err.println("Failed to load blades.png");
+                System.err.println("Failed to load items.png");
                 return;
             }
         }
@@ -37,8 +40,6 @@ public class Items extends Entity {
         this.height = 56;
         this.width = 56;
 
-        // Randomly assign type with higher probability for coin (0)
-        Random rand = new Random();
         int randomValue = rand.nextInt(100);
         if (randomValue < 85) {
             type = 0; // 85% chance for coin
@@ -104,11 +105,11 @@ public class Items extends Entity {
 
 
 
-    public boolean isDestroyed(){
+    public boolean isGrabed(){
         return grabed;
     }
 
-    public void destroyItem(){
+    public void grabItem(){
         this.grabed = true;
     }
 }

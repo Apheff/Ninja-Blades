@@ -2,11 +2,6 @@ package main;
 
 
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.io.IOException;
-import java.io.InputStream;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -16,10 +11,13 @@ import utils.SoundManager;
 import ui.HUD;
 import ui.Wallpapers;
 
+import static utils.Constants.GamePanel.BORDER_WIDTH;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-
+import static utils.Constants.GamePanel.scaleFactor;
+import static utils.Constants.GamePanel.SCREEN_SIZE;
+import static utils.Constants.GamePanel.dpi;
 
 
 
@@ -49,16 +47,23 @@ public class MainClass extends JPanel implements Runnable{
         SoundManager.preloadSound("hit.wav");
         SoundManager.preloadSound("coin.wav");
         SoundManager.preloadSound("shield.wav");
-        SoundManager.preloadSound("magnet1.wav");
+        SoundManager.preloadSound("magnet.wav");
         SoundManager.preloadSound("heal.wav");
         SoundManager.preloadSound("pop.wav");
         SoundManager.preloadSound("explosion.wav");
+
+
+        System.out.println("scale Factor : " + scaleFactor);
+        System.out.println("Screen size: " + SCREEN_SIZE);
+        System.out.println("Panel size: " + PANEL_SIZE);
+        System.out.println("dpi: " + dpi);
+        System.out.println("border width: " + BORDER_WIDTH);
 
         HUD.loadHUD();
         Wallpapers.LoadWallpapers();
 
         // Inizializziamo il layeredPane con una dimensione fissa
-        layeredPane.setSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT)); 
+        layeredPane.setSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         layeredPane.setMaximumSize(PANEL_SIZE);
     
         // Inizializziamo i pannelli
@@ -66,7 +71,7 @@ public class MainClass extends JPanel implements Runnable{
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
         tutorialPanel = new TutorialPanel(this);
-    
+
         // Aggiungiamo i pannelli al layeredPane
         layeredPane.add(gamePanel, Integer.valueOf(0));
         layeredPane.add(settingsPanel, Integer.valueOf(1));
@@ -74,7 +79,6 @@ public class MainClass extends JPanel implements Runnable{
         layeredPane.add(menuPanel, Integer.valueOf(3)); // Menu sopra tutto
         new GameWindow(layeredPane);
         
-        addFont(); // Carica il font personalizzato
         showMenu(); // Mostra il menu all'avvio
         startGameLoop();
     }
@@ -147,22 +151,6 @@ public class MainClass extends JPanel implements Runnable{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-        }
-    }
-
-    private void addFont() {
-        try {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            // Load the font from the "fonts" directory
-            InputStream is = getClass().getResourceAsStream("/font/customFont.ttf");
-            if (is == null) {
-                System.err.println("Font file not found in the fonts directory.");
-                return;
-            }
-            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-            ge.registerFont(font);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
         }
     }
 }

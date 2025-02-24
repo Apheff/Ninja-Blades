@@ -1,6 +1,11 @@
 package ui;
 
 import main.TutorialPanel;
+import utils.KeyboardInputs;
+
+import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.customFont;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,8 +17,9 @@ public class TutorialEndMenu {
     private int selectedOption = 0;
     private boolean active = false;
 
-    public TutorialEndMenu(TutorialPanel tutorialPanel) {
+    public TutorialEndMenu(TutorialPanel tutorialPanel, KeyboardInputs keyboardInputs) {
         this.tutorialPanel = tutorialPanel;
+        keyboardInputs.setEndTutorialMenu(this);
     }
 
     public void show() {
@@ -28,22 +34,22 @@ public class TutorialEndMenu {
         return active;
     }
 
-    public void draw(Graphics2D g2d, int width, int height) {
+    public void draw(Graphics2D g2d) {
         if (!active) return;
 
         // Overlay semi-trasparente
         g2d.setColor(new Color(0, 0, 0, 180));
-        g2d.fillRect(0, 0, width, height);
+        g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 
         // Titolo "Tutorial Completato"
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Arial", Font.BOLD, 50));
+        g2d.setFont(customFont);
         String title = "Tutorial Completato!";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
-        g2d.drawString(title, (width - titleWidth) / 2, height / 3);
+        g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT / 3);
 
         // Opzioni di fine tutorial
-        g2d.setFont(new Font("Arial", Font.BOLD, 30));
+        g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
                 g2d.setColor(Color.YELLOW);
@@ -51,7 +57,7 @@ public class TutorialEndMenu {
                 g2d.setColor(Color.WHITE);
             }
             int textWidth = g2d.getFontMetrics().stringWidth(options[i]);
-            g2d.drawString(options[i], (width - textWidth) / 2, height / 2 + i * 50);
+            g2d.drawString(options[i], (PANEL_WIDTH - textWidth) / 2, PANEL_HEIGHT / 2 + i * 50);
         }
     }
 

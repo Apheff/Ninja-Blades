@@ -1,55 +1,64 @@
 package main;
 
-import static utils.Constants.GamePanel.BORDER_WIDTH;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.SCREEN_HEIGHT;
-import static utils.Constants.GamePanel.SCREEN_SIZE;
-import static utils.Constants.GamePanel.SCREEN_WIDTH;
 
-import java.awt.BorderLayout;
+import static utils.Constants.GamePanel.*;
+
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import java.awt.Dimension;
 
 public class GameWindow {
-
     private JPanel leftBorder, rightBorder;
     private JFrame window;
 
     public GameWindow(JLayeredPane layeredPane) {
         // Create the main JFrame
         window = new JFrame();
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen mode
+        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
         window.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-        window.setMaximumSize(SCREEN_SIZE);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setUndecorated(true); // Removes the title bar
-        window.setLayout(new BorderLayout());
+        window.setUndecorated(true);
         window.setBackground(Color.black);
 
-        // Create the black side borders
-        leftBorder = new JPanel();  
+        // Set GridBagLayout for precise control
+        window.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1.0;  // Same height for all elements
+
+        // Create left and right borders
+        leftBorder = new JPanel();
         rightBorder = new JPanel();
 
-        // Set fixed dimensions for the black borders (scaled with the pixel density of the screen)
-        leftBorder.setSize(new Dimension(BORDER_WIDTH, PANEL_HEIGHT));
-        rightBorder.setSize(new Dimension(BORDER_WIDTH, PANEL_HEIGHT));
-        leftBorder.setPreferredSize(new Dimension(BORDER_WIDTH, PANEL_HEIGHT));
-        rightBorder.setPreferredSize(new Dimension(BORDER_WIDTH, PANEL_HEIGHT));
+        // Set debug colors
+        leftBorder.setBackground(Color.black);
+        rightBorder.setBackground(Color.black);
 
-        // Set the black color for the borders
-        leftBorder.setBackground(Color.BLACK);
-        rightBorder.setBackground(Color.BLACK);
+        // Set fixed dimensions for borders (¼ screen width each)
+        leftBorder.setPreferredSize(new Dimension(BORDER_WIDTH, SCREEN_HEIGHT));
+        rightBorder.setPreferredSize(new Dimension(BORDER_WIDTH, SCREEN_HEIGHT));
 
-        // Add the components to the JFrame
-        window.add(leftBorder, BorderLayout.WEST);   // Left black border
-        window.add(layeredPane, BorderLayout.CENTER);  // Game panel in the center
-        window.add(rightBorder, BorderLayout.EAST);  // Right black border
+        // Add left border (¼ screen width)
+        gbc.gridx = 0;  // Column 0
+        gbc.weightx = 0.25;  // ¼ width
+        window.add(leftBorder, gbc);
 
-        // Show the window
+        // Add game panel (½ screen width)
+        gbc.gridx = 1;  // Column 1
+        gbc.weightx = 0.51;  // ½ width
+        window.add(layeredPane, gbc);
+
+        // Add right border (¼ screen width)
+        gbc.gridx = 2;  // Column 2
+        gbc.weightx = 0.25;  // ¼ width
+        window.add(rightBorder, gbc);
+
+        // Pack and show window
         window.setVisible(true);
     }
 }

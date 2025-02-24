@@ -3,6 +3,7 @@ package utils;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import ui.PauseMenu;
+import ui.TutorialEndMenu;
 import ui.GameOverMenu;
 
 public class KeyboardInputs implements KeyListener {
@@ -10,6 +11,7 @@ public class KeyboardInputs implements KeyListener {
     public boolean left, right, space;
     private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
+    private TutorialEndMenu tutorialEndMenu;
 
     private static boolean isWASD = true;
 
@@ -25,8 +27,6 @@ public class KeyboardInputs implements KeyListener {
         }
     }
 
-
-
     // Metodo per collegare il menu di pausa
     public void setPauseMenu(PauseMenu pauseMenu) {
         this.pauseMenu = pauseMenu;
@@ -36,6 +36,9 @@ public class KeyboardInputs implements KeyListener {
         this.gameOverMenu = gameOverMenu;
     }
 
+    public void setEndTutorialMenu(TutorialEndMenu tutorialEndMenu){
+        this.tutorialEndMenu = tutorialEndMenu;
+    }
 
     // Metodo per gestire i tasti premuti
     @Override
@@ -48,6 +51,11 @@ public class KeyboardInputs implements KeyListener {
 
         if(gameOverMenu != null && gameOverMenu.isActive()) {
             gameOverMenu.handleInput(e.getKeyCode());
+            return;
+        }
+
+        if(tutorialEndMenu != null && tutorialEndMenu.isActive()) {
+            tutorialEndMenu.handleInput(e.getKeyCode());
             return;
         }
 

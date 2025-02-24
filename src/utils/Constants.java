@@ -17,13 +17,14 @@ public class Constants {
         public static final double scaleFactor = 96/dpi;
         public static final Font customFont;
         public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        public static final int SCREEN_WIDTH = gd.getDisplayMode().getWidth();
-        public static final int SCREEN_HEIGHT = gd.getDisplayMode().getHeight();
-        public static final Dimension SCREEN_SIZE = new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT);
-        public static final int PANEL_HEIGHT = SCREEN_HEIGHT;
-        public static final int PANEL_WIDTH = (int) (SCREEN_WIDTH / 2);
-        public static final Dimension PANEL_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
-        public static final int BORDER_WIDTH = (int) (SCREEN_WIDTH / 4 * scaleFactor);
+        public static int SCREEN_WIDTH = (int)(gd.getDisplayMode().getWidth());
+        public static int SCREEN_HEIGHT = (int)(gd.getDisplayMode().getHeight());
+        public static Dimension SCREEN_SIZE = new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT);
+        public static int PANEL_HEIGHT = (int)(SCREEN_HEIGHT);
+        public static int PANEL_WIDTH = (int) (SCREEN_WIDTH / 2);
+        public static Dimension PANEL_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+        public static int BORDER_WIDTH = (int) (SCREEN_WIDTH / 4);
+        public static int BORDER_HEIGHT = (int)(SCREEN_HEIGHT);
 
         static {
             Font tempFont;

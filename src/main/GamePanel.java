@@ -30,7 +30,6 @@ import utils.SoundManager;
 
 // import constant
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.scaleFactor;
 
@@ -84,7 +83,6 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         addKeyListener(keyboardInputs);
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
-        setMaximumSize(PANEL_SIZE);
 
         this.mainClass = mainClass;
     
@@ -127,9 +125,9 @@ public class GamePanel extends JPanel {
         for (Blades blade : bladesList) {
             if (player.checkBladeDestroy(blade)) {
                 SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
-                blade.destroyBlade();
-                smokes.setSmoke(0, blade.x, blade.y);
                 itemList.add(new Items(blade.x, blade.y));
+                smokes.setSmoke(0, blade.x, blade.y);
+                blade.destroyBlade();
             }
             blade.update();
         }
@@ -146,7 +144,7 @@ public class GamePanel extends JPanel {
                         player.setInvincible(5000);
                         break;
                     case 2:
-                        SoundManager.playSound("magnet1.wav"); // 🔊 magnet sound
+                        SoundManager.playSound("magnet.wav"); // 🔊 magnet sound
                         player.setMagnetize(7000);
                         break;
                     case 3:
@@ -156,13 +154,13 @@ public class GamePanel extends JPanel {
                         }
                         break;
                 }
-                item.destroyItem();
+                item.grabItem();
             }
             item.update(player);
         }
         
 
-        itemList.removeIf(Items::isDestroyed);
+        itemList.removeIf(Items::isGrabed);
         bladesList.removeIf(blade -> blade.y < -blade.height || blade.destroyed);
 
         bladesSpawner.start();

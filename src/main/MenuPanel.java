@@ -77,7 +77,7 @@ public class MenuPanel extends JPanel implements KeyListener {
     }
 
     private void drawWallpaper(Graphics2D g2d) {
-        int frameIndex = (int) (System.currentTimeMillis() / 200) % wallpaperFrames.length;
+        int frameIndex = (int) (System.currentTimeMillis() / 120) % wallpaperFrames.length;
         g2d.drawImage(wallpaperFrames[frameIndex], 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
     }
 

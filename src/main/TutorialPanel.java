@@ -22,16 +22,16 @@ public class TutorialPanel extends JPanel {
     private int bladesDestroyed = 0; // Contatore delle lame distrutte
     private TutorialEndMenu tutorialEndMenu;
     private String[] tutorialTexts = {
-            "Muoviti con le FRECCE SINISTRA e DESTRA",
-            "Salta con la FRECCIA SU",
-            "Puoi eseguire un DOPPIO SALTO!",
-            "Distruggi 3 lame saltandoci sopra!"
+            "MUOVITI CON LE FRECCE SINISTRA E DESTRA",
+            "SALTA CON LA FRECCIA SU ^",
+            "PUOI ESEGUIRE UN DOPPIO SALTO!",
+            "DISTRUGGI LE 3 LAME SALTANDOCI SOPRA!"
     };
 
     public TutorialPanel(MainClass mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
-        setBackground(Color.DARK_GRAY);
+        setBackground(new Color(248, 214, 104));
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
@@ -40,7 +40,7 @@ public class TutorialPanel extends JPanel {
         player = new Player(keyboardInputs);
         addKeyListener(keyboardInputs);
 
-        tutorialEndMenu = new TutorialEndMenu(this); // ✅ Aggiunto il menu di fine tutorial
+        tutorialEndMenu = new TutorialEndMenu(this, keyboardInputs); // ✅ Aggiunto il menu di fine tutorial
         spawnBladeForStep(); // Genera la lama iniziale
         
         // Game loop (aggiorna ogni 16 ms ~ 60 FPS)
@@ -75,7 +75,7 @@ public class TutorialPanel extends JPanel {
         }
     
         // Testo del tutorial
-        g2d.setFont(new Font("Arial", Font.BOLD, 32));
+        g2d.setFont(customFont);
         String text = tutorialTexts[tutorialStep];
         int textWidth = g2d.getFontMetrics().stringWidth(text);
         int textX = (PANEL_WIDTH - textWidth) / 2;
@@ -83,11 +83,9 @@ public class TutorialPanel extends JPanel {
     
         g2d.setColor(Color.BLACK);
         g2d.drawString(text, textX + 2, textY + 2);
-        g2d.setColor(Color.WHITE);
-        g2d.drawString(text, textX, textY);
     
         // Disegna il menu di fine tutorial se attivo
-        tutorialEndMenu.draw(g2d, getWidth(), getHeight());
+        tutorialEndMenu.draw(g2d);
     }
     
 
@@ -137,6 +135,7 @@ public class TutorialPanel extends JPanel {
         }
         repaint();
     }
+
     // Riprova il tutorial
     public void restartTutorial() {
         tutorialStep = 0;

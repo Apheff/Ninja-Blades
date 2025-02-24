@@ -10,7 +10,6 @@ import utils.KeyboardInputs;
 // import constants
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.SCREEN_HEIGHT;
 import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity{
@@ -75,7 +74,14 @@ public class Player extends Entity{
         this.state = 1;
 
         // Load sprite sheet
-        spriteSheet = loadImage("player.png");
+        if (spriteSheet == null) {
+            spriteSheet = loadImage("player.png");
+            if (spriteSheet == null) {
+                // Image not found; stop further processing.
+                System.err.println("Failed to load player.png");
+                return;
+            }
+        }
 
         // Loads the Frames for every state
         loadAllFrames();
@@ -90,12 +96,12 @@ public class Player extends Entity{
     */       
 
     public void applyGravity() {
-        if (!onGround || this.y < SCREEN_HEIGHT - this.height) {
+        if (!onGround || this.y < PANEL_HEIGHT - this.height) {
             speedY += GRAVITY;
             this.y += speedY;
 
-            if (y >= SCREEN_HEIGHT - this.height) {
-                y = SCREEN_HEIGHT - this.height;
+            if (y >= PANEL_HEIGHT - this.height) {
+                y = PANEL_HEIGHT - this.height;
                 onGround = true;
                 doubleJump = false;
                 speedY = 0;
