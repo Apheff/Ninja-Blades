@@ -111,7 +111,7 @@ public class MenuPanel extends JPanel implements KeyListener {
                 mainClass.showSettings();
                 break;
             case 3:
-                System.out.println("Armadietto selezionato (da implementare)");
+                mainClass.showLocker();
                 break;
             case 4:
                 System.exit(0);

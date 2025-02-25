@@ -28,9 +28,11 @@ public class MainClass extends JPanel implements Runnable{
     private SettingsPanel settingsPanel;
     private JLayeredPane layeredPane = new JLayeredPane();
     private Thread gameThread;
+    private LockerPanel lockerPanel;
     private MenuPanel menuPanel;
     private boolean running = true;
     private TutorialPanel tutorialPanel;
+    private int currentTheme = 0;
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
@@ -67,6 +69,7 @@ public class MainClass extends JPanel implements Runnable{
         layeredPane.setMaximumSize(PANEL_SIZE);
     
         // Inizializziamo i pannelli
+        lockerPanel = new LockerPanel(this);
         gamePanel = new GamePanel(this);
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);
@@ -77,6 +80,7 @@ public class MainClass extends JPanel implements Runnable{
         layeredPane.add(settingsPanel, Integer.valueOf(1));
         layeredPane.add(tutorialPanel, Integer.valueOf(2)); // Strato sopra il gioco
         layeredPane.add(menuPanel, Integer.valueOf(3)); // Menu sopra tutto
+        layeredPane.add(lockerPanel, Integer.valueOf(4)); // Locker sopra tutto
         new GameWindow(layeredPane);
         
         showMenu(); // Mostra il menu all'avvio
@@ -94,7 +98,7 @@ public class MainClass extends JPanel implements Runnable{
         menuPanel.setVisible(false);
         gamePanel.setVisible(false);
         tutorialPanel.setVisible(false);
-
+        lockerPanel.setVisible(false);
         settingsPanel.showPanel();
     }
     
@@ -104,7 +108,7 @@ public class MainClass extends JPanel implements Runnable{
         gamePanel.setVisible(false);
         settingsPanel.setVisible(false);
         tutorialPanel.setVisible(false);
-        
+        lockerPanel.setVisible(false);
         gamePanel.pauseGame(); // Pausa completa del gioco
         menuPanel.requestFocusInWindow();
         
@@ -117,7 +121,7 @@ public class MainClass extends JPanel implements Runnable{
         menuPanel.setVisible(false);
         settingsPanel.setVisible(false);
         tutorialPanel.setVisible(false);
-    
+        lockerPanel.setVisible(false);
         gamePanel.resumeGame(); // Riavvia il gioco
         gamePanel.requestFocusInWindow();
     
@@ -125,9 +129,11 @@ public class MainClass extends JPanel implements Runnable{
     }
 
     public void startTutorial() {
-        tutorialPanel.setVisible(true);
-        menuPanel.setVisible(false);
         gamePanel.setVisible(false);
+        menuPanel.setVisible(false);
+        settingsPanel.setVisible(false);
+        tutorialPanel.setVisible(true);
+        lockerPanel.setVisible(false);
         tutorialPanel.requestFocusInWindow();
     }
 
@@ -140,6 +146,24 @@ public class MainClass extends JPanel implements Runnable{
         settingsPanel.repaint();
     }
 
+    public int getTheme() {
+        return currentTheme;
+    }
+
+    public void setTheme(int themeIndex) {
+        currentTheme = themeIndex;
+        System.out.println("Tema selezionato: " + themeIndex);
+        // Qui puoi cambiare lo sfondo del gioco o le texture
+    }
+
+    public void showLocker() {
+        gamePanel.setVisible(false);
+        menuPanel.setVisible(false);
+        settingsPanel.setVisible(false);
+        tutorialPanel.setVisible(false);
+        lockerPanel.setVisible(true);
+        lockerPanel.showPanel();
+    }
 
     @Override
     public void run() {

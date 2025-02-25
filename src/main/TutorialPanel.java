@@ -10,21 +10,24 @@ import java.util.List;
 import entities.Blades;
 import entities.Player;
 import ui.TutorialEndMenu;
+import ui.Smokes;
 import utils.KeyboardInputs;
 import static utils.Constants.GamePanel.*;
 
 public class TutorialPanel extends JPanel {
 
+    private long lastCollisionTime = System.currentTimeMillis();
     private MainClass mainClass;
     private Player player;
     private List<Blades> bladesList = new ArrayList<>();
     private int tutorialStep = 0; // Fasi del tutorial
     private int bladesDestroyed = 0; // Contatore delle lame distrutte
     private TutorialEndMenu tutorialEndMenu;
+    private Smokes smokes = new Smokes();
     private String[] tutorialTexts = {
-            "MUOVITI CON LE FRECCE SINISTRA E DESTRA",
-            "SALTA CON LA FRECCIA SU ^",
-            "PUOI ESEGUIRE UN DOPPIO SALTO!",
+            "MUOVITI A SINISTRA E DESTRA",
+            "ESEGUI UN SALTO",
+            "ESEGUI UN DOPPIO SALTO!",
             "DISTRUGGI LE 3 LAME SALTANDOCI SOPRA!"
     };
 
@@ -83,7 +86,7 @@ public class TutorialPanel extends JPanel {
     
         g2d.setColor(Color.BLACK);
         g2d.drawString(text, textX + 2, textY + 2);
-    
+        smokes.draw(g2d);
         // Disegna il menu di fine tutorial se attivo
         tutorialEndMenu.draw(g2d);
     }
@@ -116,6 +119,10 @@ public class TutorialPanel extends JPanel {
                 }
                 break;
             case 3: // Distruzione delle lame
+                if(player.collisionCheck(bladesList.get(0)) && System.currentTimeMillis() > lastCollisionTime) {
+                    player.setDamage(2000);
+                    lastCollisionTime = System.currentTimeMillis() + 2000;
+                }
                 if (!bladesList.isEmpty() && bladesList.get(0).y < -bladesList.get(0).height) {
                     bladesList.clear();
                     bladesList.add(new Blades());
@@ -123,8 +130,8 @@ public class TutorialPanel extends JPanel {
 
                 if (!bladesList.isEmpty() && player.checkBladeDestroy(bladesList.get(0))) {
                     bladesDestroyed++;
+                    smokes.setSmoke(0, bladesList.get(0).x, bladesList.get(0).y);
                     bladesList.clear(); // Rimuoviamo la lama distrutta
-
                     if (bladesDestroyed >= 3) {
                         tutorialEndMenu.show(); // ✅ Ora mostra il menu invece del messaggio orribile
                     } else {

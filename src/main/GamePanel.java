@@ -174,7 +174,7 @@ public class GamePanel extends JPanel {
 
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-        Wallpapers.draw(g2d, 1);
+        Wallpapers.draw(g2d, mainClass.getTheme());
         HUD.draw(g2d, player);
 
         if (gameOverMenu.isActive()) {

@@ -194,6 +194,9 @@ public class Player extends Entity{
             }else if (this.state < 0){
                 this.state = IDLE_LEFT;
             }
+            if (keyboardInputs.left && keyboardInputs.right) {
+                this.state = IDLE_RIGHT;
+            }
         }
     }
 
@@ -366,6 +369,7 @@ public class Player extends Entity{
         this.isInvincible = false;
         this.damaged = false;
     }
+
     public void resetPlayer(){
         score = 0;
         hearts = 3;
