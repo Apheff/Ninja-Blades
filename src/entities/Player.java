@@ -130,7 +130,7 @@ public class Player extends Entity{
                 variableJumpForce = 0; // Reset jump force
                 onGround = false; // Player is no longer on the ground
                 doubleJump = true; // Enable double jump after the first jump
-                smoke.setSmoke(9, this.x, this.y + 20);
+                smoke.setSmoke(1, this.x, this.y);
             }
 
             // While the space key is held, increase the jump force gradually
@@ -143,7 +143,7 @@ public class Player extends Entity{
             if (doubleJump && !holdingJump) {
                 speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
                 doubleJump = false; // Double jump is now used
-                smoke.setSmoke(10, this.x, this.y + 20);
+                smoke.setSmoke(2, this.x, this.y);
             }
 
         }else {
@@ -348,9 +348,18 @@ public class Player extends Entity{
     public void setDamage(long  durationMillis){
         this.damaged = true;
         this.y -= 2;          // to lift the player from the ground
-        this.speedY = -10;    // knockback  y (upwards)
-        this.x += 10 * state; // knockback x (opposite of the direction the player is facing)
+        knockback(12);
         this.damagedEndTime = System.currentTimeMillis() + durationMillis;
+    }
+
+    //
+    public void knockback(int value){
+        this.speedY = -value;    // knockback  y (upwards)
+        if(state > 0 ){
+            this.x -= value; // knockback x (opposite of the direction the player is facing)
+        }else{
+            this.x +=value;
+        }
     }
 
     public void setMagnetize(long  durationMillis){
@@ -361,6 +370,10 @@ public class Player extends Entity{
     public void setInvincible(long durationMillis) {
         isInvincible = true;
         invincibilityEndTime = System.currentTimeMillis() + durationMillis;
+    }
+
+    public boolean hasMaxJumped(){
+        return variableJumpForce >= MAX_JUMP_FORCE;
     }
 
     public void resetPosition(){

@@ -1,6 +1,5 @@
 package main;
 
-
 import java.awt.Dimension;
 
 import javax.swing.JLayeredPane;
@@ -15,10 +14,8 @@ import static utils.Constants.GamePanel.BORDER_WIDTH;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.scaleFactor;
 import static utils.Constants.GamePanel.SCREEN_SIZE;
-import static utils.Constants.GamePanel.dpi;
-
+import static utils.Constants.GamePanel.scaleFactor;;
 
 
 public class MainClass extends JPanel implements Runnable{
@@ -44,21 +41,13 @@ public class MainClass extends JPanel implements Runnable{
     // Constructor
     public MainClass() {
         setLayout(null); // Assicura che i pannelli vengano posizionati correttamente
-    
-        // Preload sounds
-        SoundManager.preloadSound("hit.wav");
-        SoundManager.preloadSound("coin.wav");
-        SoundManager.preloadSound("shield.wav");
-        SoundManager.preloadSound("magnet.wav");
-        SoundManager.preloadSound("heal.wav");
-        SoundManager.preloadSound("pop.wav");
-        SoundManager.preloadSound("explosion.wav");
 
+        // preloads all the sounds
+        SoundManager.preloadAllSounds();
 
         System.out.println("scale Factor : " + scaleFactor);
         System.out.println("Screen size: " + SCREEN_SIZE);
         System.out.println("Panel size: " + PANEL_SIZE);
-        System.out.println("dpi: " + dpi);
         System.out.println("border width: " + BORDER_WIDTH);
 
         HUD.loadHUD();

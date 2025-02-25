@@ -6,6 +6,7 @@ import utils.KeyboardInputs;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.customYellow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -52,7 +53,7 @@ public class GameOverMenu{
         g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
-                g2d.setColor(Color.YELLOW); // Evidenziazione opzione selezionata
+                g2d.setColor(customYellow); // Evidenziazione opzione selezionata
             } else {
                 g2d.setColor(Color.WHITE);
             }

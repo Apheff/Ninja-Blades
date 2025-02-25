@@ -60,7 +60,7 @@ public class KeyboardInputs implements KeyListener {
         }
 
         // Tasto "P" per attivare/disattivare il menu di pausa
-        if (e.getKeyCode() == KeyEvent.VK_P && pauseMenu != null) {
+        if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE && pauseMenu != null) {
             pauseMenu.togglePause();
             return;
         }

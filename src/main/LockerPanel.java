@@ -12,9 +12,9 @@ import static utils.Constants.GamePanel.*;
 public class LockerPanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private int selectedTheme = 0; // 0 = Tema 1, 1 = Tema 2, 2 = Tema 3
+    private int selectedTheme = 0; // default: 0
     private BufferedImage[] themeImages;
-    private String[] themeNames = {"Tema Classico", "Tema Notte", "Tema Neon"};
+    private String[] themeNames = {"CLASSIC THEME", "RICK AND MORTY THEME", "Tema Neon"};
     private boolean active = false;
 
     public LockerPanel(MainClass mainClass) {
@@ -47,11 +47,12 @@ public class LockerPanel extends JPanel implements KeyListener {
             int x = (PANEL_WIDTH / 2 - 150) + (i - selectedTheme) * 350;
             int y = PANEL_HEIGHT / 3;
 
+
             if (i == selectedTheme) {
-                g2d.setColor(Color.YELLOW);
+                g2d.setColor(customYellow);
                 g2d.fillRoundRect(x - 10, y - 10, 320, 220, 20, 20);
             }
-
+            
             g2d.drawImage(themeImages[i], x, y, 300, 200, null);
             
             // Nome del tema
@@ -59,13 +60,25 @@ public class LockerPanel extends JPanel implements KeyListener {
             String text = themeNames[i];
             int textWidth = g2d.getFontMetrics().stringWidth(text);
             g2d.setColor(i == selectedTheme ? Color.YELLOW : Color.WHITE);
-            g2d.drawString(text, x + (300 - textWidth) / 2, y + 230);
+            g2d.drawString(text, x + (300 - textWidth) / 2, y + 234);
         }
+
+
+        // arrow indications 
+        String left = "<";
+        String right = ">";
+        int leftWidth = g2d.getFontMetrics().stringWidth(left);
+        int rightWidth = g2d.getFontMetrics().stringWidth(right);
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(right, (PANEL_WIDTH / 4 * 3) + rightWidth + 32, PANEL_HEIGHT / 3 + 96 + 2);
+        g2d.drawString(left, (PANEL_WIDTH / 4) - leftWidth - 32, PANEL_HEIGHT / 3 + 96 + 2);
+        g2d.setColor(customYellow);
+        g2d.drawString(right, (PANEL_WIDTH / 4 * 3) + rightWidth + 32, PANEL_HEIGHT / 3 + 96);
+        g2d.drawString(left, (PANEL_WIDTH / 4) - leftWidth - 32, PANEL_HEIGHT / 3 + 96);
         
         // Testo di istruzioni
-        g2d.setFont(customFont);
         g2d.setColor(Color.WHITE);
-        String instructions = "< > | ENTER (SELECT) | ESC (BACK)";
+        String instructions = "ENTER (SELECT) | ESC (BACK)";
         int textWidth = g2d.getFontMetrics().stringWidth(instructions);
         g2d.drawString(instructions, (PANEL_WIDTH - textWidth) / 2, PANEL_HEIGHT - 50);
     }

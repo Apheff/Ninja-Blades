@@ -3,6 +3,7 @@ package ui;
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.customYellow;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -13,7 +14,7 @@ import main.GamePanel;
 public class PauseMenu {
 
     private boolean isPaused = false;
-    private String[] options = {"Resume", "Return to Menu", "Exit"};
+    private String[] options = {"Resume", "restart", "Return to Menu", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private GamePanel gamePanel;
 
@@ -40,7 +41,7 @@ public class PauseMenu {
         g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
-                g2d.setColor(Color.YELLOW); // Evidenzia l'opzione selezionata
+                g2d.setColor(customYellow); // Evidenzia l'opzione selezionata
             } else {
                 g2d.setColor(Color.WHITE);
             }
@@ -76,10 +77,13 @@ public class PauseMenu {
             case 0: // Riprendi
                 togglePause();
                 break;
-            case 1: // Torna al Menu
+            case 1: // resetta il gioco
+                gamePanel.resetGame();
+                break;
+            case 2: // Torna al Menu
                 gamePanel.returnToMenu();
                 break;
-            case 2: // Esci
+            case 3: // Esci
                 System.exit(0);
                 break;
         }

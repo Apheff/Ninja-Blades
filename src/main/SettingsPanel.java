@@ -15,8 +15,9 @@ import utils.SoundManager;
 
 import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.scaleFactor;
 import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.customYellow;
+import static utils.Constants.GamePanel.scaleFactor;
 
 public class SettingsPanel extends JPanel implements KeyListener {
     
@@ -25,7 +26,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
     // Components for settings
     private JSlider volumeSlider;
     
-    private String[] options = {"Controls: WASD", "Back"};
+    private String[] options = {"Controls: WASD", "< Back"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private boolean active = false;
     private int value = 100;
@@ -98,22 +99,23 @@ public class SettingsPanel extends JPanel implements KeyListener {
         int startY = PANEL_HEIGHT / 2 + 80; // Punto di partenza verticale per i pulsanti
         int spacing = 160; // Distanza tra i pulsanti
 
+        
         for (int i = 0; i < options.length; i++) {
             if (i == selectedOption) {
                 if(i == 0){
                     options[i] = "Controls: " + KeyboardInputs.getControlType();
                 }
-                g2d.setColor(Color.YELLOW); // Evidenziazione per l'opzione selezionata
+                g2d.setColor(customYellow); // Evidenziazione per l'opzione selezionata
             } else {
                 g2d.setColor(Color.WHITE);
             }
-
+            
             String text = options[i];
             int textWidth = g2d.getFontMetrics().stringWidth(text);
             int textX = (PANEL_WIDTH - textWidth) / 2;
             int textY = startY + (i * spacing);
             g2d.drawString(text, textX, textY);
-            g2d.fillRect(textX, textY + 8, textWidth, 4);
+            g2d.fillRect(textX, startY + 8, textWidth, 4);
         }
     }
     
@@ -124,10 +126,10 @@ public class SettingsPanel extends JPanel implements KeyListener {
     
         switch (keyCode) {
             case KeyEvent.VK_UP:
-                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1; // Loop con lo slider
+                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
                 break;
             case KeyEvent.VK_DOWN:
-                selectedOption = (selectedOption < options.length) ? selectedOption + 1 : 0; // Loop con lo slider
+                selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
                 break;
             case KeyEvent.VK_LEFT:
                 volumeSlider.setValue(volumeSlider.getValue() - 10);

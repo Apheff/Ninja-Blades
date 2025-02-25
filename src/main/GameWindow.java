@@ -4,7 +4,6 @@ package main;
 import static utils.Constants.GamePanel.*;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JFrame;
@@ -19,7 +18,7 @@ public class GameWindow {
         // Create the main JFrame
         window = new JFrame();
         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        window.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        window.setSize(BASE_WIDTH, BASE_HEIGHT);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setUndecorated(true);
@@ -38,10 +37,6 @@ public class GameWindow {
         // Set debug colors
         leftBorder.setBackground(Color.black);
         rightBorder.setBackground(Color.black);
-
-        // Set fixed dimensions for borders (¼ screen width each)
-        leftBorder.setPreferredSize(new Dimension(BORDER_WIDTH, SCREEN_HEIGHT));
-        rightBorder.setPreferredSize(new Dimension(BORDER_WIDTH, SCREEN_HEIGHT));
 
         // Add left border (¼ screen width)
         gbc.gridx = 0;  // Column 0

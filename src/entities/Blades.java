@@ -35,8 +35,6 @@ public class Blades extends Entity{
         loadFrames();
     }
 
-
-
     public void update(){
         if (!destroyed) {
             frameCount++;

@@ -2,10 +2,12 @@ package utils;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.IOException;
+
+import static utils.Constants.GamePanel.scaleFactor;
+
+import java.awt.Color;
 import java.awt.Dimension;
 
 
@@ -13,18 +15,23 @@ public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */
 
     public static class GamePanel {
-        public static final float dpi = Toolkit.getDefaultToolkit().getScreenResolution(); 
-        public static final double scaleFactor = 96/dpi;
+        public static final int BASE_WIDTH = 1920;
+        public static final int BASE_HEIGHT = 1080; 
         public static final Font customFont;
-        public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        public static int SCREEN_WIDTH = (int)(gd.getDisplayMode().getWidth());
-        public static int SCREEN_HEIGHT = (int)(gd.getDisplayMode().getHeight());
-        public static Dimension SCREEN_SIZE = new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT);
-        public static int PANEL_HEIGHT = (int)(SCREEN_HEIGHT);
-        public static int PANEL_WIDTH = (int) (SCREEN_WIDTH / 2);
+        public static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+        public static int SCREEN_WIDTH = (int)(SCREEN_SIZE.getWidth());
+        public static int SCREEN_HEIGHT = (int)(SCREEN_SIZE.getHeight());
+        public static float scaleX = (float) SCREEN_WIDTH / BASE_WIDTH;
+        public static float scaleY = (float) SCREEN_HEIGHT / BASE_HEIGHT;
+
+        // Use the smaller scale to maintain the aspect ratio
+        public static float scaleFactor = Math.min(scaleX, scaleY);
+        public static int PANEL_HEIGHT = (int)(BASE_HEIGHT);
+        public static int PANEL_WIDTH = (int) (BASE_WIDTH / 2);
         public static Dimension PANEL_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
-        public static int BORDER_WIDTH = (int) (SCREEN_WIDTH / 4);
-        public static int BORDER_HEIGHT = (int)(SCREEN_HEIGHT);
+        public static int BORDER_WIDTH = (int) (BASE_WIDTH / 4);
+        public static int BORDER_HEIGHT = (int)(BASE_WIDTH);
+        public static Color customYellow = new Color(248, 214, 104);
 
         static {
             Font tempFont;
@@ -50,10 +57,10 @@ public class Constants {
         public static final int DOUBLE_JUMP_LEFT = -4;
 
         //jump constants
-        public static final double jumpIncrement = 14; // will increment the jump force 
-        public static final int FIXED_JUMP_FORCE = 20; 
-        public static final int MAX_JUMP_FORCE = 200;
-        public static final double GRAVITY = .6;
+        public static final double jumpIncrement = 10 * scaleFactor; // will increment the jump force 
+        public static final int FIXED_JUMP_FORCE = (int)(20 * scaleFactor); 
+        public static final int MAX_JUMP_FORCE = (int)(280 * scaleFactor);
+        public static final double GRAVITY = .6 * scaleFactor;
     }
     public static class ItemConstants {
         public static final int COIN = 0;

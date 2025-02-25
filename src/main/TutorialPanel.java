@@ -13,6 +13,7 @@ import ui.TutorialEndMenu;
 import ui.Smokes;
 import utils.KeyboardInputs;
 import static utils.Constants.GamePanel.*;
+import static utils.Constants.GamePanel.scaleFactor;
 
 public class TutorialPanel extends JPanel {
 
@@ -27,6 +28,7 @@ public class TutorialPanel extends JPanel {
     private String[] tutorialTexts = {
             "MUOVITI A SINISTRA E DESTRA",
             "ESEGUI UN SALTO",
+            "ESEGUI UN SALTO ALLUNGATO",
             "ESEGUI UN DOPPIO SALTO!",
             "DISTRUGGI LE 3 LAME SALTANDOCI SOPRA!"
     };
@@ -60,7 +62,7 @@ public class TutorialPanel extends JPanel {
     // Genera una lama solo se siamo alla fase giusta
     private void spawnBladeForStep() {
         bladesList.clear();
-        if (tutorialStep == 3) {
+        if (tutorialStep == 4) {
             bladesList.add(new Blades());
         }
     }
@@ -112,13 +114,17 @@ public class TutorialPanel extends JPanel {
                     tutorialStep++;
                 }
                 break;
-            case 2: // Doppio Salto
+            case 2:
+                if(player.hasMaxJumped()){
+                    tutorialStep++;
+                }
+            case 3: // Doppio Salto
                 if (player.hasDoubleJumped()) {
                     tutorialStep++;
                     spawnBladeForStep(); // Genera la prima lama per la fase 3
                 }
                 break;
-            case 3: // Distruzione delle lame
+            case 4: // Distruzione delle lame
                 if(player.collisionCheck(bladesList.get(0)) && System.currentTimeMillis() > lastCollisionTime) {
                     player.setDamage(2000);
                     lastCollisionTime = System.currentTimeMillis() + 2000;

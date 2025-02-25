@@ -77,6 +77,19 @@ public class Entity extends ImageLoader{
         }
     }
 
+    public void setSpeed(int speedX, int speedY){
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
+
+    public void setSpeedX(int speedX){
+        this.speedX = speedX;
+    }
+
+    public void setSpeedY(int speedY){
+        this.speedY = speedY;
+    }
+
 
     /*
     * **************************************************************

@@ -55,7 +55,9 @@ public class GamePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!pauseMenu.isPaused()) { // if the game is paused stop the spawner
-                bladesList.add(new Blades());
+                if(bladesList.size() <= 10){
+                    bladesList.add(new Blades());
+                }
                 timeSpawner = Math.max(500, timeSpawner - 25); // decrease the delay over time (minimum 500ms)
                 bladesSpawner.setDelay(random.nextInt(timeSpawner)); // randomize the delay
             }
@@ -115,19 +117,20 @@ public class GamePanel extends JPanel {
                     }
                 } else {
                     SoundManager.playSound("pop.wav"); // 🔊 pop sound
-                    smokes.setSmoke(13, player.x, player.y);
+                    smokes.setSmoke(3, player.x, player.y);
                     player.isInvincible = false;
                     lastCollisionTime = System.currentTimeMillis() + 2000;
+                    player.knockback(15);
                 }
             }
         }
 
         for (Blades blade : bladesList) {
             if (player.checkBladeDestroy(blade)) {
-                SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
-                itemList.add(new Items(blade.x, blade.y));
                 smokes.setSmoke(0, blade.x, blade.y);
+                itemList.add(new Items(blade.x, blade.y));
                 blade.destroyBlade();
+                SoundManager.playSound("explosion.wav"); // 🔊 explosion sound
             }
             blade.update();
         }
@@ -158,7 +161,6 @@ public class GamePanel extends JPanel {
             }
             item.update(player);
         }
-        
 
         itemList.removeIf(Items::isGrabed);
         bladesList.removeIf(blade -> blade.y < -blade.height || blade.destroyed);
@@ -170,6 +172,8 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        // apply scaling
         g2d.scale(scaleFactor, scaleFactor);
 
         g2d.setColor(Color.BLACK);

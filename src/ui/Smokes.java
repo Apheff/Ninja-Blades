@@ -11,14 +11,14 @@ public class Smokes extends ImageLoader{
     public static BufferedImage smokeSheet;
     private int currentFrame;
     private int frameCount;
-    private int frameDelay = 16;
+    private int frameDelay = 10;
     private int state = 0;
     private int x, y;
     private int size = 96;
     
     public Smokes(){
         // Load smoke img
-        smokes = new BufferedImage[15][9];
+        smokes = new BufferedImage[4][4];
         if (smokeSheet == null) {
             smokeSheet = loadImage("smokes.png");
             if (smokeSheet == null) {
@@ -65,21 +65,21 @@ public class Smokes extends ImageLoader{
 
     public void loadAllFrames(){
         // load all frames
-        smokes[0] = loadFrames(smokeSheet,0, 0, 9, 64, 64);
-        smokes[1] = loadFrames(smokeSheet,0, 1 * 64, 9, 64, 64);
-        smokes[2] = loadFrames(smokeSheet, 0, 2 * 64, 9, 64, 64);
-        smokes[3] = loadFrames(smokeSheet, 0, 3 * 64, 9, 64, 64);
-        smokes[4] = loadFrames(smokeSheet, 0, 4 * 64, 9, 64, 64);
-        smokes[5] = loadFrames(smokeSheet, 0, 5 * 64, 9, 64, 64);
-        smokes[6] = loadFrames(smokeSheet, 0, 6 * 64, 9, 64, 64);
-        smokes[7] = loadFrames(smokeSheet, 0, 7 * 64, 9, 64, 64);
-        smokes[8] = loadFrames(smokeSheet, 0, 8 * 64, 9, 64, 64);
-        smokes[9] = loadFrames(smokeSheet, 0, 9 * 64, 9, 64, 64);
-        smokes[10] = loadFrames(smokeSheet, 0, 10 * 64, 9, 64, 64);
-        smokes[11] = loadFrames(smokeSheet, 0, 11 * 64, 9, 64, 64);
-        smokes[12] = loadFrames(smokeSheet, 0, 12 * 64, 9, 64, 64);
-        smokes[13] = loadFrames(smokeSheet, 0, 13 * 64, 9, 64, 64);
-        smokes[14] = loadFrames(smokeSheet, 0, 14 * 64, 9, 64, 64);
+        smokes[0] = loadFrames(smokeSheet,0, 0, 4, 32, 32);
+        smokes[1] = loadFrames(smokeSheet,0, 1 * 32, 4, 32, 32);
+        smokes[2] = loadFrames(smokeSheet, 0, 2 * 32, 4, 32, 32);
+        smokes[3] = loadFrames(smokeSheet, 0, 3 * 32, 4, 32, 32);
+        // smokes[4] = loadFrames(smokeSheet, 0, 4 * 64, 9, 64, 64);
+        // smokes[5] = loadFrames(smokeSheet, 0, 5 * 64, 9, 64, 64);
+        // smokes[6] = loadFrames(smokeSheet, 0, 6 * 64, 9, 64, 64);
+        // smokes[7] = loadFrames(smokeSheet, 0, 7 * 64, 9, 64, 64);
+        // smokes[8] = loadFrames(smokeSheet, 0, 8 * 64, 9, 64, 64);
+        // smokes[9] = loadFrames(smokeSheet, 0, 9 * 64, 9, 64, 64);
+        // smokes[10] = loadFrames(smokeSheet, 0, 10 * 64, 9, 64, 64);
+        // smokes[11] = loadFrames(smokeSheet, 0, 11 * 64, 9, 64, 64);
+        // smokes[12] = loadFrames(smokeSheet, 0, 12 * 64, 9, 64, 64);
+        // smokes[13] = loadFrames(smokeSheet, 0, 13 * 64, 9, 64, 64);
+        // smokes[14] = loadFrames(smokeSheet, 0, 14 * 64, 9, 64, 64);
     }
     
 

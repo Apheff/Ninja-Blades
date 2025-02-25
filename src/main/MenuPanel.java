@@ -10,13 +10,14 @@ import static utils.Constants.GamePanel.PANEL_HEIGHT;
 import static utils.Constants.GamePanel.PANEL_SIZE;
 import static utils.Constants.GamePanel.PANEL_WIDTH;
 import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.customYellow;
 import static utils.Constants.GamePanel.scaleFactor;
 
 
 public class MenuPanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private String[] options = {"Play", "Tutorial", "Settings", "Locker", "Exit"};
+    private String[] options = {"PLAY", "TUTORIAL", "SETTINGS", "LOCKER", "EXIT"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
     private BufferedImage menuWallpaper;
@@ -40,6 +41,7 @@ public class MenuPanel extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
         g2d.scale(scaleFactor, scaleFactor);
 
         drawWallpaper(g2d);
@@ -62,16 +64,22 @@ public class MenuPanel extends JPanel implements KeyListener {
         int spacing = 60; // Distanza tra i pulsanti
 
         for (int i = 0; i < options.length; i++) {
-            if (i == selectedOption) {
-                g2d.setColor(Color.YELLOW); // Evidenziazione per l'opzione selezionata
-            } else {
-                g2d.setColor(Color.WHITE);
-            }
 
+            // color and size set
             String text = options[i];
             int textWidth = g2d.getFontMetrics().stringWidth(text);
             int textX = (PANEL_WIDTH - textWidth) / 2;
             int textY = startY + (i * spacing);
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(customFont);
+            g2d.drawString(text, textX + 2, textY + 2);
+            
+            if (i == selectedOption) {
+                g2d.setColor(customYellow); // Evidenziazione per l'opzione selezionata
+            } else {
+                g2d.setColor(Color.WHITE);
+            }
+            
             g2d.drawString(text, textX, textY);
         }
     }
