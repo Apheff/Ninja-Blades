@@ -11,12 +11,14 @@ import java.awt.event.KeyEvent;
 
 import utils.KeyboardInputs;
 import main.GamePanel;
+import main.TutorialPanel;
 public class PauseMenu {
 
     private boolean isPaused = false;
     private String[] options = {"Resume", "restart", "Return to Menu", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private GamePanel gamePanel;
+    private TutorialPanel tutorialPanel;
 
     public PauseMenu(GamePanel gamePanel, KeyboardInputs keyboardInputs) {
         this.gamePanel = gamePanel;
@@ -79,6 +81,7 @@ public class PauseMenu {
                 break;
             case 1: // resetta il gioco
                 gamePanel.resetGame();
+                tutorialPanel.restartTutorial();
                 break;
             case 2: // Torna al Menu
                 gamePanel.returnToMenu();

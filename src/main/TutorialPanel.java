@@ -13,9 +13,9 @@ import ui.TutorialEndMenu;
 import ui.Smokes;
 import utils.KeyboardInputs;
 import static utils.Constants.GamePanel.*;
-import static utils.Constants.GamePanel.scaleFactor;
 
 public class TutorialPanel extends JPanel {
+
 
     private long lastCollisionTime = System.currentTimeMillis();
     private MainClass mainClass;
@@ -26,12 +26,22 @@ public class TutorialPanel extends JPanel {
     private TutorialEndMenu tutorialEndMenu;
     private Smokes smokes = new Smokes();
     private String[] tutorialTexts = {
-            "MUOVITI A SINISTRA E DESTRA",
-            "ESEGUI UN SALTO",
-            "ESEGUI UN SALTO PROLUNGATO",
-            "ESEGUI UN DOPPIO SALTO!",
-            "DISTRUGGI LE 3 LAME SALTANDOCI SOPRA!"
+            "MUOVITI a < sinistra e destra >",
+            "ESEGUI un salto !",
+            "ESEGUI un salto prolungato !",
+            "ESEGUI un doppio salto !",
+            "DISTRUGGI le lame saltandole senza toccarle !"
     };
+    private boolean active = true;
+
+    // Game loop (aggiorna ogni 16 ms ~ 60 FPS)
+    Timer tutorialTimer = new Timer(16, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateTutorial();
+            repaint();
+        }
+    });
 
     public TutorialPanel(MainClass mainClass) {
         this.mainClass = mainClass;
@@ -48,14 +58,6 @@ public class TutorialPanel extends JPanel {
         tutorialEndMenu = new TutorialEndMenu(this, keyboardInputs); // ✅ Aggiunto il menu di fine tutorial
         spawnBladeForStep(); // Genera la lama iniziale
         
-        // Game loop (aggiorna ogni 16 ms ~ 60 FPS)
-        Timer tutorialTimer = new Timer(16, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateTutorial();
-                repaint();
-            }
-        });
         tutorialTimer.start();
     }
 
@@ -70,6 +72,9 @@ public class TutorialPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (!active) return;
+
+
         Graphics2D g2d = (Graphics2D) g;
         g2d.scale(scaleFactor, scaleFactor);
     
@@ -125,23 +130,26 @@ public class TutorialPanel extends JPanel {
                 }
                 break;
             case 4: // Distruzione delle lame
-                if(player.collisionCheck(bladesList.get(0)) && System.currentTimeMillis() > lastCollisionTime) {
-                    player.setDamage(2000);
-                    lastCollisionTime = System.currentTimeMillis() + 2000;
-                }
                 if (!bladesList.isEmpty() && bladesList.get(0).y < -bladesList.get(0).height) {
                     bladesList.clear();
                     bladesList.add(new Blades());
                 }
-
+                
                 if (!bladesList.isEmpty() && player.checkBladeDestroy(bladesList.get(0))) {
                     bladesDestroyed++;
                     smokes.setSmoke(0, bladesList.get(0).x, bladesList.get(0).y);
                     bladesList.clear(); // Rimuoviamo la lama distrutta
                     if (bladesDestroyed >= 3) {
                         tutorialEndMenu.show(); // ✅ Ora mostra il menu invece del messaggio orribile
+                        tutorialTimer.stop();
                     } else {
                         bladesList.add(new Blades());
+                    }
+                }
+                if(bladesList.size() > 0){ // checks if the player was damaged by the blades
+                    if(player.collisionCheck(bladesList.get(0)) && System.currentTimeMillis() > lastCollisionTime) {
+                        player.setDamage(2000);
+                        lastCollisionTime = System.currentTimeMillis() + 2000;
                     }
                 }
                 break;
@@ -149,12 +157,29 @@ public class TutorialPanel extends JPanel {
         repaint();
     }
 
+    public void showPanel() {
+        active = true;
+        requestFocusInWindow(); // Mantiene il focus sulla finestra
+        repaint();
+    }
+    
+    public void hidePanel() {
+        active = false;
+        repaint();
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+
     // Riprova il tutorial
     public void restartTutorial() {
         tutorialStep = 0;
         bladesDestroyed = 0;
-        bladesList.clear();
+        player.resetPlayer();
         spawnBladeForStep();
+        active = true;
+        tutorialTimer.restart();
         tutorialEndMenu.hide(); // Chiudi il menu e ricomincia
     }
 
