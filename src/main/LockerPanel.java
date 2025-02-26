@@ -59,7 +59,7 @@ public class LockerPanel extends JPanel implements KeyListener {
             g2d.setFont(customFont);
             String text = themeNames[i];
             int textWidth = g2d.getFontMetrics().stringWidth(text);
-            g2d.setColor(i == selectedTheme ? Color.YELLOW : Color.WHITE);
+            g2d.setColor(i == selectedTheme ? customYellow : Color.WHITE);
             g2d.drawString(text, x + (300 - textWidth) / 2, y + 234);
         }
 

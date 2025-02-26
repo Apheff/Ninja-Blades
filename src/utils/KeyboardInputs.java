@@ -13,7 +13,7 @@ public class KeyboardInputs implements KeyListener {
     private GameOverMenu gameOverMenu;
     private TutorialEndMenu tutorialEndMenu;
 
-    private static boolean isWASD = true;
+    private static boolean isWASD = false;
 
     public static void toggleControlType() {
         isWASD = !isWASD;

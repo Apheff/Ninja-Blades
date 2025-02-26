@@ -28,7 +28,7 @@ public class TutorialPanel extends JPanel {
     private String[] tutorialTexts = {
             "MUOVITI A SINISTRA E DESTRA",
             "ESEGUI UN SALTO",
-            "ESEGUI UN SALTO ALLUNGATO",
+            "ESEGUI UN SALTO PROLUNGATO",
             "ESEGUI UN DOPPIO SALTO!",
             "DISTRUGGI LE 3 LAME SALTANDOCI SOPRA!"
     };
@@ -114,7 +114,7 @@ public class TutorialPanel extends JPanel {
                     tutorialStep++;
                 }
                 break;
-            case 2:
+            case 2: // salto prolungato
                 if(player.hasMaxJumped()){
                     tutorialStep++;
                 }
