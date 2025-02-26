@@ -11,9 +11,7 @@ import utils.ImageLoader;
 
 public class HUD extends ImageLoader{
     public static int size = 36;
-    public static int padding = 5; 
-    public static int barWidth = 0;
-    public static int time = 0;
+    public static int padding = 5;
 
     // frames
     public static BufferedImage[] blackheart;
@@ -59,19 +57,7 @@ public class HUD extends ImageLoader{
         g.setColor(Color.WHITE);
         g.setFont(customFont);
         g.drawString(scoreText, PANEL_WIDTH - g.getFontMetrics().stringWidth(scoreText) - 20, g.getFontMetrics().getHeight());
-        g.fillRect((PANEL_WIDTH - barWidth)/2, padding, barWidth, 48);
-        barWidth -= 1/time;
-        if(barWidth<0){
-            barWidth = 0;
-            time = 0;
-        }
     }
-
-    public static void setTimerBar(int time){
-        HUD.time = time; 
-        barWidth = PANEL_WIDTH /2; 
-    }
-
 
     public static void loadAllFrames(){
         // load all frames
