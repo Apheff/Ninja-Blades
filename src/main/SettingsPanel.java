@@ -115,7 +115,9 @@ public class SettingsPanel extends JPanel implements KeyListener {
             int textX = (PANEL_WIDTH - textWidth) / 2;
             int textY = startY + (i * spacing);
             g2d.drawString(text, textX, textY);
-            g2d.fillRect(textX, startY + 8, textWidth, 4);
+            if(i ==0){
+                g2d.fillRect(textX, startY + 8, textWidth, 4);
+            }
         }
     }
     

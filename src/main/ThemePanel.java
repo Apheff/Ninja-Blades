@@ -9,15 +9,15 @@ import java.awt.image.BufferedImage;
 import utils.ImageLoader;
 import static utils.Constants.GamePanel.*;
 
-public class LockerPanel extends JPanel implements KeyListener {
+public class ThemePanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
     private int selectedTheme = 0; // default: 0
     private BufferedImage[] themeImages;
-    private String[] themeNames = {"CLASSIC THEME", "RICK AND MORTY THEME", "Tema Neon"};
+    private String[] themeNames = {"Classic Theme", "Rick and Morty Theme", "Neon theme"};
     private boolean active = false;
 
-    public LockerPanel(MainClass mainClass) {
+    public ThemePanel(MainClass mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);

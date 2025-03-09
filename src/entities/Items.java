@@ -103,8 +103,6 @@ public class Items extends Entity {
         item[3] = loadFrames(itemSheet, 0, 3 * 32, 1,32, 32);
     }
 
-
-
     public boolean isGrabed(){
         return grabed;
     }

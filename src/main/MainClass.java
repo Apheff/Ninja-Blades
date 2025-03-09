@@ -25,7 +25,7 @@ public class MainClass extends JPanel implements Runnable{
     private SettingsPanel settingsPanel;
     private JLayeredPane layeredPane = new JLayeredPane();
     private Thread gameThread;
-    private LockerPanel lockerPanel;
+    private ThemePanel lockerPanel;
     private MenuPanel menuPanel;
     private boolean running = true;
     private TutorialPanel tutorialPanel;
@@ -58,7 +58,7 @@ public class MainClass extends JPanel implements Runnable{
         layeredPane.setMaximumSize(PANEL_SIZE);
     
         // Inizializziamo i pannelli
-        lockerPanel = new LockerPanel(this);
+        lockerPanel = new ThemePanel(this);
         gamePanel = new GamePanel(this);
         settingsPanel = new SettingsPanel(this);
         menuPanel = new MenuPanel(this);

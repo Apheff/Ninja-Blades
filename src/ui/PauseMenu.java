@@ -1,9 +1,5 @@
 package ui;
 
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,21 +7,25 @@ import java.awt.event.KeyEvent;
 
 import utils.KeyboardInputs;
 import main.GamePanel;
-import main.TutorialPanel;
+
+import static utils.Constants.GamePanel.PANEL_HEIGHT;
+import static utils.Constants.GamePanel.PANEL_WIDTH;
+import static utils.Constants.GamePanel.customFont;
+import static utils.Constants.GamePanel.customYellow;
+
 public class PauseMenu {
 
     private boolean isPaused = false;
     private String[] options = {"Resume", "restart", "Return to Menu", "Exit"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private GamePanel gamePanel;
-    private TutorialPanel tutorialPanel;
 
     public PauseMenu(GamePanel gamePanel, KeyboardInputs keyboardInputs) {
         this.gamePanel = gamePanel;
         keyboardInputs.setPauseMenu(this);
     }
 
-    public void draw(Graphics2D g2d) {
+    public void draw(Graphics2D g2d){
         if (!isPaused) return;
 
         // Overlay semi-trasparente
@@ -81,7 +81,6 @@ public class PauseMenu {
                 break;
             case 1: // resetta il gioco
                 gamePanel.resetGame();
-                tutorialPanel.restartTutorial();
                 break;
             case 2: // Torna al Menu
                 gamePanel.returnToMenu();
