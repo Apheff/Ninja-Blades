@@ -1,11 +1,12 @@
-package ui;
+package NinjaBlades.ui;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
 
 import java.awt.Graphics2D;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
 import java.awt.image.BufferedImage;
 
-import utils.ImageLoader;
+import NinjaBlades.utils.ImageLoader;
 
 public class Wallpapers extends ImageLoader{
 

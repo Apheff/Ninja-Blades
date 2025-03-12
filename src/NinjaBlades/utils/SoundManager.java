@@ -1,4 +1,4 @@
-package utils;
+package NinjaBlades.utils;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -61,8 +61,8 @@ public class SoundManager {
             if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 gainControl.setValue(dB);
-                System.out.println("Volume set to: " + volumePercentage + "%");
             }
         }
+        System.out.println("Volume set to: " + volumePercentage + "%");
     }
 }

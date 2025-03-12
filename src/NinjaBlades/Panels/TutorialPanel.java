@@ -1,18 +1,22 @@
-package main;
+package NinjaBlades.Panels;
 
 // Importazioni necessarie
 import javax.swing.*;
+
+import NinjaBlades.MainClass;
+import NinjaBlades.entities.Blades;
+import NinjaBlades.entities.Player;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.ui.TutorialEndMenu;
+import NinjaBlades.utils.KeyboardInputs;
+
+import static NinjaBlades.utils.Constants.GamePanel.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import entities.Blades;
-import entities.Player;
-import ui.TutorialEndMenu;
-import ui.Smokes;
-import utils.KeyboardInputs;
-import static utils.Constants.GamePanel.*;
 
 public class TutorialPanel extends JPanel {
 

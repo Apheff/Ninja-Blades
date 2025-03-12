@@ -1,37 +1,35 @@
-package main;
+package NinjaBlades.Panels;
 
 // import libraries
 import javax.swing.Timer;
+
+import NinjaBlades.MainClass;
+import NinjaBlades.entities.Blades;
+import NinjaBlades.entities.Items;
+import NinjaBlades.entities.Player;
+import NinjaBlades.ui.GameOverMenu;
+import NinjaBlades.ui.HUD;
+import NinjaBlades.ui.PauseMenu;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.ui.Wallpapers;
+import NinjaBlades.utils.KeyboardInputs;
+import NinjaBlades.utils.SoundManager;
+import NinjaBlades.utils.ConfigManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-
-// import entities
-import entities.Blades;
-import entities.Items;
-import entities.Player;
-
-// import ui elements
-import ui.HUD;
-import ui.Smokes;
-import ui.PauseMenu;
-import ui.Wallpapers;
-import ui.GameOverMenu;
-
-// import utilites
-import utils.KeyboardInputs;
-import utils.SoundManager;
-
-// import constant
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.scaleFactor;
 
 public class GamePanel extends JPanel {
 
@@ -44,6 +42,10 @@ public class GamePanel extends JPanel {
 
     // Game Effects
     private Smokes smokes = new Smokes();
+
+    // Game variables
+    private int highScore = ConfigManager.getHighScore();
+    public int score = 0;
 
     // Game entities
     private Player player = new Player(keyboardInputs);
@@ -113,6 +115,8 @@ public class GamePanel extends JPanel {
                         lastCollisionTime = System.currentTimeMillis() + 2000;
                         if (player.hearts <= 0) {
                             gameOverMenu.show();
+                            highScore = Math.max(highScore, score);
+                            ConfigManager.setHighScore(highScore);
                         }
                     }
                 } else {
@@ -140,7 +144,7 @@ public class GamePanel extends JPanel {
                 switch (item.type) {
                     case 0:
                         SoundManager.playSound("coin.wav"); // 🔊 coin grabbed sound
-                        player.score += 1;
+                        score += 1;
                         break;
                     case 1:
                         SoundManager.playSound("shield.wav"); // 🔊 shield sound
@@ -179,7 +183,7 @@ public class GamePanel extends JPanel {
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
         Wallpapers.draw(g2d, mainClass.getTheme());
-        HUD.draw(g2d, player);
+        HUD.draw(g2d, player, score);
 
         if (gameOverMenu.isActive()) {
             gameOverMenu.show();
@@ -195,6 +199,10 @@ public class GamePanel extends JPanel {
             }
         }
         pauseMenu.draw(g2d); // Disegna il menu di pausa
+    }
+
+    public int getHighScore() {
+        return highScore;
     }
 
     public PauseMenu getPauseMenu() {
@@ -220,6 +228,7 @@ public class GamePanel extends JPanel {
         itemList.clear();   // Rimuove tutti gli oggetti
         timeSpawner = 3000; // Reimposta il tempo di spawn iniziale delle lame
         gameOverMenu.hide(); // Nasconde il menu di fine partita
+        score = 0; // Resetta il punteggio
         // Riavvia il gioco
         resumeGame();
     }

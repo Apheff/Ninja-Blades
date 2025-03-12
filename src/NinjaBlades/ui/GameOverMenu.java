@@ -1,15 +1,15 @@
-package ui;
+package NinjaBlades.ui;
 
-import main.GamePanel;
-import utils.KeyboardInputs;
-
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
+import NinjaBlades.Panels.GamePanel;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class GameOverMenu{
 
@@ -49,6 +49,16 @@ public class GameOverMenu{
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
         g2d.drawString(title, (PANEL_WIDTH - titleWidth) / 2, PANEL_HEIGHT / 3);
 
+        g2d.setColor(Color.WHITE);
+
+        String scoreText = "Score: " + gamePanel.score;
+        int scoreWidth = g2d.getFontMetrics().stringWidth(scoreText);
+        g2d.drawString(scoreText, (PANEL_WIDTH - scoreWidth) / 2, PANEL_HEIGHT / 3 + 80);
+
+        String highScoreText = "High score: " + gamePanel.getHighScore();
+        int highscoreWidth = g2d.getFontMetrics().stringWidth(highScoreText);
+        g2d.drawString(highScoreText, (PANEL_WIDTH -  highscoreWidth) / 2, PANEL_HEIGHT / 3 + 120);
+
         // Opzioni di gioco
         g2d.setFont(customFont);
         for (int i = 0; i < options.length; i++) {
@@ -58,7 +68,7 @@ public class GameOverMenu{
                 g2d.setColor(Color.WHITE);
             }
             int textWidth = g2d.getFontMetrics().stringWidth(options[i]);
-            g2d.drawString(options[i], (PANEL_WIDTH- textWidth) / 2, PANEL_HEIGHT / 2 + i * 40);
+            g2d.drawString(options[i], (PANEL_WIDTH- textWidth) / 2, PANEL_HEIGHT / 2 + i * 40 + 80);
         }
     }
 

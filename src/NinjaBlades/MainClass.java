@@ -1,21 +1,27 @@
-package main;
+package NinjaBlades;
+
+import static NinjaBlades.utils.Constants.GamePanel.BORDER_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.SCREEN_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.Dimension;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import utils.SoundManager;
-
-import ui.HUD;
-import ui.Wallpapers;
-
-import static utils.Constants.GamePanel.BORDER_WIDTH;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_SIZE;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.SCREEN_SIZE;
-import static utils.Constants.GamePanel.scaleFactor;;
+import NinjaBlades.Panels.GamePanel;
+import NinjaBlades.Panels.GameWindow;
+import NinjaBlades.Panels.MenuPanel;
+import NinjaBlades.Panels.SettingsPanel;
+import NinjaBlades.Panels.ThemePanel;
+import NinjaBlades.Panels.TutorialPanel;
+import NinjaBlades.ui.HUD;
+import NinjaBlades.ui.Wallpapers;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.SoundManager;;
 
 
 public class MainClass extends JPanel implements Runnable{
@@ -42,8 +48,12 @@ public class MainClass extends JPanel implements Runnable{
     public MainClass() {
         setLayout(null); // Assicura che i pannelli vengano posizionati correttamente
 
+        ConfigManager.loadConfig(); // Carica la configurazione del gioco
+
         // preloads all the sounds
         SoundManager.preloadAllSounds();
+        SoundManager.setVolume(0); // remove lag on first sound play
+        SoundManager.playSound("coin.wav");
 
         System.out.println("scale Factor : " + scaleFactor);
         System.out.println("Screen size: " + SCREEN_SIZE);
@@ -52,6 +62,7 @@ public class MainClass extends JPanel implements Runnable{
 
         HUD.loadHUD();
         Wallpapers.LoadWallpapers();
+
 
         // Inizializziamo il layeredPane con una dimensione fissa
         layeredPane.setSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -71,9 +82,11 @@ public class MainClass extends JPanel implements Runnable{
         layeredPane.add(menuPanel, Integer.valueOf(3)); // Menu sopra tutto
         layeredPane.add(lockerPanel, Integer.valueOf(4)); // Locker sopra tutto
         new GameWindow(layeredPane);
-        
         showMenu(); // Mostra il menu all'avvio
         startGameLoop();
+
+        // Imposta il volume in base alla configurazione
+        SoundManager.setVolume(ConfigManager.getVolume());
     }
 
     public void startGameLoop() {

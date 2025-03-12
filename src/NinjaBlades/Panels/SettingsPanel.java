@@ -1,23 +1,26 @@
-package main;
+package NinjaBlades.Panels;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import NinjaBlades.MainClass;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.KeyboardInputs;
+import NinjaBlades.utils.SoundManager;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import utils.KeyboardInputs;
-import utils.SoundManager;
-
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
-import static utils.Constants.GamePanel.scaleFactor;
 
 public class SettingsPanel extends JPanel implements KeyListener {
     
@@ -29,7 +32,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
     private String[] options = {"Controls: WASD", "< Back"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private boolean active = false;
-    private int value = 100;
+    int value = ConfigManager.getVolume();
     
     public SettingsPanel(MainClass mainClass) {
         this.mainClass = mainClass;
@@ -50,7 +53,6 @@ public class SettingsPanel extends JPanel implements KeyListener {
             @Override
             public void stateChanged(ChangeEvent e) {
                 value = volumeSlider.getValue();
-                System.out.println("Volume: " + value);
                 SoundManager.setVolume(value);
             }
         });
@@ -156,6 +158,9 @@ public class SettingsPanel extends JPanel implements KeyListener {
                 break;
             case 1:
                 mainClass.showMenu();
+                ConfigManager.setWASD(KeyboardInputs.isWASD());
+                ConfigManager.setVolume(value);
+                ConfigManager.saveConfig();
                 break;
         }
     }

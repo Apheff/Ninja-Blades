@@ -1,16 +1,15 @@
-package entities;
+package NinjaBlades.entities;
 
 import java.awt.image.BufferedImage;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
+
 import java.awt.Graphics2D;
 import java.awt.image.RescaleOp;
 
-// import utilities
-import utils.KeyboardInputs;
-
-// import constants
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.PlayerConstants.*;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class Player extends Entity{
 
@@ -28,7 +27,6 @@ public class Player extends Entity{
     private boolean holdingJump = true;
     private double variableJumpForce = 0; // this will change to let the player make a long jump
     public int hearts = 3;
-    public int score = 0;
 
     // Powerups variables
     public boolean isMagnetized = false;
@@ -384,7 +382,6 @@ public class Player extends Entity{
     }
 
     public void resetPlayer(){
-        score = 0;
         hearts = 3;
         resetPosition(); // resets the player position
         isInvincible = false; // resets the invincibility

@@ -1,9 +1,11 @@
-package entities;
+package NinjaBlades.entities;
 
 import java.awt.image.BufferedImage;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+
 import java.awt.Graphics2D;
 import java.util.Random;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
 
 public class Items extends Entity {
  

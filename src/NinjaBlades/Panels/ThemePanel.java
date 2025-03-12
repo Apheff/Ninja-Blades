@@ -1,13 +1,16 @@
-package main;
+package NinjaBlades.Panels;
 
 import javax.swing.*;
+
+import NinjaBlades.MainClass;
+import NinjaBlades.utils.ImageLoader;
+
+import static NinjaBlades.utils.Constants.GamePanel.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
-import utils.ImageLoader;
-import static utils.Constants.GamePanel.*;
 
 public class ThemePanel extends JPanel implements KeyListener {
 

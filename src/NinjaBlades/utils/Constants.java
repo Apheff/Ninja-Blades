@@ -1,13 +1,14 @@
-package utils;
+package NinjaBlades.utils;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.io.IOException;
+
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+
 import java.awt.Color;
 import java.awt.Dimension;
-
-import static utils.Constants.GamePanel.scaleFactor;
 
 public class Constants {
     /* this clas is to store all the constant and to make the other classes slimmer and easy to read  */

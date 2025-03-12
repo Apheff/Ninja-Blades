@@ -1,10 +1,12 @@
-package utils;
+package NinjaBlades.utils;
 
 import java.awt.event.KeyListener;
+
+import NinjaBlades.ui.GameOverMenu;
+import NinjaBlades.ui.PauseMenu;
+import NinjaBlades.ui.TutorialEndMenu;
+
 import java.awt.event.KeyEvent;
-import ui.PauseMenu;
-import ui.TutorialEndMenu;
-import ui.GameOverMenu;
 
 public class KeyboardInputs implements KeyListener {
 
@@ -13,10 +15,14 @@ public class KeyboardInputs implements KeyListener {
     private GameOverMenu gameOverMenu;
     private TutorialEndMenu tutorialEndMenu;
 
-    private static boolean isWASD = false;
+    private static boolean isWASD = Boolean.valueOf(ConfigManager.getWASD());
 
     public static void toggleControlType() {
         isWASD = !isWASD;
+    }
+
+    public static boolean isWASD() {
+        return isWASD;
     }
 
     public static String getControlType() {

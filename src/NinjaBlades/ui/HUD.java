@@ -1,13 +1,15 @@
-package ui;
+package NinjaBlades.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import entities.Player;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import java.awt.Color;
 
-import utils.ImageLoader;
+import NinjaBlades.entities.Player;
+import NinjaBlades.utils.ImageLoader;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+
+import java.awt.Color;
 
 public class HUD extends ImageLoader{
     public static int size = 36;
@@ -31,7 +33,7 @@ public class HUD extends ImageLoader{
         loadAllFrames();
     }
 
-    public static void draw(Graphics g, Player player){
+    public static void draw(Graphics g, Player player, int score){
         // if there is a current image, draws it
         for (int i = 0; i < player.hearts; i++) {
             int x = padding + (i * (size + padding));
@@ -53,7 +55,7 @@ public class HUD extends ImageLoader{
             g.drawImage(shield[0], padding, size + 2 * padding, size, size, null);
         }
 
-        String scoreText = "" + player.score;
+        String scoreText = "" + score;
         g.setColor(Color.WHITE);
         g.setFont(customFont);
         g.drawString(scoreText, PANEL_WIDTH - g.getFontMetrics().stringWidth(scoreText) - 20, g.getFontMetrics().getHeight());

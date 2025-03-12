@@ -1,10 +1,11 @@
-package entities;
+package NinjaBlades.entities;
+
+import static NinjaBlades.utils.Constants.GamePanel.*;
 
 import java.awt.Rectangle;
-import ui.Smokes;
-import utils.ImageLoader;
 
-import static utils.Constants.GamePanel.*;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.utils.ImageLoader;
 
 public class Entity extends ImageLoader{
 

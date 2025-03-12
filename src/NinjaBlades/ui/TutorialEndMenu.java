@@ -1,15 +1,15 @@
-package ui;
+package NinjaBlades.ui;
 
-import main.TutorialPanel;
-import utils.KeyboardInputs;
-
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
+import NinjaBlades.Panels.TutorialPanel;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class TutorialEndMenu {
 

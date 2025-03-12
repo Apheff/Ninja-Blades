@@ -1,17 +1,17 @@
-package ui;
+package NinjaBlades.ui;
 
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import utils.KeyboardInputs;
-import main.GamePanel;
-
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
+import NinjaBlades.Panels.GamePanel;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class PauseMenu {
 

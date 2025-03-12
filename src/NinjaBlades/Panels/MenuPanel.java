@@ -1,17 +1,20 @@
-package main;
+package NinjaBlades.Panels;
 import javax.swing.*;
+
+import NinjaBlades.MainClass;
+import NinjaBlades.utils.ImageLoader;
+
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
-import utils.ImageLoader;
-import static utils.Constants.GamePanel.PANEL_HEIGHT;
-import static utils.Constants.GamePanel.PANEL_SIZE;
-import static utils.Constants.GamePanel.PANEL_WIDTH;
-import static utils.Constants.GamePanel.customFont;
-import static utils.Constants.GamePanel.customYellow;
-import static utils.Constants.GamePanel.scaleFactor;
 
 
 public class MenuPanel extends JPanel implements KeyListener {
