@@ -12,7 +12,6 @@ public class ImageLoader {
 
     public ImageLoader(){
         spriteSheet = null;
-
     }
 
     public static BufferedImage loadImage(String filename){

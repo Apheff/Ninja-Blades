@@ -43,6 +43,10 @@ public class Constants {
             customFont = tempFont;
         }
     }
+    public static class EntityConstants {
+        public static final double GRAVITY = .6 * scaleFactor;
+    }
+
     public static class PlayerConstants {
         
         // states 
@@ -59,7 +63,6 @@ public class Constants {
         public static final double jumpIncrement = 10 * scaleFactor; // will increment the jump force 
         public static final int FIXED_JUMP_FORCE = (int)(20 * scaleFactor); 
         public static final int MAX_JUMP_FORCE = (int)(280 * scaleFactor);
-        public static final double GRAVITY = .6 * scaleFactor;
     }
     public static class ItemConstants {
         public static final int COIN = 0;

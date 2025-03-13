@@ -139,7 +139,7 @@ public class TutorialPanel extends JPanel {
                     bladesList.add(new Blades());
                 }
                 
-                if (!bladesList.isEmpty() && player.checkBladeDestroy(bladesList.get(0))) {
+                if (!bladesList.isEmpty() && bladesList.get(0).checkBladeDestroy(player)) {
                     bladesDestroyed++;
                     smokes.setSmoke(0, bladesList.get(0).x, bladesList.get(0).y);
                     bladesList.clear(); // Rimuoviamo la lama distrutta
@@ -180,12 +180,21 @@ public class TutorialPanel extends JPanel {
     public void restartTutorial() {
         tutorialStep = 0;
         bladesDestroyed = 0;
-        player.resetPlayer();
+        resetPlayer();
         spawnBladeForStep();
         active = true;
         tutorialTimer.restart();
         tutorialEndMenu.hide(); // Chiudi il menu e ricomincia
     }
+
+    public void resetPlayer(){
+        player.hearts = 3;
+        player.resetPosition(); // resets the player position
+        player.isInvincible = false; // resets the invincibility
+        player.isMagnetized = false; // resets the magnetism
+        player.damaged = false; // resets the damage
+    }
+
 
     // Torna al menu principale
     public void exitToMenu() {

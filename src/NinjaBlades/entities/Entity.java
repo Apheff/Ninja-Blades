@@ -1,8 +1,11 @@
 package NinjaBlades.entities;
 
 import static NinjaBlades.utils.Constants.GamePanel.*;
+import static NinjaBlades.utils.Constants.EntityConstants.GRAVITY;
 
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import NinjaBlades.ui.Smokes;
 import NinjaBlades.utils.ImageLoader;
@@ -26,6 +29,7 @@ public class Entity extends ImageLoader{
     public double speedY;
     public Rectangle hitbox;
     public Smokes smoke;
+    public BufferedImage[][] frames;
 
     /*
     * **************************************************************
@@ -45,8 +49,37 @@ public class Entity extends ImageLoader{
         this.speedY = 0;
         this.smoke = new Smokes();
         hitbox = new Rectangle(this.x, this.y, this.width, this.height);
+        this.frames = new BufferedImage[10][10];
     }
 
+    public void draw(Graphics2D g2d){
+        BufferedImage currentImage = null;
+
+        currentFrame %= frames.length;
+        currentImage = frames[state][currentFrame];
+
+        // if there is a current image, draws it
+        if (currentImage != null) {
+            g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
+        }
+    }
+
+    // applies the gravity to the entity
+    public void applyGravity() {
+            this.speedY += GRAVITY;
+            this.moveY(this.speedY);
+
+            if (this.y >= PANEL_HEIGHT - this.height) {
+                onGroundLogic();
+            }
+    }
+
+    // applies a logic when on ground
+    public void onGroundLogic(){
+        if (this.speedY > 0) {
+            this.speedY = 0;
+        }
+    }
 
     /*
     * **************************************************************
@@ -58,9 +91,11 @@ public class Entity extends ImageLoader{
     public void setX(int x){
         this.x = x;
     }
+
     public void setY(int y){
         this.y = y;
     }
+
     public void moveX(double dx){
         if (x + dx < 0) {
             this.x = 0; // limits the left border
@@ -70,6 +105,7 @@ public class Entity extends ImageLoader{
             this.x += dx; // normal movement
         }
     }
+
     public void moveY(double dy){
         if (y + height + dy > PANEL_HEIGHT) {
             this.y = PANEL_HEIGHT - height; // limits the bottom border
@@ -91,14 +127,12 @@ public class Entity extends ImageLoader{
         this.speedY = speedY;
     }
 
+    public void setState(int state){
+        this.state = state;
+    }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                       get methods                          *
-    * *                                                            *
-    * **************************************************************
-    */    
+    /* =========  GET METHODS ========= */
+
     public int getX() {
         return x;
     }

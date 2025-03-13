@@ -2,20 +2,21 @@ package NinjaBlades.entities;
 
 import java.awt.image.BufferedImage;
 
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
-
 import java.awt.Graphics2D;
 import java.util.Random;
 
 public class Items extends Entity {
  
-    public BufferedImage[][] item;
+    public BufferedImage[][] frames;
     public int type = 0; // default coin (0)
     
     // Randomly assign type with higher probability for coin (0)
     Random rand = new Random();
     
     /*
+     * frames[state]
+     * 
+     * state:
      * 0 coin
      * 1 shield
      * 2 magnet
@@ -23,11 +24,11 @@ public class Items extends Entity {
      */
 
     private boolean grabed = false;
-    private double magnetSpeed = 0.1;
+    private double magnetSpeed = 0.7;
     private static BufferedImage itemSheet;
 
     public Items(int x, int y) {
-        item = new BufferedImage[4][5];
+        frames = new BufferedImage[4][5];
         if (itemSheet == null) {
             itemSheet = loadImage("items.png");
             if (itemSheet == null) {
@@ -57,29 +58,31 @@ public class Items extends Entity {
         loadAllFrames(); 
     }
 
-
+    @Override
     public void draw(Graphics2D g2d) {
 
-        currentFrame %= item[type].length;
-        if(item[type][currentFrame] != null){
-            g2d.drawImage(item[type][currentFrame], x, y, width, height, null);
+        currentFrame %= frames[type].length;
+        if(frames[type][currentFrame] != null){
+            g2d.drawImage(frames[type][currentFrame], x, y, width, height, null);
         }
 
     }
 
+    @Override
+    public void onGroundLogic() {
+        speedY = -speedY * 0.5; // inverts the velocity
+    }
 
     public void update(Player player){
-        frameCount++;
-        y += speedY;
-        speedY += 0.4; // gravity
-        if (y >= PANEL_HEIGHT - this.height) { 
-            speedY = -speedY * 0.5; // inverts the velocity
-        }
+
+        // applies the gravity 
+        applyGravity();
 
         if (frameCount >= frameDelay) {
             currentFrame++;
             frameCount = 0; // Resets the frame counter
         }
+        
         if (player.isMagnetized) {
             if (player.x > this.x) {
                 this.x += magnetSpeed;
@@ -99,10 +102,10 @@ public class Items extends Entity {
     }
 
     public void loadAllFrames(){
-        item[0] = loadFrames(itemSheet, 0, 0, 5,32, 32);
-        item[1] = loadFrames(itemSheet, 0,1 * 32, 5,32, 32);
-        item[2] = loadFrames(itemSheet, 0, 2 * 32, 5,32, 32);
-        item[3] = loadFrames(itemSheet, 0, 3 * 32, 1,32, 32);
+        frames[0] = loadFrames(itemSheet, 0, 0, 5,32, 32);
+        frames[1] = loadFrames(itemSheet, 0,1 * 32, 5,32, 32);
+        frames[2] = loadFrames(itemSheet, 0, 2 * 32, 5,32, 32);
+        frames[3] = loadFrames(itemSheet, 0, 3 * 32, 1,32, 32);
     }
 
     public boolean isGrabed(){

@@ -23,6 +23,7 @@ import java.util.Random;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
 import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -60,8 +61,8 @@ public class GamePanel extends JPanel {
                 if(bladesList.size() <= 10){
                     bladesList.add(new Blades());
                 }
-                timeSpawner = Math.max(500, timeSpawner - 25); // decrease the delay over time (minimum 500ms)
-                bladesSpawner.setDelay(random.nextInt(timeSpawner)); // randomize the delay
+                timeSpawner = Math.max(300, timeSpawner - 25); // decrease the delay over time (minimum 500ms)
+                bladesSpawner.setDelay(random.nextInt(timeSpawner) + 200); // randomize the delay
             }
         }
     });
@@ -97,13 +98,14 @@ public class GamePanel extends JPanel {
         // starts the game loop
         gameLoopTimer.start();
     }
-    
 
     // Update game logic
     public void Update() {
         if (pauseMenu.isPaused()) return;
 
+        // Update player and set the state
         player.update();
+        setPlayerState();
 
         for (Blades blade : bladesList) {
             if (player.collisionCheck(blade) && System.currentTimeMillis() > lastCollisionTime) {
@@ -130,7 +132,7 @@ public class GamePanel extends JPanel {
         }
 
         for (Blades blade : bladesList) {
-            if (player.checkBladeDestroy(blade)) {
+            if (blade.checkBladeDestroy(player)) {
                 smokes.setSmoke(0, blade.x, blade.y);
                 itemList.add(new Items(blade.x, blade.y));
                 blade.destroyBlade();
@@ -221,8 +223,16 @@ public class GamePanel extends JPanel {
         mainClass.showMenu(); // Torna al menu principale
     }
 
+    public void resetPlayer(){
+        player.hearts = 3;
+        player.resetPosition(); // resets the player position
+        player.isInvincible = false; // resets the invincibility
+        player.isMagnetized = false; // resets the magnetism
+        player.damaged = false; // resets the damage
+    }
+
     public void resetGame() {
-        player.resetPlayer(); // Resetta il giocatore
+        resetPlayer();
         pauseMenu.setPaused(false); // Resetta il menu di pausa
         bladesList.clear(); // Rimuove tutte le lame
         itemList.clear();   // Rimuove tutti gli oggetti
@@ -231,5 +241,44 @@ public class GamePanel extends JPanel {
         score = 0; // Resetta il punteggio
         // Riavvia il gioco
         resumeGame();
+    }
+
+    // sets the state for every players movement
+    public void setPlayerState(){
+        if(!player.onGround){
+            if(player.doubleJump){
+                // jump frames
+                if(player.state > 0 || keyboardInputs.right){
+                    player.state = JUMP_RIGHT;
+                }
+                if(player.state < 0 || keyboardInputs.left){
+                    player.state = JUMP_LEFT;
+                }
+            }else{
+                // double jump frames
+                if(player.state > 0 || keyboardInputs.right){
+                    player.state = DOUBLE_JUMP_RIGHT;
+                }
+                if(player.state < 0 || keyboardInputs.left){
+                    player.state = DOUBLE_JUMP_LEFT;
+                }               
+            }
+        }else{
+            // on ground right frames (idle and run) 
+            if(keyboardInputs.right){
+                player.state = RUN_RIGHT;
+            }else if (player.state > 0){
+                player.state = IDLE_RIGHT;
+            }
+            // on ground left frames (idle and run)
+            if(keyboardInputs.left){
+                player.state = RUN_LEFT;
+            }else if (player.state < 0){
+                player.state = IDLE_LEFT;
+            }
+            if (keyboardInputs.left && keyboardInputs.right) {
+                player.state = IDLE_RIGHT;
+            }
+        }
     }
 }

@@ -13,19 +13,13 @@ import NinjaBlades.utils.KeyboardInputs;
 
 public class Player extends Entity{
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                   player's variables                       *
-    * *                                                            *
-    * **************************************************************
-    */
+    /* =========  PLAYER'S VARIABLES ========= */
 
     // Player's variables
     public boolean onGround;
     public boolean doubleJump = false; // will be true when the first jump was made
-    private boolean holdingJump = true;
-    private double variableJumpForce = 0; // this will change to let the player make a long jump
+    public boolean holdingJump = true;
+    public double variableJumpForce = 0; // this will change to let the player make a long jump
     public int hearts = 3;
 
     // Powerups variables
@@ -37,27 +31,15 @@ public class Player extends Entity{
     public long damagedEndTime;
     
     // images for the player
-    private BufferedImage shieldSheet = loadImage("shield.png");
-    private BufferedImage[] idleRightFrames;
-    private BufferedImage[] idleLeftFrames;
-    private BufferedImage[] runRightFrames;
-    private BufferedImage[] runLeftFrames;
-    private BufferedImage[] jumpRightFrames;
-    private BufferedImage[] jumpLeftFrames;
-    private BufferedImage[] doubleJumpRightFrames;    
-    private BufferedImage[] doubleJumpLeftFrames;
-    private int currentFrame;
+    public BufferedImage shieldSheet = loadImage("shield.png");
+    public BufferedImage[][] frames;
+    public int currentFrame;
 
     // input for the player
     private KeyboardInputs keyboardInputs;
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                      constractor                           *
-    * *                                                            *
-    * **************************************************************
-    */    
+    /* =========  CONSTRACTOR ========= */
+
     public Player(KeyboardInputs keyboardInputs) {
         this.keyboardInputs = keyboardInputs;
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
@@ -69,7 +51,7 @@ public class Player extends Entity{
          * -3: JumpLeft, 3: JumpRight,
          * -4: DoubleJumpLeft, 4: DoubleJumpRight
          */
-        this.state = 1;
+        this.state = IDLE_RIGHT;
 
         // Load sprite sheet
         if (spriteSheet == null) {
@@ -85,127 +67,66 @@ public class Player extends Entity{
         loadAllFrames();
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                    movement logic                          *
-    * *                                                            *
-    * **************************************************************
-    */       
+    /* =========  UPDATE METHOD ========= */
 
-    public void applyGravity() {
-        if (!onGround || this.y < PANEL_HEIGHT - this.height) {
-            speedY += GRAVITY;
-            this.y += speedY;
-
-            if (y >= PANEL_HEIGHT - this.height) {
-                y = PANEL_HEIGHT - this.height;
-                onGround = true;
-                doubleJump = false;
-                speedY = 0;
-            }
-        }
+    @Override
+    public void onGroundLogic() {
+        // logic for when the player is on the ground
+        this.y = PANEL_HEIGHT - this.height;
+        this.onGround = true;
+        this.doubleJump = false;
+        this.speedY = 0;
     }
 
-    public void playerMovement(){
+    public void playerMovement() {
 
         // left move
         if(keyboardInputs.left){
-            moveX(-speedX);
+            this.moveX(-this.speedX);
         }
 
         // right move
         if(keyboardInputs.right){
-            moveX(speedX);
+            this.moveX(this.speedX);
         }
 
         // Check if jump button is pressed and released properly before allowing a new jump
         if (keyboardInputs.space) {
 
-            if (onGround && !holdingJump) {
+            if (this.onGround && !this.holdingJump) {
                 // First long jump
-                holdingJump = true;
-                variableJumpForce = 0; // Reset jump force
-                onGround = false; // Player is no longer on the ground
-                doubleJump = true; // Enable double jump after the first jump
+                this.holdingJump = true;
+                this.variableJumpForce = 0; // Reset jump force
+                this.onGround = false; // Player is no longer on the ground
+                this.doubleJump = true; // Enable double jump after the first jump
                 smoke.setSmoke(1, this.x, this.y);
             }
 
             // While the space key is held, increase the jump force gradually
-            if (holdingJump && variableJumpForce < MAX_JUMP_FORCE) {
-                variableJumpForce += jumpIncrement; // Aumenta la forza del salto
-                speedY = -jumpIncrement; // applies an upper force
+            if (this.holdingJump && this.variableJumpForce < MAX_JUMP_FORCE) {
+                this.variableJumpForce += jumpIncrement; // Aumenta la forza del salto
+                this.speedY = -jumpIncrement; // applies an upper force
             }
 
             // If player is in the air and doubleJump is available
-            if (doubleJump && !holdingJump) {
-                speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
-                doubleJump = false; // Double jump is now used
+            if (this.doubleJump && !this.holdingJump) {
+                this.speedY = - FIXED_JUMP_FORCE; // Fixed height for the double jump
+                this.doubleJump = false; // Double jump is now used
                 smoke.setSmoke(2, this.x, this.y);
             }
 
         }else {
             // Release jump and allow the next jump
-            holdingJump = false; // Reset after releasing space key
+            this.holdingJump = false; // Reset after releasing space key
         }
 
         // Applies gravity
-        applyGravity();
-
-        // sets the state
-        setState();
+        this.applyGravity();
 
         // reset of the hitbox
-        this.hitbox.setBounds(this.x + this.width / 4, this.y + this.width / 4, this.width - this.width / 2, this.height - this.height / 2);
+        hitbox.setBounds(this.x + this.width / 4, this.y + this.width / 4, this.width - this.width / 2, this.height - this.height / 2);
     }
 
-    // sets the state for every movement
-    public void setState(){
-        if(!onGround){
-            if(doubleJump){
-                // jump frames
-                if(this.state > 0 || keyboardInputs.right){
-                    this.state = JUMP_RIGHT;
-                }
-                if(this.state < 0 || keyboardInputs.left){
-                    this.state = JUMP_LEFT;
-                }
-            }else{
-                // double jump frames
-                if(this.state > 0 || keyboardInputs.right){
-                    this.state = DOUBLE_JUMP_RIGHT;
-                }
-                if(this.state < 0 || keyboardInputs.left){
-                    this.state = DOUBLE_JUMP_LEFT;
-                }               
-            }
-        }else{
-            // on ground right frames (idle and run) 
-            if(keyboardInputs.right){
-                this.state = RUN_RIGHT;
-            }else if (this.state > 0){
-                this.state = IDLE_RIGHT;
-            }
-            // on ground left frames (idle and run)
-            if(keyboardInputs.left){
-                this.state = RUN_LEFT;
-            }else if (this.state < 0){
-                this.state = IDLE_LEFT;
-            }
-            if (keyboardInputs.left && keyboardInputs.right) {
-                this.state = IDLE_RIGHT;
-            }
-        }
-    }
-
-
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                      update method                         *
-    * *                                                            *
-    * **************************************************************
-    */    
     public void update() {
         // check if the player is damaged
         checkDamage();
@@ -222,87 +143,24 @@ public class Player extends Entity{
 
         // Update player movement
         playerMovement();
-
-        // checks the current state and cicles the frames
-        switch (state) {
-            case IDLE_RIGHT: // idle right
-                currentFrame %= idleRightFrames.length;
-                break;
-            case RUN_RIGHT: // run right
-                currentFrame %= runRightFrames.length;
-                break;
-            case JUMP_RIGHT: // jump right
-                currentFrame %= jumpRightFrames.length;
-                break;
-            case DOUBLE_JUMP_RIGHT: // double-jump right
-                currentFrame %= doubleJumpRightFrames.length;
-                break;
-            case IDLE_LEFT: // idle left
-                currentFrame %= idleLeftFrames.length;
-                break;
-            case RUN_LEFT: // run left
-                currentFrame %= runLeftFrames.length;
-                break;
-            case JUMP_LEFT: // jump left
-                currentFrame %= jumpLeftFrames.length;
-                break;
-            case DOUBLE_JUMP_LEFT: // double-jump left
-                currentFrame %= doubleJumpLeftFrames.length;
-                break;
-        }
+        currentFrame %= frames[state].length;
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                    Drawing methods                         *
-    * *                                                            *
-    * **************************************************************
-    */
+    /* ========= DRAWING METHODS ========= */
+
+    @Override
     public void draw(Graphics2D g2d) {
 
         BufferedImage currentImage = null;
 
-        switch (state) {
-            case IDLE_RIGHT: // idle right
-                currentFrame %= idleRightFrames.length;
-                currentImage = idleRightFrames[currentFrame];
-                break;
-            case RUN_RIGHT: // run right
-                currentFrame %= runRightFrames.length;
-                currentImage = runRightFrames[currentFrame];
-                break;
-            case JUMP_RIGHT: // jump right
-                currentFrame %= jumpRightFrames.length;
-                currentImage = jumpRightFrames[currentFrame];
-                break;
-            case DOUBLE_JUMP_RIGHT: // double-jump right
-                currentFrame %= doubleJumpRightFrames.length;
-                currentImage = doubleJumpRightFrames[currentFrame];
-                break;
-            case IDLE_LEFT: // idle left
-                currentFrame %= idleLeftFrames.length;
-                currentImage = idleLeftFrames[currentFrame];
-                break;
-            case RUN_LEFT: // run left
-                currentFrame %= runLeftFrames.length;
-                currentImage = runLeftFrames[currentFrame];
-                break;
-            case JUMP_LEFT: // jump left
-                currentFrame %= jumpLeftFrames.length; 
-                currentImage = jumpLeftFrames[currentFrame];
-                break;
-            case DOUBLE_JUMP_LEFT: // double-jump left
-                currentFrame %= doubleJumpLeftFrames.length;
-                currentImage = doubleJumpLeftFrames[currentFrame];
-                break;
-        }
+        currentFrame %= frames[state].length;
+        currentImage = frames[state][currentFrame];
 
         // if there is a current image, draws it
         if (currentImage != null) {
             drawPlayer(g2d, currentImage);
         }
-    }  
+    }
     
     // draws the player with all the effects
     public void drawPlayer(Graphics2D g2d, BufferedImage currentImage){
@@ -332,16 +190,7 @@ public class Player extends Entity{
         smoke.draw(g2d);
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                       Set Methods                          *
-    * *                                                            *
-    * **************************************************************
-    */
-    public void setState(int newState){
-        this.state = newState;
-    }
+    /* ========= SET METHODS ========= */
 
     public void setDamage(long  durationMillis){
         this.damaged = true;
@@ -350,7 +199,7 @@ public class Player extends Entity{
         this.damagedEndTime = System.currentTimeMillis() + durationMillis;
     }
 
-    //
+    // knockback the player
     public void knockback(int value){
         this.speedY = -value;    // knockback  y (upwards)
         if(state > 0 ){
@@ -369,32 +218,20 @@ public class Player extends Entity{
         isInvincible = true;
         invincibilityEndTime = System.currentTimeMillis() + durationMillis;
     }
-
-    public boolean hasMaxJumped(){
-        return variableJumpForce >= MAX_JUMP_FORCE;
-    }
-
+    
     public void resetPosition(){
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
         this.y = PANEL_HEIGHT - this.height;
         this.isInvincible = false;
         this.damaged = false;
     }
+    
+    /* ========= CHECK METHODS ========= */
 
-    public void resetPlayer(){
-        hearts = 3;
-        resetPosition(); // resets the player position
-        isInvincible = false; // resets the invincibility
-        isMagnetized = false; // resets the magnetism
-        damaged = false; // resets the damage
+    public boolean hasMaxJumped(){
+        return variableJumpForce >= MAX_JUMP_FORCE;
     }
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                     check Methods                          *
-    * *                                                            *
-    * **************************************************************
-    */    
+
     // checks if the player has powerups
     public void checkPowerups(){
         // check if the player is invincible
@@ -418,16 +255,6 @@ public class Player extends Entity{
                 damaged = false;
             }
         }
-    }
-
-    public boolean checkBladeDestroy(Blades blade){
-        boolean destroyed = false;
-        if(this.y + this.height < blade.y){
-            if(this.x + this.width / 2 > blade.x && this.x + this.width / 2 < blade.x + blade.width){
-                destroyed = true;
-            }
-        }
-        return destroyed;
     }
 
     public boolean hasJumped(){
@@ -454,23 +281,17 @@ public class Player extends Entity{
         return moved;
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *               Loading frames Method                        *
-    * *                                                            *
-    * **************************************************************
-    */
+    /* ========= LOADING FRAMES METHOD ========= */
     // this method loads the frame from player.png located on the ../img folder
 
     public void loadAllFrames(){
-        idleRightFrames = loadFrames(spriteSheet, 0, 0, 3, 32, 32); // idle right
-        runRightFrames = loadFrames(spriteSheet, 0, 32, 4, 32, 32); // run right
-        jumpRightFrames = loadFrames(spriteSheet, 0, 64, 1, 32, 32); // jump right
-        doubleJumpRightFrames = loadFrames(spriteSheet, 0, 96, 3, 32, 32);  //double jump right
-        idleLeftFrames = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
-        runLeftFrames = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
-        jumpLeftFrames = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
-        doubleJumpLeftFrames = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
+        frames[IDLE_RIGHT] = loadFrames(spriteSheet, 0, 0, 3, 32, 32); // idle right
+        frames[RUN_RIGHT] = loadFrames(spriteSheet, 0, 32, 4, 32, 32); // run right
+        frames[JUMP_RIGHT] = loadFrames(spriteSheet, 0, 64, 1, 32, 32); // jump right
+        frames[DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 96, 3, 32, 32);  //double jump right
+        frames[IDLE_LEFT] = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
+        frames[RUN_LEFT] = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
+        frames[JUMP_LEFT] = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
+        frames[DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
     }
 }

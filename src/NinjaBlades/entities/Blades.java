@@ -10,12 +10,15 @@ import java.awt.Graphics2D;
 
 public class Blades extends Entity{
     
-    private BufferedImage [] frames;
     Random random = new Random();
     public boolean destroyed = false;
     private static BufferedImage bladeSheet;
 
     public Blades() {
+
+        // sets the size of the frames
+        this.frames = new BufferedImage[2][3];
+
         // Load the sprite sheet only once
         if (bladeSheet == null) {
             bladeSheet = loadImage("blades.png");
@@ -37,6 +40,8 @@ public class Blades extends Entity{
         loadFrames();
     }
 
+    /* =========  UPDATE METHOD ========= */
+
     public void update(){
         if (!destroyed) {
             frameCount++;
@@ -56,17 +61,9 @@ public class Blades extends Entity{
 
     }
 
-    public void draw(Graphics2D g2d) {
+    public void drawBlades(Graphics2D g2d) {
         if(!destroyed){
-            BufferedImage currentImage = null;
-
-            currentFrame %= frames.length;
-            currentImage = frames[currentFrame];
-
-            // if there is a current image, draws it
-            if (currentImage != null) {
-                g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
-            }
+            draw(g2d);
         }else{
             smoke.setSmoke(5, this.x, this.y);
         }
@@ -84,13 +81,19 @@ public class Blades extends Entity{
         }
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                   destruction logic                        *
-    * *                                                            *
-    * **************************************************************
-    */
+    // checks if the player has jumped the blade
+    public boolean checkBladeDestroy(Player player){
+        boolean destroyed = false;
+        if(player.y + player.height < this.y){
+            if(player.x + player.width / 2 > this.x && player.x + player.width / 2 < this.x + this.width){
+                destroyed = true;
+            }
+        }
+        return destroyed;
+    }
+
+    /* =========  DESTRUCTION LOGIC ========= */
+
     public boolean isDestroyed(){
         return destroyed;
     }
@@ -99,16 +102,11 @@ public class Blades extends Entity{
         this.destroyed = true;
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *               Loading frames Method                        *
-    * *                                                            *
-    * **************************************************************
-    */
+    /* =========  LOADING FRAMES METHOD ========= */
     // this method loads the frame from blades.png located on the ../img folder
         
     public void loadFrames() {
-        frames = loadFrames(bladeSheet, 0, 0, 3, 32, 32); 
+        frames[0] = loadFrames(bladeSheet, 0, 0, 3, 32, 32); 
+        frames[1] = loadFrames(bladeSheet, 0, 32, 3, 32, 32);
     }
 }
