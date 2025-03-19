@@ -25,6 +25,7 @@ public class Entity extends ImageLoader{
     public double speedY;
     public Rectangle hitbox;
     public Smokes smoke;
+    public int theme;
     public BufferedImage[][] frames;
 
     /* ========= CONSTRACTOR ========= */
@@ -34,20 +35,20 @@ public class Entity extends ImageLoader{
         this.y = 0;
         this.width = 80;
         this.height = 80;
-        this.spriteSheet = null;
-        this.state = 0;
+        spriteSheet = null;
         this.speedX = 0;
         this.speedY = 0;
         this.smoke = new Smokes();
         hitbox = new Rectangle(this.x, this.y, this.width, this.height);
         this.frames = new BufferedImage[10][10];
+        this.theme = 0;
     }
 
     public void draw(Graphics2D g2d){
         BufferedImage currentImage = null;
 
         currentFrame %= frames.length;
-        currentImage = frames[state][currentFrame];
+        currentImage = frames[theme][currentFrame];
 
         // if there is a current image, draws it
         if (currentImage != null) {
@@ -117,6 +118,14 @@ public class Entity extends ImageLoader{
         this.state = state;
     }
 
+    public void setHitbox(int x, int y, int width, int height){
+        this.hitbox = new Rectangle(x, y, width, height);
+    }
+
+    public void setTheme(int theme){
+        this.theme = theme;
+    }
+
     /* =========  GET METHODS ========= */
 
     public int getX() {
@@ -137,6 +146,10 @@ public class Entity extends ImageLoader{
 
     public Rectangle getHitbox() {
         return hitbox;
+    }
+
+    public int getTheme(){
+        return theme;
     }
 
     // will test if the hitbox of the entity is colliding with another entity

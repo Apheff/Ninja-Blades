@@ -187,7 +187,7 @@ public class GamePanel extends JPanel {
 
 
 
-        Wallpapers.draw(g2d, mainClass.getTheme());
+        Wallpapers.draw(g2d, ConfigManager.getTheme());
         
         if (gameOverMenu.isActive()) {
             gameOverMenu.show();

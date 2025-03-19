@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 public class ImageLoader {
 
-    protected BufferedImage spriteSheet;
+    protected static BufferedImage spriteSheet;
     public BufferedImage[] blades;
 
     public ImageLoader(){

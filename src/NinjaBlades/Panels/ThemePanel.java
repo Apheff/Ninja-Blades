@@ -3,6 +3,7 @@ package NinjaBlades.Panels;
 import javax.swing.*;
 
 import NinjaBlades.MainClass;
+import NinjaBlades.utils.ConfigManager;
 import NinjaBlades.utils.ImageLoader;
 
 import static NinjaBlades.utils.Constants.GamePanel.*;
@@ -15,9 +16,9 @@ import java.awt.image.BufferedImage;
 public class ThemePanel extends JPanel implements KeyListener {
 
     private MainClass mainClass;
-    private int selectedTheme = 0; // default: 0
+    private int selectedTheme = ConfigManager.getTheme(); // default: 0
     private BufferedImage[] themeImages;
-    private String[] themeNames = {"Classic Theme", "Rick and Morty Theme", "Neon theme"};
+    private String[] themeNames = {"Classic Theme", "Rick and Morty Theme"};
     private boolean active = false;
 
     public ThemePanel(MainClass mainClass) {
@@ -28,10 +29,9 @@ public class ThemePanel extends JPanel implements KeyListener {
         setSize(PANEL_WIDTH, PANEL_HEIGHT);
         setMaximumSize(PANEL_SIZE);
 
-        themeImages = new BufferedImage[3];
+        themeImages = new BufferedImage[2];
         themeImages[0] = ImageLoader.loadImage("wallpaper0.jpg");
         themeImages[1] = ImageLoader.loadImage("wallpaper1.jpg");
-        themeImages[2] = ImageLoader.loadImage("wallpaper2.jpg");
     }
 
     @Override
@@ -90,23 +90,18 @@ public class ThemePanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        switch (keyCode) {
-            case KeyEvent.VK_LEFT:
-                selectedTheme = (selectedTheme > 0) ? selectedTheme - 1 : themeImages.length - 1;
-                repaint();
-                break;
-            case KeyEvent.VK_RIGHT:
-                selectedTheme = (selectedTheme < themeImages.length - 1) ? selectedTheme + 1 : 0;
-                repaint();
-                break;
-            case KeyEvent.VK_ENTER:
-                mainClass.setTheme(selectedTheme); // Applica il tema selezionato
-                mainClass.showMenu(); // Torna al menu principale
-                break;
-            case KeyEvent.VK_ESCAPE:
-                mainClass.showMenu();
-                hidePanel();
-                break;
+        if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A){
+            selectedTheme = (selectedTheme > 0) ? selectedTheme - 1 : themeImages.length - 1;
+            repaint();
+        } else if (keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_D){
+            selectedTheme = (selectedTheme < themeImages.length - 1) ? selectedTheme + 1 : 0;
+            repaint();
+        } else if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE){
+            ConfigManager.setTheme(selectedTheme); // Salva il tema selezionato
+            mainClass.showMenu(); // Torna al menu principale
+        } else if (keyCode == KeyEvent.VK_ESCAPE){
+            mainClass.showMenu();
+            hidePanel();
         }
     }
 

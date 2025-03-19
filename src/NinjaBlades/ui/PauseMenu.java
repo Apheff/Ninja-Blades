@@ -54,23 +54,15 @@ public class PauseMenu {
 
     public void handleInput(int keyCode) {
         if (!isPaused) return;
-    
-        switch (keyCode) {
-            case KeyEvent.VK_UP:
-                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
-                break;
-            case KeyEvent.VK_DOWN:
-                selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
-                break;
-            case KeyEvent.VK_ENTER:
-                selectOption();
-                break;
-            case KeyEvent.VK_P:
-                togglePause();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                togglePause();
-                break;
+        
+        if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W){
+            selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
+        } else if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S){
+            selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
+        } else if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE){
+            selectOption();
+        } else if(keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_ESCAPE){
+            togglePause();
         }
     }
     

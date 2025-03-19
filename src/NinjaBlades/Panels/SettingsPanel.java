@@ -29,7 +29,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
     // Components for settings
     private JSlider volumeSlider;
     
-    private String[] options = {"Controls: WASD", "< Back"};
+    private String[] options = {"Controls: WASD",  "music: ON",  "< Back"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private boolean active = false;
     int value = ConfigManager.getVolume();
@@ -106,6 +106,8 @@ public class SettingsPanel extends JPanel implements KeyListener {
             if (i == selectedOption) {
                 if(i == 0){
                     options[i] = "Controls: " + KeyboardInputs.getControlType();
+                }else if (i == 1){
+                    options[i] = "music: " + (SoundManager.isMuted() ? "OFF" : "ON");
                 }
                 g2d.setColor(customYellow); // Evidenziazione per l'opzione selezionata
             } else {
@@ -117,8 +119,8 @@ public class SettingsPanel extends JPanel implements KeyListener {
             int textX = (PANEL_WIDTH - textWidth) / 2;
             int textY = startY + (i * spacing);
             g2d.drawString(text, textX, textY);
-            if(i ==0){
-                g2d.fillRect(textX, startY + 8, textWidth, 4);
+            if(i != options.length - 1){
+                g2d.fillRect(textX, startY + 8 + (i * spacing), textWidth, 4);
             }
         }
     }
@@ -127,26 +129,21 @@ public class SettingsPanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-    
-        switch (keyCode) {
-            case KeyEvent.VK_UP:
-                selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
-                break;
-            case KeyEvent.VK_DOWN:
-                selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
-                break;
-            case KeyEvent.VK_LEFT:
-                volumeSlider.setValue(volumeSlider.getValue() - 10);
-                break;
-            case KeyEvent.VK_RIGHT:
-                volumeSlider.setValue(volumeSlider.getValue() + 10);
-                break;
-            case KeyEvent.VK_ENTER:
-                selectOption();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
-                break;
+        
+        if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W){
+            selectedOption = (selectedOption > 0) ? selectedOption - 1 : options.length - 1;
+        } else if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S){
+            selectedOption = (selectedOption < options.length - 1) ? selectedOption + 1 : 0;
+        } else if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE){
+            selectOption();
+        } else if (keyCode == KeyEvent.VK_ESCAPE){
+            mainClass.showMenu();
+        } else if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A){
+            volumeSlider.setValue(volumeSlider.getValue() - 10);
+        } else if (keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_D){
+            volumeSlider.setValue(volumeSlider.getValue() + 10);
+        } else if (keyCode == KeyEvent.VK_ESCAPE){
+            mainClass.showMenu();
         }
         repaint();
     }
@@ -157,6 +154,9 @@ public class SettingsPanel extends JPanel implements KeyListener {
                 KeyboardInputs.toggleControlType();
                 break;
             case 1:
+                SoundManager.toggleMute();
+                break;
+            case 2:
                 mainClass.showMenu();
                 ConfigManager.setWASD(KeyboardInputs.isWASD());
                 ConfigManager.setVolume(value);

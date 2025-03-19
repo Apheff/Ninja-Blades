@@ -3,6 +3,8 @@ package NinjaBlades.entities;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import NinjaBlades.utils.ConfigManager;
+
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
 
@@ -12,7 +14,7 @@ public class Blades extends Entity{
     
     Random random = new Random();
     public boolean destroyed = false;
-    private static BufferedImage bladeSheet;
+    static BufferedImage spriteSheet;
 
     public Blades() {
 
@@ -20,9 +22,9 @@ public class Blades extends Entity{
         this.frames = new BufferedImage[2][3];
 
         // Load the sprite sheet only once
-        if (bladeSheet == null) {
-            bladeSheet = loadImage("blades.png");
-            if (bladeSheet == null) {
+        if (spriteSheet == null) {
+            spriteSheet = loadImage("blades.png");
+            if (spriteSheet == null) {
                 // Image not found; stop further processing.
                 System.err.println("Failed to load blades.png");
                 return;
@@ -35,15 +37,16 @@ public class Blades extends Entity{
         this.speedX = random.nextBoolean() ? 2 : -2;
         this.speedY = 6; // constant velocity
         this.state = 0; // sets the state to red (default)
-
+        this.theme = ConfigManager.getTheme();
         //loading the frames
-        loadFrames();
+        loadAllFrames();
     }
 
     /* =========  UPDATE METHOD ========= */
 
     public void update(){
         if (!destroyed) {
+            theme = ConfigManager.getTheme();
             frameCount++;
             bladesMovement();
             // set the hitbox position every time does it move
@@ -66,6 +69,19 @@ public class Blades extends Entity{
             draw(g2d);
         }else{
             smoke.setSmoke(5, this.x, this.y);
+        }
+    }
+
+    /* =========  DRAW METHOD ========= */
+    public void draw(Graphics2D g2d){
+        BufferedImage currentImage = null;
+
+        currentFrame %= frames.length;
+        currentImage = frames[theme % 2][currentFrame];
+
+        // if there is a current image, draws it
+        if (currentImage != null) {
+            g2d.drawImage(currentImage, this.x, this.y, this.width, this.height, null);
         }
     }
 
@@ -104,9 +120,8 @@ public class Blades extends Entity{
 
     /* =========  LOADING FRAMES METHOD ========= */
     // this method loads the frame from blades.png located on the ../img folder
-        
-    public void loadFrames() {
-        frames[0] = loadFrames(bladeSheet, 0, 0, 3, 32, 32); 
-        frames[1] = loadFrames(bladeSheet, 0, 32, 3, 32, 32);
+    public void loadAllFrames() {
+        frames[0] = loadFrames(spriteSheet, 0, 0, 3, 32, 32); 
+        frames[1] = loadFrames(spriteSheet, 0, 32, 3, 32, 32);
     }
 }

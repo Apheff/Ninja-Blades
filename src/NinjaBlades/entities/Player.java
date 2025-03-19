@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
 import static NinjaBlades.utils.Constants.PlayerConstants.*;
+import NinjaBlades.utils.ConfigManager;
 
 import java.awt.Graphics2D;
 import java.awt.image.RescaleOp;
@@ -32,7 +33,7 @@ public class Player extends Entity{
     
     // images for the player
     public BufferedImage shieldSheet = loadImage("shield.png");
-    public BufferedImage[][] frames;
+    public BufferedImage[][][] frames;
     public int currentFrame;
 
     // input for the player
@@ -46,7 +47,7 @@ public class Player extends Entity{
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
         this.y = PANEL_HEIGHT - this.height;
         this.speedX = 14;
-        this.frames = new BufferedImage[8][4];
+        this.frames = new BufferedImage[2][8][4];
         /*
          * 4: idleLeft, 0: idleRight,
          * 5: RunLeft, 1: RunRight,
@@ -57,13 +58,15 @@ public class Player extends Entity{
 
         // Load sprite sheet
         if (spriteSheet == null) {
-            spriteSheet = loadImage("player_1.png");
+            spriteSheet = loadImage("player.png");
             if (spriteSheet == null) {
                 // Image not found; stop further processing.
                 System.err.println("Failed to load player.png");
                 return;
             }
         }
+
+        this.theme = ConfigManager.getTheme();
 
         // Loads the Frames for every state
         loadAllFrames();
@@ -132,7 +135,7 @@ public class Player extends Entity{
     public void update() {
         // check if the player is damaged
         checkDamage();
-
+        theme = ConfigManager.getTheme();
         // check if the player has powerups
         checkPowerups();
 
@@ -145,7 +148,7 @@ public class Player extends Entity{
 
         // Update player movement
         playerMovement();
-        currentFrame %= frames[state].length;
+        currentFrame %= frames[theme][state].length;
     }
 
     /* ========= DRAWING METHODS ========= */
@@ -155,8 +158,8 @@ public class Player extends Entity{
 
         BufferedImage currentImage = null;
 
-        currentFrame %= frames[state].length;
-        currentImage = frames[state][currentFrame];
+        currentFrame %= frames[theme][state].length;
+        currentImage = frames[theme][state][currentFrame];
 
         // if there is a current image, draws it
         if (currentImage != null) {
@@ -285,15 +288,22 @@ public class Player extends Entity{
 
     /* ========= LOADING FRAMES METHOD ========= */
     // this method loads the frame from player.png located on the ../img folder
-
     public void loadAllFrames(){
-        frames[IDLE_RIGHT] = loadFrames(spriteSheet, 0, 0, 3, 32, 32); // idle right
-        frames[RUN_RIGHT] = loadFrames(spriteSheet, 0, 32, 4, 32, 32); // run right
-        frames[JUMP_RIGHT] = loadFrames(spriteSheet, 0, 64, 1, 32, 32); // jump right
-        frames[DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 96, 3, 32, 32);  //double jump right
-        frames[IDLE_LEFT] = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
-        frames[RUN_LEFT] = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
-        frames[JUMP_LEFT] = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
-        frames[DOUBLE_JUMP_LEFT] = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
+        frames[0][IDLE_RIGHT] = loadFrames(spriteSheet, 0, 0, 3, 32, 32); // idle right
+        frames[0][RUN_RIGHT] = loadFrames(spriteSheet, 0, 32, 4, 32, 32); // run right
+        frames[0][JUMP_RIGHT] = loadFrames(spriteSheet, 0, 64, 1, 32, 32); // jump right
+        frames[0][DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 96, 3, 32, 32);  //double jump right
+        frames[0][IDLE_LEFT] = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
+        frames[0][RUN_LEFT] = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
+        frames[0][JUMP_LEFT] = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
+        frames[0][DOUBLE_JUMP_LEFT] = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left
+        frames[1][IDLE_RIGHT] = loadFrames(spriteSheet, 0, 256, 3, 32, 32); // idle right
+        frames[1][RUN_RIGHT] = loadFrames(spriteSheet, 0, 288, 4, 32, 32); // run right
+        frames[1][JUMP_RIGHT] = loadFrames(spriteSheet, 0, 320, 1, 32, 32); // jump right
+        frames[1][DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 352, 3, 32, 32);  //double jump right
+        frames[1][IDLE_LEFT] = loadFrames(spriteSheet, 0, 384, 3, 32, 32);  // idle left
+        frames[1][RUN_LEFT] = loadFrames(spriteSheet, 0, 416, 4, 32, 32);  // run left
+        frames[1][JUMP_LEFT] = loadFrames(spriteSheet, 0, 448, 1, 32, 32);  // jump left
+        frames[1][DOUBLE_JUMP_LEFT] = loadFrames(spriteSheet, 0, 480, 3, 32, 32); // double jump left
     }
 }

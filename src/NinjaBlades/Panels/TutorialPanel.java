@@ -11,6 +11,7 @@ import NinjaBlades.ui.TutorialEndMenu;
 import NinjaBlades.utils.KeyboardInputs;
 
 import static NinjaBlades.utils.Constants.GamePanel.*;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TutorialPanel extends JPanel {
-
 
     private long lastCollisionTime = System.currentTimeMillis();
     private MainClass mainClass;
@@ -37,6 +37,7 @@ public class TutorialPanel extends JPanel {
             "DISTRUGGI le lame saltandole senza toccarle !"
     };
     private boolean active = true;
+    private KeyboardInputs keyboardInputs;
 
     // Game loop (aggiorna ogni 16 ms ~ 60 FPS)
     Timer tutorialTimer = new Timer(16, new ActionListener() {
@@ -55,7 +56,7 @@ public class TutorialPanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
         // Creiamo il giocatore e colleghiamo gli input
-        KeyboardInputs keyboardInputs = new KeyboardInputs();
+        keyboardInputs = new KeyboardInputs();
         player = new Player(keyboardInputs);
         addKeyListener(keyboardInputs);
 
@@ -106,6 +107,7 @@ public class TutorialPanel extends JPanel {
     // Logica per avanzare nelle fasi del tutorial
     public void updateTutorial() {
         player.update();
+        setPlayerState();
 
         // Aggiorna le lame
         for (Blades blade : bladesList) {
@@ -195,6 +197,44 @@ public class TutorialPanel extends JPanel {
         player.damaged = false; // resets the damage
     }
 
+    // sets the state for every players movement
+    public void setPlayerState(){
+        if(!player.onGround){
+            if(player.doubleJump){
+                // jump frames
+                if(player.state < 4 || keyboardInputs.right){
+                    player.state = JUMP_RIGHT;
+                }
+                if(player.state >= 4 || keyboardInputs.left){
+                    player.state = JUMP_LEFT;
+                }
+            }else{
+                // double jump frames
+                if(player.state < 4 || keyboardInputs.right){
+                    player.state = DOUBLE_JUMP_RIGHT;
+                }
+                if(player.state >= 4 || keyboardInputs.left){
+                    player.state = DOUBLE_JUMP_LEFT;
+                }               
+            }
+        }else{
+            // on ground right frames (idle and run) 
+            if(keyboardInputs.right){
+                player.state = RUN_RIGHT;
+            }else if (player.state < 4){
+                player.state = IDLE_RIGHT;
+            }
+            // on ground left frames (idle and run)
+            if(keyboardInputs.left){
+                player.state = RUN_LEFT;
+            }else if (player.state >= 4){
+                player.state = IDLE_LEFT;
+            }
+            if (keyboardInputs.left && keyboardInputs.right) {
+                player.state = IDLE_RIGHT;
+            }
+        }
+    }
 
     // Torna al menu principale
     public void exitToMenu() {

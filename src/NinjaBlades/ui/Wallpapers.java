@@ -15,7 +15,7 @@ public class Wallpapers extends ImageLoader{
     public static void LoadWallpapers(){
         wallpapers = new BufferedImage[3]; 
         // Load wallpapers
-        for(int i = 0; i < 3 ; i++){
+        for(int i = 0; i < 2; i++){
             String s = "wallpaper" + i + ".jpg";
             wallpapers[i] = loadImage(s);
         }

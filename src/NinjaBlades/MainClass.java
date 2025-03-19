@@ -21,7 +21,7 @@ import NinjaBlades.Panels.TutorialPanel;
 import NinjaBlades.ui.HUD;
 import NinjaBlades.ui.Wallpapers;
 import NinjaBlades.utils.ConfigManager;
-import NinjaBlades.utils.SoundManager;;
+import NinjaBlades.utils.SoundManager;
 
 
 public class MainClass extends JPanel implements Runnable{
@@ -35,7 +35,6 @@ public class MainClass extends JPanel implements Runnable{
     private MenuPanel menuPanel;
     private boolean running = true;
     private TutorialPanel tutorialPanel;
-    private int currentTheme = 0;
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
@@ -87,6 +86,7 @@ public class MainClass extends JPanel implements Runnable{
 
         // Imposta il volume in base alla configurazione
         SoundManager.setVolume(ConfigManager.getVolume());
+        SoundManager.loopSound("background.wav");
     }
 
     public void startGameLoop() {
@@ -146,16 +146,6 @@ public class MainClass extends JPanel implements Runnable{
         gamePanel.repaint();
         settingsPanel.revalidate();
         settingsPanel.repaint();
-    }
-
-    public int getTheme() {
-        return currentTheme;
-    }
-
-    public void setTheme(int themeIndex) {
-        currentTheme = themeIndex;
-        System.out.println("Tema selezionato: " + themeIndex);
-        // Qui puoi cambiare lo sfondo del gioco o le texture
     }
 
     public void showLocker() {

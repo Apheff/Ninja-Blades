@@ -20,6 +20,7 @@ public class SoundManager {
         SoundManager.preloadSound("heal.wav");
         SoundManager.preloadSound("pop.wav");
         SoundManager.preloadSound("explosion.wav");
+        SoundManager.preloadSound("background.wav");
     }
 
     public static void preloadSound(String soundFile) {
@@ -36,6 +37,39 @@ public class SoundManager {
             soundMap.put(soundFile, clip); // Store the preloaded clip in the map
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void loopSound(String soundFile) {
+        Clip clip = soundMap.get(soundFile);
+        if (clip != null) {
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } else {
+            System.err.println("Clip not ready to loop: " + soundFile);
+            preloadSound(soundFile); // Preload the sound if not already loaded
+        }
+    }
+
+    public static void toggleMute() {
+        Clip clip = soundMap.get("background.wav");
+        if (clip.isActive()) {
+            clip.stop();
+        } else {
+            clip.start();
+        }
+    }
+
+    public static boolean isMuted(){
+        return !soundMap.get("background.wav").isActive();
+    }
+
+    public static void stopSound(String soundFile) {
+        Clip clip = soundMap.get(soundFile);
+        if (clip != null) {
+            clip.stop();
+        } else {
+            System.err.println("Clip not ready to stop: " + soundFile);
+            preloadSound(soundFile); // Preload the sound if not already loaded
         }
     }
 
