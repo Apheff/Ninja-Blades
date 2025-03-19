@@ -3,6 +3,7 @@ import javax.swing.*;
 
 import NinjaBlades.MainClass;
 import NinjaBlades.utils.ImageLoader;
+import NinjaBlades.entities.Blades;
 
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
 import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
@@ -15,6 +16,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 
 public class MenuPanel extends JPanel implements KeyListener {
@@ -24,7 +30,14 @@ public class MenuPanel extends JPanel implements KeyListener {
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
     private BufferedImage menuWallpaper;
-    private BufferedImage[] wallpaperFrames;
+    private List<Blades> bladesList = new ArrayList<>();
+
+    private Timer bladesSpawner = new Timer(1500, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            bladesList.add(new Blades());
+        }
+    });
 
     public MenuPanel(MainClass mainClass) {
         this.mainClass = mainClass;
@@ -36,8 +49,10 @@ public class MenuPanel extends JPanel implements KeyListener {
 
         // Carichiamo il logo usando la funzione esistente
         logoImage = ImageLoader.loadImage("logo.png"); // Assicurati che il file sia in img/
-        menuWallpaper = ImageLoader.loadImage("menuWallpaper.png");
-        wallpaperFrames = ImageLoader.loadFrames(menuWallpaper, 0, 0, 8, 920, 1080);
+        menuWallpaper = ImageLoader.loadImage("menuWallpaper_test.png");
+
+        // starts the blades spawner
+        bladesSpawner.start();
     }
 
     @Override
@@ -47,7 +62,8 @@ public class MenuPanel extends JPanel implements KeyListener {
 
         g2d.scale(scaleFactor, scaleFactor);
 
-        drawWallpaper(g2d);
+        g2d.drawImage(menuWallpaper, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
+
         // Overlay semi-trasparente
         g2d.setColor(new Color(0, 0, 0, 80));
         g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
@@ -85,11 +101,17 @@ public class MenuPanel extends JPanel implements KeyListener {
             
             g2d.drawString(text, textX, textY);
         }
-    }
+        for (Blades blade : bladesList) {
+            blade.draw(g2d);
+        }
+        for (Blades blade : bladesList) {
+            blade.update();
+        }
 
-    private void drawWallpaper(Graphics2D g2d) {
-        int frameIndex = (int) (System.currentTimeMillis() / 120) % wallpaperFrames.length;
-        g2d.drawImage(wallpaperFrames[frameIndex], 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
+        bladesList.removeIf(blade -> blade.isDestroyed());
+        if(bladesList.isEmpty()){
+            bladesSpawner.start();
+        }
     }
 
     @Override
