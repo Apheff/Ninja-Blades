@@ -72,8 +72,8 @@ public class GamePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!gameOverMenu.isActive() && !pauseMenu.isPaused()) { // if the game is not over and not paused
-                Update();
                 repaint();
+                Update();
             }
         }
     });
@@ -177,16 +177,18 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // black background
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
         Graphics2D g2d = (Graphics2D) g;
 
         // apply scaling
         g2d.scale(scaleFactor, scaleFactor);
 
-        g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-        Wallpapers.draw(g2d, mainClass.getTheme());
-        HUD.draw(g2d, player, score);
 
+
+        Wallpapers.draw(g2d, mainClass.getTheme());
+        
         if (gameOverMenu.isActive()) {
             gameOverMenu.show();
             gameOverMenu.draw(g2d);
@@ -200,6 +202,7 @@ public class GamePanel extends JPanel {
                 item.draw(g2d);
             }
         }
+        HUD.draw(g2d, player, score);
         pauseMenu.draw(g2d); // Disegna il menu di pausa
     }
 
@@ -248,18 +251,18 @@ public class GamePanel extends JPanel {
         if(!player.onGround){
             if(player.doubleJump){
                 // jump frames
-                if(player.state > 0 || keyboardInputs.right){
+                if(player.state < 4 || keyboardInputs.right){
                     player.state = JUMP_RIGHT;
                 }
-                if(player.state < 0 || keyboardInputs.left){
+                if(player.state >= 4 || keyboardInputs.left){
                     player.state = JUMP_LEFT;
                 }
             }else{
                 // double jump frames
-                if(player.state > 0 || keyboardInputs.right){
+                if(player.state < 4 || keyboardInputs.right){
                     player.state = DOUBLE_JUMP_RIGHT;
                 }
-                if(player.state < 0 || keyboardInputs.left){
+                if(player.state >= 4 || keyboardInputs.left){
                     player.state = DOUBLE_JUMP_LEFT;
                 }               
             }
@@ -267,13 +270,13 @@ public class GamePanel extends JPanel {
             // on ground right frames (idle and run) 
             if(keyboardInputs.right){
                 player.state = RUN_RIGHT;
-            }else if (player.state > 0){
+            }else if (player.state < 4){
                 player.state = IDLE_RIGHT;
             }
             // on ground left frames (idle and run)
             if(keyboardInputs.left){
                 player.state = RUN_LEFT;
-            }else if (player.state < 0){
+            }else if (player.state >= 4){
                 player.state = IDLE_LEFT;
             }
             if (keyboardInputs.left && keyboardInputs.right) {

@@ -41,21 +41,23 @@ public class Player extends Entity{
     /* =========  CONSTRACTOR ========= */
 
     public Player(KeyboardInputs keyboardInputs) {
+
         this.keyboardInputs = keyboardInputs;
         this.x = PANEL_WIDTH / 2 - this.width / 2; // centers the player in the middle of the panel
         this.y = PANEL_HEIGHT - this.height;
         this.speedX = 14;
+        this.frames = new BufferedImage[8][4];
         /*
-         * -1: idleLeft, 1: idleRight,
-         * -2: RunLeft, 2: RunRight,
-         * -3: JumpLeft, 3: JumpRight,
-         * -4: DoubleJumpLeft, 4: DoubleJumpRight
+         * 4: idleLeft, 0: idleRight,
+         * 5: RunLeft, 1: RunRight,
+         * 6: JumpLeft, 2: JumpRight,
+         * 7: DoubleJumpLeft, 3: DoubleJumpRight
          */
         this.state = IDLE_RIGHT;
 
         // Load sprite sheet
         if (spriteSheet == null) {
-            spriteSheet = loadImage("player.png");
+            spriteSheet = loadImage("player_1.png");
             if (spriteSheet == null) {
                 // Image not found; stop further processing.
                 System.err.println("Failed to load player.png");
@@ -202,8 +204,8 @@ public class Player extends Entity{
     // knockback the player
     public void knockback(int value){
         this.speedY = -value;    // knockback  y (upwards)
-        if(state > 0 ){
-            this.x -= value; // knockback x (opposite of the direction the player is facing)
+        if(state < 4){           // if the player is facing right
+            this.x -= value;     // knockback x (opposite of the direction the player is facing)
         }else{
             this.x +=value;
         }
@@ -292,6 +294,6 @@ public class Player extends Entity{
         frames[IDLE_LEFT] = loadFrames(spriteSheet, 0, 128, 3, 32, 32);  // idle left
         frames[RUN_LEFT] = loadFrames(spriteSheet, 0, 160, 4, 32, 32);  // run left
         frames[JUMP_LEFT] = loadFrames(spriteSheet, 0, 192, 1, 32, 32);  // jump left
-        frames[DOUBLE_JUMP_RIGHT] = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
+        frames[DOUBLE_JUMP_LEFT] = loadFrames(spriteSheet, 0, 224, 3, 32, 32); // double jump left 
     }
 }

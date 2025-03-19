@@ -12,13 +12,9 @@ import NinjaBlades.utils.ImageLoader;
 
 public class Entity extends ImageLoader{
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                  Entity's variables                        *
-    * *                                                            *
-    * **************************************************************
-    */    
+
+    /* ========= ENTITY'S VARIABLES ========= */
+
     public int x, y; // position
     public int width, height; // size
     public int state;
@@ -31,13 +27,8 @@ public class Entity extends ImageLoader{
     public Smokes smoke;
     public BufferedImage[][] frames;
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                     constractor                            *
-    * *                                                            *
-    * **************************************************************
-    */    
+    /* ========= CONSTRACTOR ========= */
+
     public Entity(){
         this.x = 0;
         this.y = 0;
@@ -81,13 +72,8 @@ public class Entity extends ImageLoader{
         }
     }
 
-    /*
-    * **************************************************************
-    * *                                                            *
-    * *                       set methods                          *
-    * *                                                            *
-    * **************************************************************
-    */    
+    /* =========  SET METHOD ========= */
+
     public void setX(int x){
         this.x = x;
     }

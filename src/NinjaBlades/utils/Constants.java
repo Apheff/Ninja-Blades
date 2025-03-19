@@ -49,15 +49,18 @@ public class Constants {
 
     public static class PlayerConstants {
         
-        // states 
-        public static final int IDLE_RIGHT = 1;
-        public static final int RUN_RIGHT = 2;
-        public static final int JUMP_RIGHT = 3;
-        public static final int DOUBLE_JUMP_RIGHT = 4;
-        public static final int IDLE_LEFT = -1;
-        public static final int RUN_LEFT = -2;
-        public static final int JUMP_LEFT = -3;
-        public static final int DOUBLE_JUMP_LEFT = -4;
+        // states
+
+        // lower than 4 is right
+        public static final int IDLE_RIGHT = 0;
+        public static final int RUN_RIGHT = 1;
+        public static final int JUMP_RIGHT = 2;
+        public static final int DOUBLE_JUMP_RIGHT = 3;
+        // higher than 4 is left
+        public static final int IDLE_LEFT = 4;
+        public static final int RUN_LEFT = 5;
+        public static final int JUMP_LEFT = 6;
+        public static final int DOUBLE_JUMP_LEFT = 7;
 
         //jump constants
         public static final double jumpIncrement = 10 * scaleFactor; // will increment the jump force 
