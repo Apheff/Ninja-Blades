@@ -102,6 +102,7 @@ public class MainClass extends JPanel implements Runnable{
         tutorialPanel.setVisible(false);
         lockerPanel.setVisible(false);
         settingsPanel.showPanel();
+        menuPanel.stopBlades();
     }
     
     // Metodo per mostrare il menu
@@ -113,7 +114,7 @@ public class MainClass extends JPanel implements Runnable{
         lockerPanel.setVisible(false);
         gamePanel.pauseGame(); // Pausa completa del gioco
         menuPanel.requestFocusInWindow();
-        
+        menuPanel.startBlades(); // Avvia il movimento delle lame
         updatePanels(); // Forza il rendering corretto
     }
     
@@ -126,7 +127,7 @@ public class MainClass extends JPanel implements Runnable{
         lockerPanel.setVisible(false);
         gamePanel.resumeGame(); // Riavvia il gioco
         gamePanel.requestFocusInWindow();
-    
+        menuPanel.stopBlades();
         updatePanels(); // Forza il rendering corretto
     }
 
@@ -137,6 +138,7 @@ public class MainClass extends JPanel implements Runnable{
         tutorialPanel.setVisible(true);
         lockerPanel.setVisible(false);
         tutorialPanel.requestFocusInWindow();
+        menuPanel.stopBlades();
     }
 
     private void updatePanels() {
@@ -155,6 +157,7 @@ public class MainClass extends JPanel implements Runnable{
         tutorialPanel.setVisible(false);
         lockerPanel.setVisible(true);
         lockerPanel.showPanel();
+        menuPanel.stopBlades();
     }
 
     @Override

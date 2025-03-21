@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
 
 public class MenuPanel extends JPanel implements KeyListener {
@@ -50,7 +49,6 @@ public class MenuPanel extends JPanel implements KeyListener {
         // Carichiamo il logo usando la funzione esistente
         logoImage = ImageLoader.loadImage("logo.png"); // Assicurati che il file sia in img/
         menuWallpaper = ImageLoader.loadImage("menuWallpaper_test.png");
-
         // starts the blades spawner
         bladesSpawner.start();
     }
@@ -146,6 +144,15 @@ public class MenuPanel extends JPanel implements KeyListener {
                 System.exit(0);
                 break;
         }
+    }
+
+    public void stopBlades() {
+        bladesSpawner.stop();
+        bladesList.clear();
+    }
+
+    public void startBlades() {
+        bladesSpawner.start();
     }
 
     @Override
