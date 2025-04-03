@@ -1,4 +1,4 @@
-package NinjaBlades.utils;
+package ninjablades.utils;
 
 
 import java.awt.image.BufferedImage;

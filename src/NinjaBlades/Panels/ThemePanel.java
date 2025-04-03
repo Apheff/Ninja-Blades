@@ -1,12 +1,12 @@
-package NinjaBlades.Panels;
+package ninjablades.panels;
 
 import javax.swing.*;
 
-import NinjaBlades.MainClass;
-import NinjaBlades.utils.ConfigManager;
-import NinjaBlades.utils.ImageLoader;
+import ninjalades.MainClass;
+import ninjalades.utils.ConfigManager;
+import ninjalades.utils.ImageLoader;
 
-import static NinjaBlades.utils.Constants.GamePanel.*;
+import static ninjalades.utils.Constants.GamePanel.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

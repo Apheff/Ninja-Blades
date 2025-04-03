@@ -1,11 +1,11 @@
-package NinjaBlades.utils;
+package ninjablades.utils;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.io.IOException;
 
-import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+import static ninjablades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.Color;
 import java.awt.Dimension;

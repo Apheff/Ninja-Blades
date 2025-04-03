@@ -1,7 +1,7 @@
-package NinjaBlades.Panels;
+package ninjablades.panels;
 
 
-import static NinjaBlades.utils.Constants.GamePanel.*;
+import static ninjalades.utils.Constants.GamePanel.*;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;

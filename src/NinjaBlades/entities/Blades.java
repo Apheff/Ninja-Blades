@@ -1,12 +1,12 @@
-package NinjaBlades.entities;
+package ninjablades.entities;
 
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import NinjaBlades.utils.ConfigManager;
+import ninjablades.utils.ConfigManager;
 
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static ninjablades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
 
 import java.awt.Graphics2D;
 

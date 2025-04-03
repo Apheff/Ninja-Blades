@@ -1,13 +1,13 @@
-package NinjaBlades.ui;
+package ninjablades.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import NinjaBlades.entities.Player;
-import NinjaBlades.utils.ImageLoader;
+import ninjablades.entities.Player;
+import ninjablades.utils.ImageLoader;
 
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static ninjablades.utils.Constants.GamePanel.customFont;
 
 import java.awt.Color;
 

@@ -1,16 +1,16 @@
-package NinjaBlades.Panels;
+package ninjablades.panels;
 import javax.swing.*;
 
-import NinjaBlades.MainClass;
-import NinjaBlades.utils.ImageLoader;
-import NinjaBlades.entities.Blades;
+import ninjalades.MainClass;
+import ninjalades.entities.Blades;
+import ninjalades.utils.ImageLoader;
 
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static NinjaBlades.utils.Constants.GamePanel.customFont;
-import static NinjaBlades.utils.Constants.GamePanel.customYellow;
-import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+import static ninjalades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static ninjalades.utils.Constants.GamePanel.PANEL_SIZE;
+import static ninjalades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static ninjalades.utils.Constants.GamePanel.customFont;
+import static ninjalades.utils.Constants.GamePanel.customYellow;
+import static ninjalades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

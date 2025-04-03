@@ -1,9 +1,9 @@
-package NinjaBlades.ui;
+package ninjablades.ui;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import NinjaBlades.utils.ImageLoader;
+import ninjablades.utils.ImageLoader;
 
 public class Smokes extends ImageLoader{
     

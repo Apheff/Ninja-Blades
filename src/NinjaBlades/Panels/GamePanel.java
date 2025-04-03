@@ -1,29 +1,29 @@
-package NinjaBlades.Panels;
+package ninjablades.panels;
 
 // import libraries
 import javax.swing.Timer;
 
-import NinjaBlades.MainClass;
-import NinjaBlades.entities.Blades;
-import NinjaBlades.entities.Items;
-import NinjaBlades.entities.Player;
-import NinjaBlades.ui.GameOverMenu;
-import NinjaBlades.ui.HUD;
-import NinjaBlades.ui.PauseMenu;
-import NinjaBlades.ui.Smokes;
-import NinjaBlades.ui.Wallpapers;
-import NinjaBlades.utils.KeyboardInputs;
-import NinjaBlades.utils.SoundManager;
-import NinjaBlades.utils.ConfigManager;
+import ninjalades.MainClass;
+import ninjalades.entities.Blades;
+import ninjalades.entities.Items;
+import ninjalades.entities.Player;
+import ninjalades.ui.GameOverMenu;
+import ninjalades.ui.HUD;
+import ninjalades.ui.PauseMenu;
+import ninjalades.ui.Smokes;
+import ninjalades.ui.Wallpapers;
+import ninjalades.utils.ConfigManager;
+import ninjalades.utils.KeyboardInputs;
+import ninjalades.utils.SoundManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
-import static NinjaBlades.utils.Constants.PlayerConstants.*;
+import static ninjalades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static ninjalades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static ninjalades.utils.Constants.GamePanel.scaleFactor;
+import static ninjalades.utils.Constants.PlayerConstants.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
