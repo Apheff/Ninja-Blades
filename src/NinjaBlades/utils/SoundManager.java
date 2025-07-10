@@ -56,6 +56,7 @@ public class SoundManager {
             clip.stop();
         } else {
             clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
