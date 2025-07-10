@@ -1,16 +1,16 @@
-package ninjablades.entities;
+package NinjaBlades.entities;
 
 import java.awt.image.BufferedImage;
 
-import static ninjablades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjablades.utils.Constants.PlayerConstants.*;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
 
 import java.awt.Graphics2D;
 import java.awt.image.RescaleOp;
 
-import ninjablades.utils.ConfigManager;
-import ninjablades.utils.KeyboardInputs;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class Player extends Entity{
 

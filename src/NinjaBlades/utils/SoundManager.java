@@ -1,4 +1,4 @@
-package ninjablades.utils;
+package NinjaBlades.utils;
 
 import javax.sound.sampled.*;
 import java.io.IOException;

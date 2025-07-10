@@ -1,15 +1,15 @@
-package ninjablades.ui;
+package NinjaBlades.ui;
 
-import static ninjablades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjablades.utils.Constants.GamePanel.customFont;
-import static ninjablades.utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import ninjablades.Panels.GamePanel;
-import ninjablades.utils.KeyboardInputs;
+import NinjaBlades.Panels.GamePanel;
+import NinjaBlades.utils.KeyboardInputs;
 
 public class GameOverMenu{
 

@@ -1,20 +1,20 @@
-package ninjablades.panels;
+package NinjaBlades.Panels;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import ninjalades.MainClass;
-import ninjalades.utils.ConfigManager;
-import ninjalades.utils.KeyboardInputs;
-import ninjalades.utils.SoundManager;
+import NinjaBlades.NinjaMain;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.KeyboardInputs;
+import NinjaBlades.utils.SoundManager;
 
-import static ninjalades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjalades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjalades.utils.Constants.GamePanel.customFont;
-import static ninjalades.utils.Constants.GamePanel.customYellow;
-import static ninjalades.utils.Constants.GamePanel.scaleFactor;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,7 +24,7 @@ import java.awt.event.KeyListener;
 
 public class SettingsPanel extends JPanel implements KeyListener {
     
-    private MainClass mainClass;
+    private NinjaMain mainClass;
 
     // Components for settings
     private JSlider volumeSlider;
@@ -34,7 +34,7 @@ public class SettingsPanel extends JPanel implements KeyListener {
     private boolean active = false;
     int value = ConfigManager.getVolume();
     
-    public SettingsPanel(MainClass mainClass) {
+    public SettingsPanel(NinjaMain mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);

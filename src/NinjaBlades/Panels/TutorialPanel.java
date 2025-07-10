@@ -1,17 +1,17 @@
-package ninjablades.panels;
+package NinjaBlades.Panels;
 
 // Importazioni necessarie
 import javax.swing.*;
 
-import ninjalades.MainClass;
-import ninjalades.entities.Blades;
-import ninjalades.entities.Player;
-import ninjalades.ui.Smokes;
-import ninjalades.ui.TutorialEndMenu;
-import ninjalades.utils.KeyboardInputs;
+import NinjaBlades.NinjaMain;
+import NinjaBlades.entities.Blades;
+import NinjaBlades.entities.Player;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.ui.TutorialEndMenu;
+import NinjaBlades.utils.KeyboardInputs;
 
-import static ninjalades.utils.Constants.GamePanel.*;
-import static ninjalades.utils.Constants.PlayerConstants.*;
+import static NinjaBlades.utils.Constants.GamePanel.*;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import java.util.List;
 public class TutorialPanel extends JPanel {
 
     private long lastCollisionTime = System.currentTimeMillis();
-    private MainClass mainClass;
+    private NinjaMain mainClass;
     private Player player;
     private List<Blades> bladesList = new ArrayList<>();
     private int tutorialStep = 0; // Fasi del tutorial
@@ -48,7 +48,7 @@ public class TutorialPanel extends JPanel {
         }
     });
 
-    public TutorialPanel(MainClass mainClass) {
+    public TutorialPanel(NinjaMain mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         setBackground(new Color(248, 214, 104));

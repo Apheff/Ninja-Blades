@@ -1,27 +1,27 @@
-package ninjablades;
+package NinjaBlades;
 
-import static ninjablades.utils.Constants.GamePanel.BORDER_WIDTH;
-import static ninjablades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjablades.utils.Constants.GamePanel.PANEL_SIZE;
-import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjablades.utils.Constants.GamePanel.SCREEN_SIZE;
-import static ninjablades.utils.Constants.GamePanel.scaleFactor;
+import static NinjaBlades.utils.Constants.GamePanel.BORDER_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.SCREEN_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.Dimension;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import ninjablades.Panels.GamePanel;
-import ninjablades.Panels.GameWindow;
-import ninjablades.Panels.MenuPanel;
-import ninjablades.Panels.SettingsPanel;
-import ninjablades.Panels.ThemePanel;
-import ninjablades.Panels.TutorialPanel;
-import ninjablades.ui.HUD;
-import ninjablades.ui.Wallpapers;
-import ninjablades.utils.ConfigManager;
-import ninjablades.utils.SoundManager;
+import NinjaBlades.Panels.GamePanel;
+import NinjaBlades.Panels.GameWindow;
+import NinjaBlades.Panels.MenuPanel;
+import NinjaBlades.Panels.SettingsPanel;
+import NinjaBlades.Panels.ThemePanel;
+import NinjaBlades.Panels.TutorialPanel;
+import NinjaBlades.ui.HUD;
+import NinjaBlades.ui.Wallpapers;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.SoundManager;
 
 
 public class NinjaMain extends JPanel implements Runnable{
@@ -39,12 +39,12 @@ public class NinjaMain extends JPanel implements Runnable{
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(() -> new MainClass());
+        javax.swing.SwingUtilities.invokeLater(() -> new NinjaMain());
     }
 
 
     // Constructor
-    public MainClass() {
+    public NinjaMain() {
         setLayout(null); // Assicura che i pannelli vengano posizionati correttamente
 
         ConfigManager.loadConfig(); // Carica la configurazione del gioco

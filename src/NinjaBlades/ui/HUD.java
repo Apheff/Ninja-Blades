@@ -1,13 +1,13 @@
-package ninjablades.ui;
+package NinjaBlades.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import ninjablades.entities.Player;
-import ninjablades.utils.ImageLoader;
+import NinjaBlades.entities.Player;
+import NinjaBlades.utils.ImageLoader;
 
-import static ninjablades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjablades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
 
 import java.awt.Color;
 
@@ -27,7 +27,7 @@ public class HUD extends ImageLoader{
 
     public static void loadHUD(){
         // Load img
-        heartSheet = loadImage("hearts.png");
+        heartSheet = loadImage("Hearts.png");
         powerupSheet = loadImage("items.png");
         // Load all frames
         loadAllFrames();

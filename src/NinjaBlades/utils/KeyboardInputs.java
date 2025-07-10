@@ -1,10 +1,10 @@
-package ninjablades.utils;
+package NinjaBlades.utils;
 
 import java.awt.event.KeyListener;
 
-import ninjablades.ui.GameOverMenu;
-import ninjablades.ui.PauseMenu;
-import ninjablades.ui.TutorialEndMenu;
+import NinjaBlades.ui.GameOverMenu;
+import NinjaBlades.ui.PauseMenu;
+import NinjaBlades.ui.TutorialEndMenu;
 
 import java.awt.event.KeyEvent;
 

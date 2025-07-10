@@ -1,14 +1,14 @@
-package ninjablades.entities;
+package NinjaBlades.entities;
 
-import static ninjablades.utils.Constants.EntityConstants.GRAVITY;
-import static ninjablades.utils.Constants.GamePanel.*;
+import static NinjaBlades.utils.Constants.EntityConstants.GRAVITY;
+import static NinjaBlades.utils.Constants.GamePanel.*;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import ninjablades.ui.Smokes;
-import ninjablades.utils.ImageLoader;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.utils.ImageLoader;
 
 public class Entity extends ImageLoader{
 

@@ -1,29 +1,29 @@
-package ninjablades.panels;
+package NinjaBlades.Panels;
 
 // import libraries
 import javax.swing.Timer;
 
-import ninjalades.MainClass;
-import ninjalades.entities.Blades;
-import ninjalades.entities.Items;
-import ninjalades.entities.Player;
-import ninjalades.ui.GameOverMenu;
-import ninjalades.ui.HUD;
-import ninjalades.ui.PauseMenu;
-import ninjalades.ui.Smokes;
-import ninjalades.ui.Wallpapers;
-import ninjalades.utils.ConfigManager;
-import ninjalades.utils.KeyboardInputs;
-import ninjalades.utils.SoundManager;
+import NinjaBlades.NinjaMain;
+import NinjaBlades.entities.Blades;
+import NinjaBlades.entities.Items;
+import NinjaBlades.entities.Player;
+import NinjaBlades.ui.GameOverMenu;
+import NinjaBlades.ui.HUD;
+import NinjaBlades.ui.PauseMenu;
+import NinjaBlades.ui.Smokes;
+import NinjaBlades.ui.Wallpapers;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.KeyboardInputs;
+import NinjaBlades.utils.SoundManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-import static ninjalades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjalades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjalades.utils.Constants.GamePanel.scaleFactor;
-import static ninjalades.utils.Constants.PlayerConstants.*;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
+import static NinjaBlades.utils.Constants.PlayerConstants.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -38,7 +38,7 @@ public class GamePanel extends JPanel {
     private KeyboardInputs keyboardInputs = new KeyboardInputs();
 
     private PauseMenu pauseMenu;
-    private MainClass mainClass;
+    private NinjaMain mainClass;
     private GameOverMenu gameOverMenu;
 
     // Game Effects
@@ -81,7 +81,7 @@ public class GamePanel extends JPanel {
     // Game state
     private long lastCollisionTime = 0; // Time of the last collision
 
-    public GamePanel(MainClass mainClass) {
+    public GamePanel(NinjaMain mainClass) {
 
         // Set the panel properties
         setDoubleBuffered(true);

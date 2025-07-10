@@ -1,12 +1,12 @@
-package ninjablades.panels;
+package NinjaBlades.Panels;
 
 import javax.swing.*;
 
-import ninjalades.MainClass;
-import ninjalades.utils.ConfigManager;
-import ninjalades.utils.ImageLoader;
+import NinjaBlades.NinjaMain;
+import NinjaBlades.utils.ConfigManager;
+import NinjaBlades.utils.ImageLoader;
 
-import static ninjalades.utils.Constants.GamePanel.*;
+import static NinjaBlades.utils.Constants.GamePanel.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -15,13 +15,13 @@ import java.awt.image.BufferedImage;
 
 public class ThemePanel extends JPanel implements KeyListener {
 
-    private MainClass mainClass;
+    private NinjaMain mainClass;
     private int selectedTheme = ConfigManager.getTheme(); // default: 0
     private BufferedImage[] themeImages;
     private String[] themeNames = {"Classic Theme", "Rick and Morty Theme"};
     private boolean active = false;
 
-    public ThemePanel(MainClass mainClass) {
+    public ThemePanel(NinjaMain mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);

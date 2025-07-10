@@ -1,16 +1,16 @@
-package ninjablades.panels;
+package NinjaBlades.Panels;
 import javax.swing.*;
 
-import ninjalades.MainClass;
-import ninjalades.entities.Blades;
-import ninjalades.utils.ImageLoader;
+import NinjaBlades.NinjaMain;
+import NinjaBlades.entities.Blades;
+import NinjaBlades.utils.ImageLoader;
 
-import static ninjalades.utils.Constants.GamePanel.PANEL_HEIGHT;
-import static ninjalades.utils.Constants.GamePanel.PANEL_SIZE;
-import static ninjalades.utils.Constants.GamePanel.PANEL_WIDTH;
-import static ninjalades.utils.Constants.GamePanel.customFont;
-import static ninjalades.utils.Constants.GamePanel.customYellow;
-import static ninjalades.utils.Constants.GamePanel.scaleFactor;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_HEIGHT;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_SIZE;
+import static NinjaBlades.utils.Constants.GamePanel.PANEL_WIDTH;
+import static NinjaBlades.utils.Constants.GamePanel.customFont;
+import static NinjaBlades.utils.Constants.GamePanel.customYellow;
+import static NinjaBlades.utils.Constants.GamePanel.scaleFactor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,7 @@ import java.awt.event.ActionListener;
 
 public class MenuPanel extends JPanel implements KeyListener {
 
-    private MainClass mainClass;
+    private NinjaMain mainClass;
     private String[] options = {"PLAY", "TUTORIAL", "SETTINGS", "THEMES", "EXIT"};
     private int selectedOption = 0; // Indice dell'opzione selezionata
     private BufferedImage logoImage; // Per caricare l'immagine del logo
@@ -38,7 +38,7 @@ public class MenuPanel extends JPanel implements KeyListener {
         }
     });
 
-    public MenuPanel(MainClass mainClass) {
+    public MenuPanel(NinjaMain mainClass) {
         this.mainClass = mainClass;
         setFocusable(true);
         addKeyListener(this);

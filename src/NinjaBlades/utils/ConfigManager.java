@@ -1,4 +1,4 @@
-package ninjablades.utils;
+package NinjaBlades.utils;
 import java.io.*;
 import java.util.Properties;
 
